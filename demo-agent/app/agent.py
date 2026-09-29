@@ -17,8 +17,10 @@ import datetime
 from zoneinfo import ZoneInfo
 
 from google.adk.agents import Agent
+from google.adk.agents.callback_context import CallbackContext
 from google.adk.apps import App
 from google.adk.models import Gemini
+from google.adk.tools.preload_memory_tool import PreloadMemoryTool
 from google.genai import types
 
 
@@ -43,7 +45,7 @@ def get_current_time(query: str) -> str:
     """Simulates getting the current time for a city.
 
     Args:
-        city: The name of the city to get the current time for.
+        query: The name of the city to get the current time for.
 
     Returns:
         A string with the current time information.
@@ -58,14 +60,27 @@ def get_current_time(query: str) -> str:
     return f"The current time for query {query} is {now.strftime('%Y-%m-%d %H:%M:%S %Z%z')}"
 
 
+# WRITE: after each turn, send the session to Memory Bank for extraction.
+async def generate_memories_callback(callback_context: CallbackContext):
+    await callback_context.add_session_to_memory()
+    return None
+
+
 root_agent = Agent(
     name="root_agent",
     model=Gemini(
         model=MODEL,
         retry_options=types.HttpRetryOptions(attempts=3),
     ),
-    instruction="You are a helpful AI assistant designed to provide accurate and useful information.",
-    tools=[get_weather, get_current_time],
+    instruction=(
+        "You are a helpful AI assistant designed to provide accurate and useful information. "
+        "You remember the user's stated preferences and facts from previous conversations and "
+        "use them to personalize your responses."
+    ),
+    # READ: PreloadMemoryTool retrieves memories at the start of every turn and
+    # injects them into the system instruction.
+    tools=[PreloadMemoryTool(), get_weather, get_current_time],
+    after_agent_callback=generate_memories_callback,
 )
 
 app = App(
