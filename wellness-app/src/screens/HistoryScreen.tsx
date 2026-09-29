@@ -52,12 +52,12 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
   // Determine predominant mood
   let topMood: MoodLevel = 'good';
   let maxCount = -1;
-  (Object.keys(moodCounts) as MoodLevel[]).forEach((m) => {
+  for (const m of Object.keys(moodCounts) as MoodLevel[]) {
     if (moodCounts[m] > maxCount) {
       maxCount = moodCounts[m];
       topMood = m;
     }
-  });
+  }
 
   const moodMeta: Record<MoodLevel, { label: string; emoji: string; color: string; desc: string }> = {
     thriving: { label: 'Thriving', emoji: '🌟', color: '#10b981', desc: 'Energized & Joyful' },

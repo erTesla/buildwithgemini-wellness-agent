@@ -4,6 +4,7 @@
  */
 
 export type MoodType = 'thriving' | 'good' | 'okay' | 'low' | 'overwhelmed';
+export type MoodLevel = MoodType;
 
 export interface WellnessCheckIn {
   id: string;
@@ -56,10 +57,14 @@ export interface HobbyItem {
   description?: string;
   frequencyPerWeek: number;
   estimatedCost: 'free' | 'low' | 'medium' | 'high';
+  costEstimate?: 'free' | 'low' | 'medium' | 'high';
   personalFeedback?: string;
   startedAt: string;
   lastParticipatedAt?: string;
   isWishlist?: boolean;
+  streakCount?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ActivityRecommendation {

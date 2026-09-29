@@ -102,7 +102,7 @@ export const ActivitiesScreen: React.FC<ActivitiesScreenProps> = ({
     {
       id: 'rec_nature_1',
       title: 'Golden Gate Park Conservatory Flowers & Dahlia Garden Walk',
-      category: 'nature',
+      category: 'outdoor',
       whyItFits: 'Gentle biophilic immersion with vibrant flowers to reduce mental fatigue and screen strain.',
       estimatedDurationMinutes: 45,
       approximateCost: 'Free Outdoor Access',
@@ -116,7 +116,7 @@ export const ActivitiesScreen: React.FC<ActivitiesScreenProps> = ({
     {
       id: 'rec_arts_1',
       title: 'De Young Fine Arts Museum Sculpture Garden & Panoramic Tower',
-      category: 'arts',
+      category: 'creative',
       whyItFits: 'Inspiring architecture, contemplative outdoor sculptures, and free public panoramic city views.',
       estimatedDurationMinutes: 60,
       approximateCost: 'Free Access to Public Sculpture Grounds',
@@ -130,7 +130,7 @@ export const ActivitiesScreen: React.FC<ActivitiesScreenProps> = ({
     {
       id: 'rec_coffee_1',
       title: 'Sightglass Coffee Quiet Porch Roastery & Chemex Brew',
-      category: 'nature',
+      category: 'relaxing',
       whyItFits: 'Spacious industrial aesthetic with artisan roasts, ideal for quiet midday reflection.',
       estimatedDurationMinutes: 30,
       approximateCost: '$5 - $8',
@@ -163,9 +163,11 @@ export const ActivitiesScreen: React.FC<ActivitiesScreenProps> = ({
       name: name.trim(),
       category,
       frequencyPerWeek: frequency,
+      estimatedCost: cost,
       costEstimate: cost,
       description: description.trim(),
       status,
+      startedAt: new Date().toISOString(),
       streakCount: 0,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -199,7 +201,7 @@ export const ActivitiesScreen: React.FC<ActivitiesScreenProps> = ({
     const hobbyCategory: HobbyCategory = 
       rec.category === 'cooking' ? 'culinary' :
       rec.category === 'reading' ? 'intellectual' :
-      rec.category === 'arts' ? 'creative' : 'outdoor';
+      rec.category === 'creative' ? 'creative' : 'outdoor';
 
     const newHobby: HobbyItem = {
       id: 'hobby_' + Date.now(),
@@ -207,9 +209,11 @@ export const ActivitiesScreen: React.FC<ActivitiesScreenProps> = ({
       name: rec.title,
       category: hobbyCategory,
       frequencyPerWeek: 2,
+      estimatedCost: 'low',
       costEstimate: 'low',
       description: rec.whyItFits,
       status: 'active',
+      startedAt: new Date().toISOString(),
       streakCount: 0,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -339,7 +343,7 @@ export const ActivitiesScreen: React.FC<ActivitiesScreenProps> = ({
 
                     <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
                       <span>Target: {hobby.frequencyPerWeek}x / week</span>
-                      <span className="capitalize">Cost: {hobby.costEstimate}</span>
+                      <span className="capitalize">Cost: {hobby.costEstimate || hobby.estimatedCost}</span>
                     </div>
 
                     <div className="flex items-center justify-end space-x-2 pt-1">
