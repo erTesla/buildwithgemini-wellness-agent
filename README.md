@@ -55,6 +55,20 @@ Built with Google Material Design principles (clean white background, high-contr
 
 ---
 
+## 📖 Deploying to Your Own Personal Project
+
+Want to host this in your own personal Firebase / Google Cloud account with automated GitHub Actions?
+Check out the comprehensive, step-by-step guide:
+👉 **[Personal Project Deployment Guide](./PERSONAL_PROJECT_DEPLOYMENT_GUIDE.md)**
+
+It covers:
+- Creating a personal Firebase / GCP project from scratch.
+- Generating the Firebase Service Account JSON key (with visual examples).
+- Setting up GitHub Repository Secrets & Variables for automated CI/CD.
+- Direct CLI deployment commands.
+
+---
+
 ## 🛠️ Local Development & Setup
 
 ### Prerequisites
