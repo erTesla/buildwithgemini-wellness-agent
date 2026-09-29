@@ -1,122 +1,140 @@
-# Personal Wellness, Performance & Hobby Management Agent
+# Who-Hum Wellness Companion
 
-An autonomous web application and AI partner designed to help users record daily mental wellness updates, track personal tasks, discover restorative hobbies, and receive tailored activity suggestions.
+An empathetic, supportive AI companion and habit management agent for personal wellness, fitness milestones, restorative activities, healthy recipes, and mindful life adventures. Built on Google's **Agent Development Kit (ADK)** and powered by **Gemini 3.6 Flash** on **Vertex AI**.
 
-Built with Google Material Design principles (clean white background, high-contrast black typography, calm accents), React + TypeScript, Vite, Cloud Firestore, Firebase Hosting, and Vertex AI Gemini 3.6 Flash.
-
----
-
-## 🌟 Features
-
-1. **Dashboard & Wellness Overview**:
-   - Today's self-reported mood badge, energy, stress, sleep, and motivation levels.
-   - Quick check-in shortcuts and real-time task completion progress meters.
-   - Priority task tracking and personalized activity suggestions.
-
-2. **Daily Wellness Check-in & Journal**:
-   - Multi-metric check-ins: Mood, Physical Energy (1-5), Perceived Stress (1-5), Sleep Quality (1-5), and Motivation (1-5).
-   - Free-text reflection journal and daily constraint notes.
-   - Empathetic, non-judgmental AI summaries without psychological diagnoses or clinical labels.
-   - Embedded crisis support protocol offering instant 24/7 hotline numbers (988, 741741, NHS 111, findahelpline.com).
-
-3. **Tasks & Personal Performance**:
-   - Create, edit, complete, postpone, and delete personal goals.
-   - **Energy-Aware Filtering**: Filter tasks by self-reported energy level (`≤ current energy`) to prevent cognitive overload.
-   - Clear distinction between user-created tasks and AI-proposed suggestions.
-
-4. **Hobbies & Creative Interests**:
-   - Track existing hobbies, weekly target frequencies, and estimated costs.
-   - Pause and resume hobbies without losing historical records.
-   - Curated exploration catalog (urban sketching, herb gardening, filter coffee brewing, audiobook nature walking).
-
-5. **Activity Discovery & Place Exploration**:
-   - Curated recommendations across cooking, reading, travel, outdoor exploration, and relaxation.
-   - Estimated durations, approximate budgets, and practical next steps.
-   - Verified location links to Google Maps with disclaimers to check live opening hours.
-   - "+ Add as Task" one-click integration.
-
-6. **Insights & Objective Patterns**:
-   - Chronological journal timeline.
-   - Recorded mood distribution bar charts.
-   - Strict adherence to objective logging: no hidden clinical risk scores or speculative inferences.
-
-7. **Profile, Privacy & Settings**:
-   - Account identifier switcher with isolated Firestore spaces (`/users/{userId}/*`).
-   - Customizable dietary, reading, travel, location, and budget preferences.
-   - One-click JSON data export and account erasure for complete GDPR/privacy compliance.
+![Who-Hum Wellness Companion Demo](demo.gif)
 
 ---
 
-## 🚀 Live Deployment
+## 🌟 What the Agent Does
 
-- **Firebase Hosting URL**: [https://qwiklabs-gcp-03-478f309b432f.web.app](https://qwiklabs-gcp-03-478f309b432f.web.app)
-- **Firebase Project Console**: `qwiklabs-gcp-03-478f309b432f`
-- **Database**: Cloud Firestore Native (`us-central1`)
+The Who-Hum Wellness Companion pairs conversational companionship with structured action cards and multimedia generation to guide users through daily wellness routines, celebrate physical accomplishments, and recommend rejuvenating meals and activities.
+
+### Real Implemented Capabilities & Tools
+
+Based on the codebase in `demo-agent/app/agent.py` and `agents-cli-manifest.yaml`, the agent provides the following active tools:
+
+1. **Cross-Session Long-Term Memory (Vertex AI Memory Bank)**
+   - **`PreloadMemoryTool()`**: Automatically queries Vertex AI Memory Bank at the start of every conversation turn to recall past user habits, goals, milestones, and preferences across sessions.
+   - **`generate_memories_callback`**: Executes at the conclusion of each interaction turn (`after_agent_callback`) to asynchronously extract key facts and log them to the managed Vertex AI Memory Bank.
+
+2. **Cinematic Short Video Generation (`generate_wellness_video`)**
+   - Uses Google's Omni model (**`gemini-omni-flash-preview`** in the `global` Vertex AI region) to generate short, peaceful 720p 16:9 MP4 videos for domain relaxation scenes (e.g., zen rock gardens, ocean sunsets, calming tea ceremonies).
+   - Saves the video directly to the ADK session context via `tool_context.save_artifact` so it appears in the developer playground's **Artifacts** panel.
+   - Streams and uploads the video bytes directly to **Google Cloud Storage (GCS)**, returning a public HTTPS URL.
+
+3. **Culinary Recipe & High-Resolution Image Pairing (`generate_healthy_recipe_image`)**
+   - Recommends mood-boosting, nutritionally balanced meal recipes based on the user's current energy levels.
+   - Pairs each dish with high-resolution, curated food photography and detailed preparation notes.
+
+4. **Restorative Exploration & Scenic Navigation (`search_travel_places`)**
+   - Discovers tranquil nature walks, cultural sanctuaries, botanic gardens, and scenic points.
+   - Provides verified search queries with instant Google Maps navigation links.
+
+5. **A2UI 0.8 Rich Display Surface Protocol**
+   - Translates model output into structured **A2UI v0.8** components (`Card`, `Column`, `Row`, `Text`, and `Image`) via `a2ui_callback`.
+   - Adapts typography hints (`h1`, `body`) and layout hierarchy to render clean visual cards in the ADK Dev UI and A2A-compliant frontends without raw JSON leaks.
+
+6. **Utility Tools**
+   - **`get_weather`**: Location-based weather lookups.
+   - **`get_current_time`**: Timezone-aware clock checks.
+
+7. **Client-Side Data Persistence (Cloud Firestore)**
+   - The companion web application (`wellness-app`) integrates directly with **Cloud Firestore** for user-scoped check-in histories, energy-aware task management, and hobby trackers under `/users/{userId}/*`.
 
 ---
 
-## 📖 Deploying to Your Own Personal Project
+## 📋 Roadmap & Planned Features
 
-Want to host this in your own personal Firebase / Google Cloud account with automated GitHub Actions?
-Check out the comprehensive, step-by-step guide:
-👉 **[Personal Project Deployment Guide](./PERSONAL_PROJECT_DEPLOYMENT_GUIDE.md)**
+The following capabilities were explored during architectural planning and are scheduled for upcoming milestones:
 
-It covers:
-- Creating a personal Firebase / GCP project from scratch.
-- Generating the Firebase Service Account JSON key (with visual examples).
-- Setting up GitHub Repository Secrets & Variables for automated CI/CD.
-- Direct CLI deployment commands.
+- **Mobile Application Client (Planned, not yet implemented)**: Native mobile app targeting Kotlin Multiplatform (KMP) / React Native with local offline inference and 4x-daily proactive wellness check-in notifications.
 
 ---
 
-## 🏛️ Clean Architecture Guide
+## 🏗️ Google Cloud Services & Architecture
 
-The application follows **Clean Architecture** patterns separating pure domain models, repositories, application services, and UI presentation components:
-👉 **[WHO-HUM Architecture Guide](./ARCHITECTURE.md)**
-
-Includes layer diagrams, companion registry design, offline-first fallback patterns, and step-by-step instructions on extending characters.
+| Component | Technology | Configuration / Location |
+| :--- | :--- | :--- |
+| **Agent Framework** | Google Agent Development Kit (ADK) | `agents-cli` v1.4.0 (`base_template: adk`) |
+| **Foundation Model** | Vertex AI Gemini 3.6 Flash (`gemini-3.6-flash`) | Location: `global` |
+| **Video Generation** | Vertex AI Omni (`gemini-omni-flash-preview`) | Location: `global` (720p, 16:9 MP4) |
+| **Long-Term Memory** | Vertex AI Memory Bank | Agent Platform Memory Service |
+| **Media Hosting** | Google Cloud Storage (GCS) | Public Bucket Storage |
+| **App Database** | Google Cloud Firestore | Native Mode (`us-central1`) |
+| **UI Protocol** | A2UI v0.8 & A2A Protocol | JSON Surface Updates |
 
 ---
 
-## 🛠️ Local Development & Setup
+## 🚀 Local Setup & Run Instructions
 
 ### Prerequisites
-- Node.js 20+
-- npm 10+
 
-### 1. Install & Run Frontend
+- **Python 3.11+** with [`uv`](https://docs.astral.sh/uv/) installed.
+- **Node.js 18+** and `npm` (for the companion web UI).
+- **Google Cloud SDK (`gcloud`)** authenticated with an active project:
+  ```bash
+  gcloud auth login
+  gcloud auth application-default login
+  gcloud config set project <YOUR_PROJECT_ID>
+  ```
+
+### 1. Running the Agent Backend
+
+Navigate to the agent directory and install dependencies:
+
+```bash
+cd demo-agent
+uv tool install google-agents-cli
+agents-cli install
+```
+
+Launch the agent with the local ADK developer playground:
+
+```bash
+uv run adk web . --port 8080 --reload_agents
+```
+
+To run with persistent Vertex AI Memory Bank integration, provide your Memory Bank service URI:
+
+```bash
+uv run adk web . --port 8080 --reload_agents --memory_service_uri=agentengine://<YOUR_MEMORY_BANK_ID>
+```
+
+### 2. Running the Companion Web UI
+
+In a separate terminal, install and launch the frontend client:
+
 ```bash
 cd wellness-app
 npm install
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### 2. Run Tests & Typechecks
+### 3. Deploying to Google Cloud Agent Engine
+
+To deploy the agent directly to Google Cloud Agent Runtime:
+
 ```bash
-cd wellness-app
-npm run typecheck
-npm run test
-npm run build
-```
-
-### 3. Deploy to Firebase
-```bash
-# Build frontend
-cd wellness-app
-npm run build
-
-# Deploy Hosting and Firestore security rules from repository root
-cd ..
-npx firebase-tools deploy --only hosting,firestore --project qwiklabs-gcp-03-478f309b432f
+cd demo-agent
+agents-cli deploy
 ```
 
 ---
 
-## 🔒 Security & Privacy Architecture
+## 🧪 Testing
 
-- **User Data Isolation**: Firestore security rules restrict read/write access to matching user document paths.
-- **Zero Client Secret Exposure**: Privileged API keys or service credentials are never compiled into frontend bundles.
-- **Non-Therapeutic Safety Boundaries**: The assistant explicitly acts as a wellness habits partner, providing crisis hotlines when distress is detected and avoiding medical diagnostic claims.
+Run the test suite using `pytest`:
 
-See [`SECRETS_REPORT.md`](./SECRETS_REPORT.md) for the complete GitHub Actions and Cloud deployment configuration breakdown.
+```bash
+cd demo-agent
+uv run pytest tests/unit tests/integration
+```
+
+---
+
+## 🔒 Safety & Privacy
+
+The Who-Hum Wellness Companion is designed as a personal habit and lifestyle support tool. It maintains strict ethical boundaries:
+- It does **not** provide clinical diagnosis, psychiatric therapy, or medical treatment plans.
+- Conversations are treated with privacy and isolated per user ID in Firestore.

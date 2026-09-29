@@ -70,9 +70,9 @@ function loadChromium() {
 }
 
 function ensureBrowserInstalled() {
-  // Downloads the Chromium binary into the shared per-user cache if it isn't
-  // already there. Idempotent and a no-op once installed, so it's cheap on
-  // repeat runs (and instant if the lab image pre-installed it).
+  if (fs.existsSync('/usr/bin/google-chrome')) {
+    return;
+  }
   try {
     execSync('npx --yes playwright install chromium', { stdio: 'inherit' });
   } catch (e) {
@@ -368,7 +368,11 @@ Options:
   fs.mkdirSync(tempDir, { recursive: true });
 
   console.log('\nLaunching Playwright Chromium browser...');
-  const browser = await chromium.launch({ headless: options.headless });
+  const launchOptions = { headless: options.headless };
+  if (fs.existsSync('/usr/bin/google-chrome')) {
+    launchOptions.executablePath = '/usr/bin/google-chrome';
+  }
+  const browser = await chromium.launch(launchOptions);
   const context = await browser.newContext({
     viewport: options.viewport,
     recordVideo: { dir: tempDir, size: options.viewport },
@@ -423,11 +427,39 @@ Options:
     console.log('Sending message...');
     await chatInput.press('Enter');
 
-    console.log(`Waiting ${options.waitMs / 1000}s for response...`);
-    await page.waitForTimeout(options.waitMs);
+    console.log(`Waiting ${options.waitMs / 1000}s for complete response and streaming...`);
+    const waitStart = Date.now();
+
+    while (Date.now() - waitStart < options.waitMs) {
+      await page.evaluate(() => {
+        const cm = document.querySelector('.chat-messages');
+        if (cm) {
+          cm.scrollTop = cm.scrollHeight;
+        }
+        const last = document.querySelector('.chat-messages > :last-child');
+        if (last) {
+          last.scrollIntoView({ block: 'end' });
+        }
+      });
+      await page.waitForTimeout(1000);
+    }
+
+    // Settle wait and final scroll
+    await page.waitForTimeout(2000);
+    await page.evaluate(() => {
+      const cm = document.querySelector('.chat-messages');
+      if (cm) {
+        cm.scrollTop = cm.scrollHeight;
+      }
+      const last = document.querySelector('.chat-messages > :last-child');
+      if (last) {
+        last.scrollIntoView({ block: 'end' });
+      }
+    });
   }
 
   // Hold on the final reply so the video doesn't cut off abruptly.
+  console.log(`Holding final view for ${options.endPadMs / 1000}s...`);
   await page.waitForTimeout(options.endPadMs);
 
   console.log('\nFinalizing recording...');

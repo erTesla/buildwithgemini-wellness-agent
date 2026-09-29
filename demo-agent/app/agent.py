@@ -237,37 +237,14 @@ WORKFLOW_DESCRIPTION = """Analyze the user's conversation, daily events, dreams,
 5. A2UI Surface Rules:
    - Output must follow the v0.8 A2UI schema rules wrapped in <a2ui-json> blocks."""
 
-UI_DESCRIPTION = """NEO-BRUTALISM DESIGN SPECIFICATION & GUIDELINES:
-1. Neo-Brutalist Visual Identity:
-   - High-contrast, bold, playful, and expressive layout.
-   - Distinct bold multi-colors representing functional cards and categories.
-   - Card headers should use bold, crisp typography (usageHint: 'h1' or 'h2').
-
-2. Dynamic Mood-Based Color Adaptation:
-   - Detect or reference how the user feels today and adapt the primary card theme:
-     * Happy / Energetic: Vibrant Electric Yellow / Lime Green (#FFE600 / #22C55E) theme.
-     * Calm / Peaceful: Deep Refreshing Sky Cyan / Soft Mint (#06B6D4 / #A7F3D0) theme.
-     * Stressed / Overwhelmed: Calming Lavender / Soft Rose / Coral Accent (#DDD6FE / #FDA4AF) theme.
-     * Low Energy / Tired: Warm Amber / Sunset Orange (#FDBA74 / #FB923C) theme.
-     * Focused / Motivated: Electric Cobalt Blue / Ultra Violet (#3B82F6 / #8B5CF6) theme.
-   - Mention the theme color accent and mood badge prominently in the card title (e.g., "[Mood: Energetic ⚡] Daily Focus").
-
-3. Responsive, Clean & Non-Overlapping Layout:
-   - Must be fully mobile and web friendly.
-   - Components MUST NOT overlap, overflow, or override each other.
-   - Keep surface structure uniform, flat, and balanced:
-     * Single Root Card containing ONE Column.
-     * Inside the Column, use neatly ordered Rows or Text elements with uniform spacing.
-     * Never nest a Card inside another Card.
-     * Use Divider components to cleanly separate sections without crowding.
-   - Equal and uniform visual rhythm: keep labels and values aligned.
-
-4. Component Constraints:
-   - Supported components: Card, Column, Row, Text, Divider, List, Icon, Image.
-   - Do NOT use Table or Heading components (unsupported in adk web; build tables using Row/Column of Text, and use usageHint='h1'/'h2'/'body').
-   - Do NOT use Buttons or interactive form actions (display-only).
-   - Images: When providing a recipe or dish image, include the Image component with its public https:// URL.
-   - Output ONLY the raw A2UI JSON array matching version 0.8."""
+UI_DESCRIPTION = """Keep every surface tiny, flat, and simple: ONE Card > ONE Column > a few Text rows (and optionally one Image).
+Never nest a Card inside a Card, and avoid complex nested columns/dividers.
+Card title: Bold typography with usageHint 'h1' and include mood badge (e.g. '[Mood: Energetic & Happy ⚡] Milestone Unlocked!').
+Card body: 2 to 4 clean Text rows with usageHint 'body' detailing key wellness benefits, logs, or ingredients.
+Supported components: Card, Column, Row, Text, and Image.
+Do NOT use Table, Heading, Buttons, or interactive actions (display-only).
+Images: When providing a recipe or food suggestion, include the Image component with its public https:// URL.
+Always output the raw A2UI JSON array matching version 0.8."""
 
 a2ui_instruction = schema_manager.generate_system_prompt(
     role_description=ROLE_DESCRIPTION,

@@ -86,10 +86,10 @@ def _iter_json_values(text: str):
             break
         try:
             value, end = decoder.raw_decode(text, idx)
+            yield value
+            idx = end
         except json.JSONDecodeError:
-            break  # malformed from here on; keep whatever we already parsed
-        yield value
-        idx = end
+            idx += 1
 
 
 def _extract_a2ui_messages(text: str) -> list[dict]:
@@ -237,6 +237,20 @@ def a2ui_callback(
         if not messages:
             continue
 
+        # If beginRendering is missing, synthesize it from the root component
+        if not any("beginRendering" in m for m in messages):
+            for m in messages:
+                su = m.get("surfaceUpdate")
+                if isinstance(su, dict) and su.get("components"):
+                    surface_id = su.get("surfaceId", "default_surface")
+                    root_id = su["components"][0].get("id", "root")
+                    for c in su["components"]:
+                        if "Card" in c.get("component", {}):
+                            root_id = c["id"]
+                            break
+                    messages.insert(0, {"beginRendering": {"surfaceId": surface_id, "root": root_id}})
+                    break
+
         # Turn un-fetchable <Image> URLs into a text note (no broken-image icons).
         _sanitize_image_components(messages)
 
@@ -250,7 +264,13 @@ def a2ui_callback(
                 )
             )
 
-        new_parts = [_wrap_a2ui_part(m) for m in messages]
+        new_parts = []
+        # Strip out the raw JSON from text to keep any conversational companion prose clean
+        clean_text = _TAG_RE.sub("", re.sub(r"\[?\s*\{\s*\"(?:beginRendering|surfaceUpdate|dataModelUpdate)\"[\s\S]*\}\s*\]?", "", text)).strip()
+        if clean_text:
+            new_parts.append(types.Part(text=clean_text))
+        new_parts.extend([_wrap_a2ui_part(m) for m in messages])
+
         return LlmResponse(
             content=types.Content(role="model", parts=new_parts),
             custom_metadata={"a2a:response": "true"},
