@@ -3,6 +3,8 @@
  * Core Business Entities & Models
  */
 
+import { CompanionType } from './companions';
+
 export type MoodType = 'thriving' | 'good' | 'okay' | 'low' | 'overwhelmed';
 export type MoodLevel = MoodType;
 
@@ -86,6 +88,7 @@ export type AppTheme = 'light' | 'ember' | 'brutalist';
 
 export interface UserPreferences {
   userId: string;
+  userName?: string;
   preferredLocation?: string;
   budgetLevel: 'budget' | 'moderate' | 'flexible';
   typicalAvailableTimeMinutes: number;
@@ -95,6 +98,8 @@ export interface UserPreferences {
   consentExternalAI: boolean;
   enableCrisisAssistance: boolean;
   theme: 'google-light' | 'google-calm' | 'light' | 'ember' | 'brutalist';
+  companionType?: CompanionType;
+  uiMode?: 'simple' | 'advanced';
   updatedAt: string;
 }
 

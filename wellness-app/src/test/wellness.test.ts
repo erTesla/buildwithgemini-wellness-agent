@@ -34,4 +34,41 @@ describe('Non-Unique Username and Persistent Data Synchronization', () => {
     const reentered = setUserNameAndId('maya lin');
     expect(reentered.userId).toBe('user_maya_lin');
   });
+
+  it('detects existing account data for a username and restores it for the session', async () => {
+    const { checkUserDataExists, saveCheckIn, saveChatMessage, getChatMessages } = await import('../services/wellnessService');
+    
+    // For a brand new username
+    const freshStatus = await checkUserDataExists('BrandNewUser999');
+    expect(freshStatus.exists).toBe(false);
+    expect(freshStatus.checkInCount).toBe(0);
+
+    // Save check-in and chat message for this user
+    await saveCheckIn({
+      id: 'chk_test_1',
+      userId: freshStatus.userId,
+      date: '2026-09-29',
+      mood: 4,
+      energyLevel: 3,
+      notes: 'Feeling productive',
+      createdAt: new Date().toISOString()
+    });
+
+    await saveChatMessage(freshStatus.userId, {
+      id: 'msg_test_1',
+      role: 'user',
+      content: 'Hello Who-Hum!',
+      timestamp: new Date().toISOString()
+    });
+
+    // Now checkUserDataExists should report exists: true with data counts
+    const existingStatus = await checkUserDataExists('BrandNewUser999');
+    expect(existingStatus.exists).toBe(true);
+    expect(existingStatus.checkInCount).toBeGreaterThanOrEqual(1);
+    expect(existingStatus.messageCount).toBeGreaterThanOrEqual(1);
+
+    // Restoring chat messages should return the saved message
+    const restoredMessages = await getChatMessages(freshStatus.userId);
+    expect(restoredMessages.some(m => m.content === 'Hello Who-Hum!')).toBe(true);
+  });
 });

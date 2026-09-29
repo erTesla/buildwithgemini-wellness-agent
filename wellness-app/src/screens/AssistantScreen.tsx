@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   AIChatMessage, 
   WellnessCheckIn, 
@@ -7,6 +7,7 @@ import {
   UserPreferences 
 } from '../types';
 import { askAgentAssistant, CRISIS_SUPPORT_TEXT } from '../services/aiService';
+import { getChatMessages, saveChatMessage } from '../services/wellnessService';
 import { 
   Bot, 
   Send, 
@@ -65,6 +66,28 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
   const [acceptedTaskIds, setAcceptedTaskIds] = useState<Set<string>>(new Set());
   const [acceptedHobbyIds, setAcceptedHobbyIds] = useState<Set<string>>(new Set());
 
+  // Load existing conversation history for this active user
+  useEffect(() => {
+    let active = true;
+    getChatMessages(userId).then(saved => {
+      if (active) {
+        if (saved && saved.length > 0) {
+          setMessages(saved);
+        } else {
+          setMessages([
+            {
+              id: 'msg_welcome_' + Date.now(),
+              role: 'assistant',
+              content: `Hey there, ${userName || 'buddy'}! 👋 I'm your Who-Hum lifestyle companion. Talk to me like a close friend—tell me about your day, any exciting things that happened, your mood, or what you're dreaming of doing. I'm here for you!`,
+              timestamp: new Date().toISOString()
+            }
+          ]);
+        }
+      }
+    });
+    return () => { active = false; };
+  }, [userId, userName]);
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputPrompt.trim() || loading) return;
@@ -79,6 +102,7 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
     setMessages(prev => [...prev, userMsg]);
     setInputPrompt('');
     setLoading(true);
+    await saveChatMessage(userId, userMsg);
 
     try {
       const response = await askAgentAssistant(userMsg.content, {
@@ -95,6 +119,7 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
       }
 
       setMessages(prev => [...prev, response]);
+      await saveChatMessage(userId, response);
     } catch (err) {
       console.error(err);
     } finally {

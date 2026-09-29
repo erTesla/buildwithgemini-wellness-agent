@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PixelCompanion } from './PixelCompanion';
 import { CompanionType, ALL_COMPANIONS, getCompanionMetadata } from '../domain/companions';
 import { playCompanionBoop, playTaskSuccess } from '../services/soundEffects';
-import { Sparkles, Check, Heart, User } from 'lucide-react';
-import { getCurrentUserName } from '../services/wellnessService';
+import { Sparkles, Check, Heart, User, CheckCircle2 } from 'lucide-react';
+import { getCurrentUserName, checkUserDataExists, UserDataSummary } from '../services/wellnessService';
 
 interface CompanionOnboardingModalProps {
   isOpen: boolean;
@@ -18,6 +18,34 @@ export const CompanionOnboardingModal: React.FC<CompanionOnboardingModalProps> =
 }) => {
   const [selected, setSelected] = useState<CompanionType>('cat');
   const [userName, setUserName] = useState<string>(() => initialUserName || getCurrentUserName() || '');
+  const [userDataSummary, setUserDataSummary] = useState<UserDataSummary | null>(null);
+  const [checkingUser, setCheckingUser] = useState<boolean>(false);
+
+  useEffect(() => {
+    const trimmed = userName.trim();
+    if (!trimmed || trimmed.length < 2) {
+      setUserDataSummary(null);
+      setCheckingUser(false);
+      return;
+    }
+
+    setCheckingUser(true);
+    const timer = setTimeout(async () => {
+      try {
+        const summary = await checkUserDataExists(trimmed);
+        setUserDataSummary(summary);
+        if (summary.exists && summary.savedCompanion) {
+          setSelected(summary.savedCompanion);
+        }
+      } catch (err) {
+        console.warn('Error checking existing user in modal:', err);
+      } finally {
+        setCheckingUser(false);
+      }
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [userName]);
 
   if (!isOpen) return null;
 
@@ -58,7 +86,7 @@ export const CompanionOnboardingModal: React.FC<CompanionOnboardingModalProps> =
             <span>Choose Your Username (Non-Unique)</span>
           </label>
           <p className="text-[11px] text-slate-500 leading-relaxed">
-            Pick any name or nickname. It does not need to be unique! By using this name, you can keep updating your reflections, habits, and tasks across visits.
+            Pick any name or nickname. It does not need to be unique! Entering an existing username will instantly load and connect all reflections, tasks, and routines for that name into this session.
           </p>
           <div className="relative">
             <input
@@ -70,6 +98,38 @@ export const CompanionOnboardingModal: React.FC<CompanionOnboardingModalProps> =
               maxLength={30}
             />
           </div>
+
+          {/* Live User Account Status */}
+          {checkingUser && (
+            <div className="flex items-center gap-1.5 text-[11px] text-slate-400 animate-pulse pt-1">
+              <Sparkles className="w-3 h-3 text-emerald-500" />
+              <span>Checking account history...</span>
+            </div>
+          )}
+
+          {!checkingUser && userDataSummary && userDataSummary.exists && (
+            <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200/90 text-xs text-emerald-900 flex items-start gap-2 shadow-2xs">
+              <Sparkles className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <div className="space-y-0.5">
+                <div className="font-bold flex items-center gap-1.5">
+                  <span>Welcome back, {userName.trim()}!</span>
+                  <span className="text-[10px] bg-emerald-200/70 text-emerald-800 px-1.5 py-0.2 rounded font-semibold">
+                    Account Found
+                  </span>
+                </div>
+                <p className="text-[11px] text-emerald-700 leading-relaxed">
+                  Found {userDataSummary.checkInCount} check-in{userDataSummary.checkInCount === 1 ? '' : 's'} and {userDataSummary.taskCount} task{userDataSummary.taskCount === 1 ? '' : 's'} on record. All your data, preferences, and companion will be restored into this session!
+                </p>
+              </div>
+            </div>
+          )}
+
+          {!checkingUser && userName.trim().length >= 2 && userDataSummary && !userDataSummary.exists && (
+            <div className="p-2 rounded-xl bg-slate-100/90 border border-slate-200/90 text-[11px] text-slate-600 flex items-center gap-1.5">
+              <User className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+              <span>New username! A fresh, private wellness space will be created for <strong>{userName.trim()}</strong>.</span>
+            </div>
+          )}
         </div>
 
         {/* Selected Companion Preview Stage */}
@@ -100,6 +160,7 @@ export const CompanionOnboardingModal: React.FC<CompanionOnboardingModalProps> =
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {ALL_COMPANIONS.map((c) => {
             const isSelected = selected === c.id;
+            const isSavedCompanion = userDataSummary?.savedCompanion === c.id;
             return (
               <button
                 key={c.id}
@@ -121,11 +182,15 @@ export const CompanionOnboardingModal: React.FC<CompanionOnboardingModalProps> =
                   <span>{c.emoji}</span>
                   <span>{c.name}</span>
                 </div>
-                {isSelected && (
+                {isSelected ? (
                   <div className="text-[10px] font-semibold bg-emerald-600 text-white px-2 py-0.5 rounded-full flex items-center gap-0.5 shadow-2xs">
                     <Check className="w-2.5 h-2.5" /> Selected
                   </div>
-                )}
+                ) : isSavedCompanion ? (
+                  <div className="text-[10px] font-semibold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded-full flex items-center gap-0.5 shadow-2xs">
+                    <Sparkles className="w-2.5 h-2.5" /> Previous
+                  </div>
+                ) : null}
               </button>
             );
           })}
@@ -137,8 +202,17 @@ export const CompanionOnboardingModal: React.FC<CompanionOnboardingModalProps> =
           onClick={handleConfirm}
           className="brutalist-btn-primary w-full py-3.5 text-sm font-semibold rounded-2xl shadow-sm flex items-center justify-center space-x-2"
         >
-          <Heart className="w-4 h-4 fill-white text-white" />
-          <span>Bond with {activeCompanion.name} & Continue</span>
+          {userDataSummary?.exists ? (
+            <>
+              <Sparkles className="w-4 h-4 fill-white text-white" />
+              <span>Continue as {userName.trim()} & Restore Session Data</span>
+            </>
+          ) : (
+            <>
+              <Heart className="w-4 h-4 fill-white text-white" />
+              <span>Bond with {activeCompanion.name} & Continue</span>
+            </>
+          )}
         </button>
       </div>
     </div>

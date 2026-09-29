@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UserPreferences } from '../types';
 import { 
   switchUserId, 
   exportAllUserData, 
   clearAllUserData,
   setUserNameAndId,
-  getCurrentUserName 
+  getCurrentUserName,
+  checkUserDataExists,
+  UserDataSummary 
 } from '../services/wellnessService';
 import { PixelCompanion } from '../components/PixelCompanion';
 import { CompanionType, ALL_COMPANIONS, formatCompanionLabel } from '../domain/companions';
@@ -74,6 +76,37 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   const [customUserName, setCustomUserName] = useState(userName || getCurrentUserName());
   const [customUserId, setCustomUserId] = useState(userId);
   const [savedStatus, setSavedStatus] = useState<string>('');
+  const [userNameSummary, setUserNameSummary] = useState<UserDataSummary | null>(null);
+  const [checkingUserName, setCheckingUserName] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (userName) setCustomUserName(userName);
+    if (userId) setCustomUserId(userId);
+  }, [userName, userId]);
+
+  useEffect(() => {
+    const trimmed = customUserName.trim();
+    if (!trimmed || trimmed.toLowerCase() === (userName || '').toLowerCase()) {
+      setUserNameSummary(null);
+      setCheckingUserName(false);
+      return;
+    }
+
+    setCheckingUserName(true);
+    const timer = setTimeout(async () => {
+      try {
+        const summary = await checkUserDataExists(trimmed);
+        setUserNameSummary(summary);
+      } catch (err) {
+        console.warn('Error checking username summary:', err);
+      } finally {
+        setCheckingUserName(false);
+      }
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [customUserName, userName]);
+
   const [selectedTheme, setSelectedTheme] = useState<AppTheme>(() => {
     if (theme) return theme;
     const saved = localStorage.getItem('whohum_theme');
@@ -140,13 +173,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   const handleUpdateUserName = async (e: React.FormEvent) => {
     e.preventDefault();
     if (customUserName.trim()) {
+      const summary = userNameSummary;
       if (onUpdateUserName) {
         await onUpdateUserName(customUserName.trim());
       } else {
         setUserNameAndId(customUserName.trim());
         await onReloadAllData();
       }
-      setSavedStatus(`Username updated to "${customUserName.trim()}". Your data is synced!`);
+      setSavedStatus(
+        summary && summary.exists
+          ? `✨ Connected to existing account "${customUserName.trim()}"! Restored ${summary.checkInCount} check-in${summary.checkInCount === 1 ? '' : 's'} and ${summary.taskCount} task${summary.taskCount === 1 ? '' : 's'}.`
+          : `Username updated to "${customUserName.trim()}". Started fresh space!`
+      );
       setTimeout(() => setSavedStatus(''), 4000);
     }
   };
@@ -215,20 +253,49 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           Your username does not need to be unique! By entering this username on any device or session, you can keep updating your daily reflections, tasks, and wellness routines seamlessly.
         </p>
 
-        <form onSubmit={handleUpdateUserName} className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-          <input
-            type="text"
-            value={customUserName}
-            onChange={(e) => setCustomUserName(e.target.value)}
-            placeholder="e.g. Alex, Maya, Sam..."
-            className="p-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm font-semibold text-slate-900 flex-1 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500"
-          />
-          <button
-            type="submit"
-            className="brutalist-btn-primary text-xs py-2.5 px-4 rounded-xl whitespace-nowrap"
-          >
-            Update Username
-          </button>
+        <form onSubmit={handleUpdateUserName} className="space-y-3">
+          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+            <input
+              type="text"
+              value={customUserName}
+              onChange={(e) => setCustomUserName(e.target.value)}
+              placeholder="e.g. Alex, Maya, Sam..."
+              className="p-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm font-semibold text-slate-900 flex-1 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500"
+            />
+            <button
+              type="submit"
+              className="brutalist-btn-primary text-xs py-2.5 px-4 rounded-xl whitespace-nowrap flex items-center justify-center gap-1.5"
+            >
+              {userNameSummary?.exists ? (
+                <>
+                  <Sparkles className="w-3.5 h-3.5 text-white" />
+                  <span>Switch & Load Account Data</span>
+                </>
+              ) : (
+                <span>Update Username</span>
+              )}
+            </button>
+          </div>
+
+          {/* Account Check Feedback */}
+          {checkingUserName && (
+            <div className="flex items-center gap-1.5 text-[11px] text-slate-400 animate-pulse">
+              <Sparkles className="w-3 h-3 text-emerald-500" />
+              <span>Checking account records for "{customUserName.trim()}"...</span>
+            </div>
+          )}
+
+          {!checkingUserName && userNameSummary && userNameSummary.exists && (
+            <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200/90 text-xs text-emerald-900 flex items-start gap-2 shadow-2xs">
+              <Sparkles className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <span className="font-bold">Existing account found for "{customUserName.trim()}"!</span>
+                <p className="text-[11px] text-emerald-700 mt-0.5 leading-relaxed">
+                  Has {userNameSummary.checkInCount} check-in{userNameSummary.checkInCount === 1 ? '' : 's'}, {userNameSummary.taskCount} task{userNameSummary.taskCount === 1 ? '' : 's'}{userNameSummary.savedCompanion ? `, and bonded companion (${userNameSummary.savedCompanion})` : ''}. Clicking above will switch your active session and load all historical data.
+                </p>
+              </div>
+            </div>
+          )}
         </form>
       </div>
 

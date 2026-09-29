@@ -7,6 +7,7 @@ import {
   UserPreferences 
 } from '../types';
 import { askAgentAssistant, CRISIS_SUPPORT_TEXT } from '../services/aiService';
+import { getChatMessages, saveChatMessage } from '../services/wellnessService';
 import { formatCompanionLabel } from '../domain/companions';
 import { 
   Bot, 
@@ -104,6 +105,28 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
     }
   }, [inputPrompt]);
 
+  // Load existing conversation history for this active user
+  useEffect(() => {
+    let active = true;
+    getChatMessages(userId).then(saved => {
+      if (active) {
+        if (saved && saved.length > 0) {
+          setMessages(saved);
+        } else {
+          setMessages([
+            {
+              id: 'msg_welcome_' + Date.now(),
+              role: 'assistant',
+              content: `Hey ${userName || 'buddy'}! 👋 How's your day going? Feel free to tell me what you're up to, how you're feeling, or anything fun that happened today. I'm here to listen and keep you company.`,
+              timestamp: new Date().toISOString()
+            }
+          ]);
+        }
+      }
+    });
+    return () => { active = false; };
+  }, [userId, userName]);
+
   const handleSendMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!inputPrompt.trim() || loading) return;
@@ -123,6 +146,7 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
     setInputPrompt('');
     setLoading(true);
     playMessageChime(); // Gentle chime when sending
+    await saveChatMessage(userId, userMsg);
 
     try {
       const response = await askAgentAssistant(userMsg.content, {
@@ -140,6 +164,7 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
 
       setMessages(prev => [...prev, response]);
       playMessageChime(); // Gentle chime when reply arrives
+      await saveChatMessage(userId, response);
     } catch (err) {
       console.error(err);
     } finally {

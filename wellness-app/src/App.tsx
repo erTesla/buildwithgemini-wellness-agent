@@ -61,14 +61,59 @@ export const App: React.FC = () => {
     return !chosen || !hasName;
   });
 
-  const handleOnboardingComplete = (selected: CompanionType, newUserName?: string) => {
+  const loadUserData = async (targetUserId?: string, forcedCompanion?: CompanionType) => {
+    const activeUid = targetUserId || userId;
+    setLoading(true);
+    try {
+      const [loadedCheckins, loadedTasks, loadedHobbies, loadedPrefs] = await Promise.all([
+        getCheckIns(activeUid),
+        getTasks(activeUid),
+        getHobbies(activeUid),
+        getUserPreferences(activeUid)
+      ]);
+      setCheckins(loadedCheckins);
+      setTasks(loadedTasks);
+      setHobbies(loadedHobbies);
+      setPreferences(loadedPrefs);
+
+      // If an existing companion preference was saved for this user, restore it
+      if (forcedCompanion) {
+        setCompanionType(forcedCompanion);
+        localStorage.setItem('whohum_companion', forcedCompanion);
+      } else if (loadedPrefs.companionType) {
+        setCompanionType(loadedPrefs.companionType);
+        localStorage.setItem('whohum_companion', loadedPrefs.companionType);
+      }
+
+      // If an existing theme preference was saved for this user, restore it
+      if (loadedPrefs.theme === 'light' || loadedPrefs.theme === 'ember' || loadedPrefs.theme === 'brutalist') {
+        setTheme(loadedPrefs.theme);
+        localStorage.setItem('whohum_theme', loadedPrefs.theme);
+      }
+
+      // If an existing UI mode was saved, restore it
+      if (loadedPrefs.uiMode) {
+        setIsSimpleMode(loadedPrefs.uiMode === 'simple');
+        localStorage.setItem('wellness_ui_mode', loadedPrefs.uiMode);
+      }
+    } catch (e) {
+      console.error('Error loading data:', e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOnboardingComplete = async (selected: CompanionType, newUserName?: string) => {
     setCompanionType(selected);
+    setShowCompanionModal(false);
     if (newUserName && newUserName.trim()) {
       const { userName: updatedName, userId: updatedId } = setUserNameAndId(newUserName);
       setUserName(updatedName);
       setUserId(updatedId);
+      await loadUserData(updatedId, selected);
+    } else {
+      await loadUserData(userId, selected);
     }
-    setShowCompanionModal(false);
   };
 
   const handleUpdateUserName = async (newUserName: string) => {
@@ -76,12 +121,21 @@ export const App: React.FC = () => {
       const { userName: updatedName, userId: updatedId } = setUserNameAndId(newUserName);
       setUserName(updatedName);
       setUserId(updatedId);
+      await loadUserData(updatedId);
     }
   };
 
   const handleCompanionTypeChange = (newType: CompanionType) => {
     setCompanionType(newType);
     localStorage.setItem('whohum_companion', newType);
+    saveUserPreferences({
+      ...preferences,
+      userId,
+      userName,
+      companionType: newType,
+      theme,
+      updatedAt: new Date().toISOString()
+    }).catch(err => console.warn('Could not sync companion preference:', err));
   };
   
   // UI Mode: Simple vs Advanced (persisted in localStorage)
@@ -93,6 +147,15 @@ export const App: React.FC = () => {
   const handleToggleSimpleMode = (simple: boolean) => {
     setIsSimpleMode(simple);
     localStorage.setItem('wellness_ui_mode', simple ? 'simple' : 'advanced');
+    saveUserPreferences({
+      ...preferences,
+      userId,
+      userName,
+      companionType,
+      theme,
+      uiMode: simple ? 'simple' : 'advanced',
+      updatedAt: new Date().toISOString()
+    }).catch(err => console.warn('Could not sync uiMode preference:', err));
   };
 
   // Theme: Clean Light vs Cozy Ember vs Neo-Brutalism (persisted)
@@ -107,6 +170,14 @@ export const App: React.FC = () => {
   const handleSelectTheme = (newTheme: AppTheme) => {
     setTheme(newTheme);
     localStorage.setItem('whohum_theme', newTheme);
+    saveUserPreferences({
+      ...preferences,
+      userId,
+      userName,
+      companionType,
+      theme: newTheme,
+      updatedAt: new Date().toISOString()
+    }).catch(err => console.warn('Could not sync theme preference:', err));
   };
 
   const handleToggleTheme = () => {
@@ -154,26 +225,6 @@ export const App: React.FC = () => {
   });
   const [recommendations, setRecommendations] = useState<ActivityRecommendation[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
-  // Load all user records
-  const loadUserData = async () => {
-    try {
-      const [loadedCheckins, loadedTasks, loadedHobbies, loadedPrefs] = await Promise.all([
-        getCheckIns(userId),
-        getTasks(userId),
-        getHobbies(userId),
-        getUserPreferences(userId)
-      ]);
-      setCheckins(loadedCheckins);
-      setTasks(loadedTasks);
-      setHobbies(loadedHobbies);
-      setPreferences(loadedPrefs);
-    } catch (e) {
-      console.error('Error loading data:', e);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
     loadUserData();
@@ -226,8 +277,17 @@ export const App: React.FC = () => {
 
   // Preferences Handler
   const handleSavePreferences = async (prefs: UserPreferences) => {
-    await saveUserPreferences(prefs);
-    setPreferences(prefs);
+    const enriched: UserPreferences = {
+      ...prefs,
+      userId,
+      userName,
+      companionType,
+      theme,
+      uiMode: isSimpleMode ? 'simple' : 'advanced',
+      updatedAt: new Date().toISOString()
+    };
+    await saveUserPreferences(enriched);
+    setPreferences(enriched);
   };
 
   // Convert recommendation to task

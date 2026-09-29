@@ -13,7 +13,7 @@ Experience the live web application:
 - **Alternative Mirror**: [https://qwiklabs-gcp-03-478f309b432f.firebaseapp.com](https://qwiklabs-gcp-03-478f309b432f.firebaseapp.com)
 
 **Live Features to Try**:
-- 🏷️ **Non-Unique Username Onboarding**: Enter any display name (e.g. `Alex`, `Sam`, `Maya`) on first launch to instantly link and persist your reflections, habits, and tasks across sessions and devices without passwords.
+- 🏷️ **Non-Unique Username & Instant Session Restoration**: Enter any display name (e.g. `Alex`, `Sam`, `Maya`) on first launch. If an existing username is entered, Who-Hum immediately recognizes the account, shows past check-in and task tallies, and seamlessly restores all reflections, tasks, bonded companion, theme, and chat history into that active session.
 - 🎨 **Tri-Theme Switcher**: Switch seamlessly between **Clean Light**, **Cozy Ember** (restorative night mode), and **Neo-Brutalism** (bold 2px solid borders and hard offset drop shadows).
 - 🐱 **Interactive Ambient Buddy**: A floating desktop companion with animated pixel art, thought bubbles, petting counter, and 8-bit synthesized audio feedback.
 
