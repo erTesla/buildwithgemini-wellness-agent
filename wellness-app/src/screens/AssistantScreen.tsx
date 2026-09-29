@@ -22,6 +22,7 @@ import {
   Clock,
   BookMarked
 } from 'lucide-react';
+import { PixelCompanion, CompanionType, CompanionEmotion } from '../components/PixelCompanion';
 
 interface AssistantScreenProps {
   userId: string;
@@ -32,6 +33,8 @@ interface AssistantScreenProps {
   onSaveTask: (task: TaskItem) => Promise<void>;
   onSaveHobby: (hobby: HobbyItem) => Promise<void>;
   onSaveCheckIn?: (checkin: WellnessCheckIn) => Promise<void>;
+  companionType?: CompanionType;
+  onChangeCompanionType?: (type: CompanionType) => void;
 }
 
 export const AssistantScreen: React.FC<AssistantScreenProps> = ({
@@ -42,7 +45,9 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
   preferences,
   onSaveTask,
   onSaveHobby,
-  onSaveCheckIn
+  onSaveCheckIn,
+  companionType = 'puppy',
+  onChangeCompanionType
 }) => {
   const [messages, setMessages] = useState<AIChatMessage[]>([
     {
@@ -130,21 +135,58 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
     setAcceptedHobbyIds(prev => new Set(prev).add(`${msgId}_${hobbyPartial.name}`));
   };
 
+  const getMessageEmotion = (msg: AIChatMessage): CompanionEmotion => {
+    if (msg.crisisAlert) return 'sad';
+    const c = msg.content.toLowerCase();
+    if (c.includes('congrats') || c.includes('awesome') || c.includes('happy') || c.includes('😄') || c.includes('🎉') || c.includes('great')) {
+      return 'smile';
+    }
+    if (c.includes('deep breath') || c.includes('difficult') || c.includes('vent') || c.includes('gentle') || c.includes('care')) {
+      return 'sad';
+    }
+    return 'idle';
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
+      {/* Header with Pixel Companion */}
       <div className="material-card-flat p-6 bg-white">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-lg bg-[#fef08a] border-2 border-black shadow-[2px_2px_0px_#000000] flex items-center justify-center">
-            <Bot className="w-6 h-6 text-black" />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center space-x-3.5">
+            <div className="p-1 rounded-xl bg-[#fef08a] border-2 border-black shadow-[3px_3px_0px_#000000] flex items-center justify-center shrink-0">
+              <PixelCompanion 
+                type={companionType} 
+                emotion={loading ? 'thinking' : 'idle'} 
+                size={48} 
+                interactive={true} 
+              />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-black flex items-center gap-2">
+                Who-Hum <span className="bg-[#facc15] px-1.5 py-0.5 border-2 border-black rounded text-xl">Chat Buddy</span>
+              </h1>
+              <p className="text-sm font-medium text-zinc-600 mt-1">
+                Your supportive companion. Talk freely—everything is captured quietly in the background.
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-black flex items-center gap-2">
-              Wellness <span className="bg-[#facc15] px-1.5 py-0.5 border-2 border-black rounded text-xl">Chat Buddy</span>
-            </h1>
-            <p className="text-sm font-medium text-zinc-600 mt-1">
-              Your supportive everyday companion. Chat about your day, wins, or feelings—your buddy listens, logs your daily mood & updates, and cheers you on.
-            </p>
+
+          {/* Quick Companion Switcher */}
+          <div className="flex items-center space-x-1.5 bg-[#f1f3f4] p-1 border-2 border-black rounded-lg self-start sm:self-auto shadow-[2px_2px_0px_#000000]">
+            {(['puppy', 'cat', 'racoon'] as CompanionType[]).map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => onChangeCompanionType && onChangeCompanionType(t)}
+                className={`px-2.5 py-1 text-xs font-mono font-bold rounded transition-all ${
+                  companionType === t 
+                    ? 'bg-black text-white shadow-[1px_1px_0px_#000000]' 
+                    : 'text-zinc-600 hover:text-black'
+                }`}
+              >
+                {t === 'puppy' ? '🐶 Puppy' : t === 'cat' ? '🐱 Cat' : '🦝 Raccoon'}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -161,13 +203,19 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
                 className={`flex items-start space-x-3 ${isUser ? 'flex-row-reverse space-x-reverse' : ''}`}
               >
                 {!isUser && (
-                  <div className="w-8 h-8 rounded bg-[#facc15] border-2 border-black shadow-[1px_1px_0px_#000000] flex items-center justify-center text-black flex-shrink-0 mt-1">
-                    <Bot className="w-4 h-4" />
+                  <div className="w-9 h-9 rounded bg-[#fef08a] border-2 border-black shadow-[2px_2px_0px_#000000] flex items-center justify-center text-black flex-shrink-0 mt-1 p-0.5">
+                    <PixelCompanion 
+                      type={companionType} 
+                      emotion={getMessageEmotion(msg)} 
+                      size={32} 
+                      interactive={true} 
+                      showThoughtBubble={false}
+                    />
                   </div>
                 )}
                 {isUser && (
                   <div className="w-8 h-8 rounded bg-black text-white border-2 border-black shadow-[1px_1px_0px_#000000] flex items-center justify-center font-bold text-xs flex-shrink-0 mt-1">
-                    U
+                    YOU
                   </div>
                 )}
 
@@ -313,9 +361,29 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
           })}
 
           {loading && (
-            <div className="flex items-center space-x-2 text-sm text-zinc-600 font-mono p-3 bg-zinc-100 border-2 border-black rounded inline-flex">
-              <Sparkles className="w-4 h-4 animate-spin text-black" />
-              <span>Chat Buddy is listening and writing to your diary...</span>
+            <div className="flex items-center space-x-3.5 p-3.5 bg-white border-2 border-black rounded-xl shadow-[4px_4px_0px_#000000] w-fit">
+              <div className="bg-[#fef08a] p-1 border-2 border-black rounded-lg shrink-0">
+                <PixelCompanion 
+                  type={companionType} 
+                  emotion="thinking" 
+                  size={38} 
+                  showThoughtBubble={true} 
+                  interactive={false} 
+                />
+              </div>
+              <div className="space-y-0.5">
+                <div className="flex items-center space-x-2 text-xs font-black uppercase tracking-wider text-black">
+                  <span>Who-Hum is thinking</span>
+                  <span className="flex space-x-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-black animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-black animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-black animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </span>
+                </div>
+                <p className="text-[11px] font-mono text-zinc-600">
+                  Listening and capturing your day quietly in the background...
+                </p>
+              </div>
             </div>
           )}
         </div>

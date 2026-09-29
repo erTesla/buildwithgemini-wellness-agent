@@ -9,6 +9,8 @@ import { DiscoverScreen } from './screens/DiscoverScreen';
 import { HistoryScreen } from './screens/HistoryScreen';
 import { AssistantScreen } from './screens/AssistantScreen';
 import { ProfileScreen } from './screens/ProfileScreen';
+import { PixelLoadingScreen } from './components/PixelLoadingScreen';
+import { CompanionType } from './components/PixelCompanion';
 
 import { 
   getCurrentUserId, 
@@ -34,6 +36,17 @@ import {
 export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<TabType>('dashboard');
   const [userId, setUserId] = useState<string>(getCurrentUserId());
+  
+  // Companion choice: puppy, cat, racoon (persisted)
+  const [companionType, setCompanionType] = useState<CompanionType>(() => {
+    const saved = localStorage.getItem('whohum_companion');
+    return (saved === 'cat' || saved === 'racoon') ? saved : 'puppy';
+  });
+
+  const handleCompanionTypeChange = (newType: CompanionType) => {
+    setCompanionType(newType);
+    localStorage.setItem('whohum_companion', newType);
+  };
   
   // UI Mode: Simple vs Advanced (persisted in localStorage)
   const [isSimpleMode, setIsSimpleMode] = useState<boolean>(() => {
@@ -177,9 +190,10 @@ export const App: React.FC = () => {
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
         {loading ? (
-          <div className="flex justify-center items-center h-64 text-[#5f6368]">
-            <span className="text-sm font-bold font-mono">Connecting to your personal wellness cloud...</span>
-          </div>
+          <PixelLoadingScreen 
+            message="Who-Hum is waking up..." 
+            defaultType={companionType} 
+          />
         ) : isSimpleMode ? (
           <SimpleChatScreen
             userId={userId}
@@ -191,6 +205,8 @@ export const App: React.FC = () => {
             onSaveHobby={handleSaveHobby}
             onSaveCheckIn={handleSaveCheckIn}
             onSwitchToAdvanced={() => handleToggleSimpleMode(false)}
+            companionType={companionType}
+            onChangeCompanionType={handleCompanionTypeChange}
           />
         ) : (
           <>
@@ -266,6 +282,8 @@ export const App: React.FC = () => {
                 onSaveTask={handleSaveTask}
                 onSaveHobby={handleSaveHobby}
                 onSaveCheckIn={handleSaveCheckIn}
+                companionType={companionType}
+                onChangeCompanionType={handleCompanionTypeChange}
               />
             )}
 
