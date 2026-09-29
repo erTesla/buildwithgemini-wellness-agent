@@ -112,5 +112,6 @@ export interface AIChatMessage {
   suggestedHobbies?: Partial<HobbyItem>[];
   travelSpots?: TravelSpot[];
   recipeData?: RecipeCardData;
+  loggedCheckIn?: WellnessCheckIn;
   crisisAlert?: boolean;
 }

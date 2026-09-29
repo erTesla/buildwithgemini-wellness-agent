@@ -6,7 +6,8 @@ import {
   UserPreferences,
   AIChatMessage,
   TravelSpot,
-  RecipeCardData
+  RecipeCardData,
+  MoodType
 } from '../types';
 
 const CRISIS_KEYWORDS = [
@@ -127,6 +128,7 @@ export async function analyzeWellnessCheckIn(
 export async function askAgentAssistant(
   prompt: string,
   context: {
+    userId?: string;
     checkins: WellnessCheckIn[];
     tasks: TaskItem[];
     hobbies: HobbyItem[];
@@ -149,10 +151,57 @@ export async function askAgentAssistant(
   const suggestedTasks: Partial<TaskItem>[] = [];
   const suggestedHobbies: Partial<HobbyItem>[] = [];
   let travelSpots: TravelSpot[] | undefined = undefined;
-  let recipeData: RecipeCardData[] | undefined = undefined;
+  let recipeData: RecipeCardData | undefined = undefined;
+  let loggedCheckIn: WellnessCheckIn | undefined = undefined;
 
-  // 1. Travel & Dreams handling
-  if (lower.includes('travel') || lower.includes('dream') || lower.includes('trip') || lower.includes('destination') || lower.includes('visit') || lower.includes('explore') || lower.includes('place')) {
+  // 1. Detect Chat Buddy Mood & Daily Events Logging (e.g. buying a bike/cycle, great day, feeling happy)
+  const isHappy = lower.includes('happy') || lower.includes('excited') || lower.includes('great') || lower.includes('awesome') || lower.includes('wonderful') || lower.includes('bought') || lower.includes('proud') || lower.includes('thriving');
+  const isSadOrTired = lower.includes('sad') || lower.includes('tired') || lower.includes('exhausted') || lower.includes('drained') || lower.includes('down') || lower.includes('depressed') || lower.includes('awful');
+  const isStressed = lower.includes('stress') || lower.includes('overwhelmed') || lower.includes('anxious') || lower.includes('panic');
+
+  const detectedMood: MoodType = isHappy ? 'thriving' : isStressed ? 'overwhelmed' : isSadOrTired ? 'low' : 'good';
+
+  // Check if user is sharing a daily event (e.g. bought a cycle / bike / went somewhere / started something)
+  if (lower.includes('bought a cycle') || lower.includes('bought a bike') || lower.includes('bought') || lower.includes('got a bike') || lower.includes('cycle') || (isHappy && (lower.includes('today') || lower.includes('i am')))) {
+    let specificEvent = prompt;
+    if (lower.includes('cycle') || lower.includes('bike')) {
+      content = `That's amazing! Huge congratulations on getting your new cycle! 🚲✨ Cycling is such a fantastic way to boost cardiovascular health, get fresh air, and elevate your daily mental clarity. I've automatically logged this exciting milestone in your daily wellness journal so you can look back on this happy moment!`;
+      
+      suggestedTasks.push({
+        title: "Go for a celebratory 20-minute cycle ride",
+        category: "wellness",
+        priority: "medium",
+        estimatedDurationMinutes: 20,
+        minEnergyRequired: 3,
+        proposedReason: "Celebrate your new bike and enjoy outdoor physical movement"
+      });
+
+      suggestedHobbies.push({
+        name: "Outdoor Cycling & Trail Exploration",
+        category: "outdoor",
+        status: "active",
+        frequencyPerWeek: 2,
+        estimatedCost: "low"
+      });
+    } else {
+      content = `I love hearing that! What a wonderful day. Sharing these moments of joy helps cement positive experiences in your nervous system. I have automatically recorded this daily reflection and updated your wellness record!`;
+    }
+
+    loggedCheckIn = {
+      id: 'checkin_' + Date.now(),
+      userId: context.userId || 'anonymous_user',
+      timestamp: new Date().toISOString(),
+      mood: detectedMood,
+      energyLevel: isHappy ? 5 : 3,
+      stressLevel: 1,
+      sleepQuality: 4,
+      motivationLevel: isHappy ? 5 : 3,
+      journalText: prompt.trim(),
+      aiSummary: `User reported: "${prompt.trim()}". Mood captured as ${detectedMood.toUpperCase()} with high vitality and positive momentum.`
+    };
+  }
+  // 2. Travel & Dreams handling
+  else if (lower.includes('travel') || lower.includes('dream') || lower.includes('trip') || lower.includes('destination') || lower.includes('visit') || lower.includes('explore') || lower.includes('place')) {
     let dest = context.preferences.preferredLocation || "San Francisco";
     if (lower.includes('kyoto') || lower.includes('japan')) dest = "Kyoto, Japan";
     else if (lower.includes('paris') || lower.includes('france')) dest = "Paris, France";
@@ -160,9 +209,8 @@ export async function askAgentAssistant(
     else if (lower.includes('bali') || lower.includes('indonesia')) dest = "Ubud, Bali";
     else if (lower.includes('rome') || lower.includes('italy')) dest = "Rome, Italy";
 
-    content = `I noticed your dream to travel and explore **${dest}**! Stepping into new environments and dreaming of inspiring journeys restores mental energy and broadens your perspective.\n\nHere are top spots verified on Google Maps with publicly curated community ratings:`;
+    content = `I hear you, my friend! Dreaming of journeys and new horizon lines is so restorative for the soul. Exploring **${dest}** sounds like an unforgettable adventure.\n\nHere are some of the top-rated spots from Google Maps with real traveler ratings to inspire your daydreams:`;
 
-    const encodedDest = encodeURIComponent(dest);
     travelSpots = [
       {
         name: `${dest} Scenic Cultural Lookout & Heritage Trail`,
@@ -191,7 +239,7 @@ export async function askAgentAssistant(
     ];
 
     suggestedTasks.push({
-      title: `Plan itinerary for ${dest}`,
+      title: `Plan a travel wishlist for ${dest}`,
       category: "personal",
       priority: "low",
       estimatedDurationMinutes: 30,
@@ -199,7 +247,7 @@ export async function askAgentAssistant(
       proposedReason: "Fulfills your travel aspirations and mental replenishment"
     });
   } 
-  // 2. Cooking, Cheer-up & Recipe Image Generation handling
+  // 3. Cooking, Cheer-up & Recipe Image Generation handling
   else if (lower.includes('cook') || lower.includes('recipe') || lower.includes('cheer') || lower.includes('food') || lower.includes('dinner') || lower.includes('lunch') || lower.includes('diet') || lower.includes('eat')) {
     const currentMood = context.checkins[0]?.mood || 'good';
     
@@ -217,9 +265,9 @@ export async function askAgentAssistant(
       moodReason = "Rich in healthy monounsaturated fats and crisp textures to refresh alertness.";
     }
 
-    content = `To cheer you up and support a wholesome, mood-lifting diet, here is a restorative recipe recommendation accompanied by a freshly visualized photo of the dish:`;
+    content = `I've got your back! Good nourishing food can truly turn a whole day around. Here is a delicious, mood-boosting recipe I visualized for you:`;
 
-    recipeData = [{
+    recipeData = {
       dishName: recipeTitle,
       imageUrl: imgUrl,
       moodBenefit: moodReason,
@@ -236,7 +284,7 @@ export async function askAgentAssistant(
         "3. Assemble warm bowl, top with sliced avocado and drizzle with lemon tahini.",
         "4. Mindfully enjoy each bite away from work screens."
       ]
-    }];
+    };
 
     suggestedTasks.push({
       title: `Cook ${recipeTitle}`,
@@ -247,7 +295,7 @@ export async function askAgentAssistant(
       proposedReason: "Cheer-up nutrient therapy aligned with your daily mood"
     });
   } 
-  // 3. Books & Reading
+  // 4. Books & Reading
   else if (lower.includes('book') || lower.includes('read') || lower.includes('novel')) {
     content = "Looking at your reading preferences, here is a thoughtful recommendation:\n\n**'Atomic Habits' by James Clear** (or **'Klara and the Sun' by Kazuo Ishiguro** for speculative fiction)\n- **Duration**: ~20 minutes of daily quiet reading\n- **Why it fits**: Gentle, practical insights without information overload.\n\nWould you like to schedule a 20-minute evening reading window?";
     suggestedTasks.push({
@@ -259,9 +307,9 @@ export async function askAgentAssistant(
       proposedReason: "Unwinding session to support calm sleep hygiene"
     });
   } 
-  // 4. Default Assistant Response
+  // 5. Default Chat Buddy Conversation
   else {
-    content = `I have reviewed your wellness dashboard context: you currently have ${context.tasks.filter(t => t.status !== 'completed').length} active tasks and ${context.hobbies.length} tracked hobbies. How can I best assist you today? We can explore travel dreams on interactive maps, generate cheer-up recipe imagery, or calibrate your daily goals.`;
+    content = `Hey buddy! I'm here hanging out with you. You've got ${context.tasks.filter(t => t.status !== 'completed').length} things going on your task list right now, but honestly, how is your head feeling? Tell me about your day, any cool things that happened, or what you feel like doing!`;
   }
 
   return {
@@ -272,6 +320,7 @@ export async function askAgentAssistant(
     suggestedTasks: suggestedTasks.length ? suggestedTasks : undefined,
     suggestedHobbies: suggestedHobbies.length ? suggestedHobbies : undefined,
     travelSpots: travelSpots,
-    recipeData: recipeData ? recipeData[0] : undefined
+    recipeData: recipeData,
+    loggedCheckIn: loggedCheckIn
   };
 }

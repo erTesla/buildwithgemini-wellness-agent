@@ -233,6 +233,7 @@ export const App: React.FC = () => {
                 preferences={preferences}
                 onSaveTask={handleSaveTask}
                 onSaveHobby={handleSaveHobby}
+                onSaveCheckIn={handleSaveCheckIn}
               />
             )}
 

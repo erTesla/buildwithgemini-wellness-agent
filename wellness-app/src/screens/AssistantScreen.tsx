@@ -19,7 +19,8 @@ import {
   Star,
   ExternalLink,
   Utensils,
-  Clock
+  Clock,
+  BookMarked
 } from 'lucide-react';
 
 interface AssistantScreenProps {
@@ -30,6 +31,7 @@ interface AssistantScreenProps {
   preferences: UserPreferences;
   onSaveTask: (task: TaskItem) => Promise<void>;
   onSaveHobby: (hobby: HobbyItem) => Promise<void>;
+  onSaveCheckIn?: (checkin: WellnessCheckIn) => Promise<void>;
 }
 
 export const AssistantScreen: React.FC<AssistantScreenProps> = ({
@@ -39,13 +41,14 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
   hobbies,
   preferences,
   onSaveTask,
-  onSaveHobby
+  onSaveHobby,
+  onSaveCheckIn
 }) => {
   const [messages, setMessages] = useState<AIChatMessage[]>([
     {
       id: 'msg_welcome',
       role: 'assistant',
-      content: `Hello! I am your autonomous Wellness, Travel & Lifestyle Assistant. I can adapt your daily schedule, explore dream travel spots with interactive Google Maps and ratings, generate mood-lifting recipes with photo visualizations, or suggest restorative hobbies.\n\nWhat is on your mind today?`,
+      content: `Hey there, buddy! 👋 I'm your wellness & lifestyle buddy. Talk to me like a close friend—tell me about your day, any exciting things that happened, your mood, or what you're dreaming of doing. I'll automatically log your highlights into your daily wellness diary, map out travel spots, or find cheer-up recipes!`,
       timestamp: new Date().toISOString()
     }
   ]);
@@ -71,11 +74,18 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
 
     try {
       const response = await askAgentAssistant(userMsg.content, {
+        userId,
         checkins,
         tasks,
         hobbies,
         preferences
       });
+
+      // If the buddy detected a daily event / mood log, auto-save to check-in store!
+      if (response.loggedCheckIn && onSaveCheckIn) {
+        await onSaveCheckIn(response.loggedCheckIn);
+      }
+
       setMessages(prev => [...prev, response]);
     } catch (err) {
       console.error(err);
@@ -129,11 +139,11 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
             <Bot className="w-6 h-6 text-black" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-black">
-              AI Wellness & <span className="bg-[#facc15] px-1 border border-black">Travel Partner</span>
+            <h1 className="text-2xl font-bold text-black flex items-center gap-2">
+              Wellness <span className="bg-[#facc15] px-1.5 py-0.5 border-2 border-black rounded text-xl">Chat Buddy</span>
             </h1>
-            <p className="text-sm font-medium text-zinc-600 mt-0.5">
-              Trained to recall your daily updates, map dream destinations with public ratings, and cheer you up with nutritious recipe imagery.
+            <p className="text-sm font-medium text-zinc-600 mt-1">
+              Your supportive everyday companion. Chat about your day, wins, or feelings—your buddy listens, logs your daily mood & updates, and cheers you on.
             </p>
           </div>
         </div>
@@ -179,7 +189,23 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
                     {msg.content}
                   </div>
 
-                  {/* 1. Travel Spots & Google Maps Rendering */}
+                  {/* Logged Daily Check-in Notification Badge */}
+                  {msg.loggedCheckIn && (
+                    <div className="bg-[#fef08a] border-2 border-black p-3 rounded shadow-[2px_2px_0px_#000000] space-y-1">
+                      <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-black">
+                        <BookMarked className="w-4 h-4 text-black" />
+                        <span>Daily Wellness Entry Automatically Logged!</span>
+                      </div>
+                      <p className="text-xs font-mono text-zinc-800">
+                        <strong>Logged Mood:</strong> {msg.loggedCheckIn.mood.toUpperCase()} (Energy: {msg.loggedCheckIn.energyLevel}/5)
+                      </p>
+                      <p className="text-xs text-zinc-700 italic">
+                        "{msg.loggedCheckIn.journalText}"
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Travel Spots & Google Maps Rendering */}
                   {msg.travelSpots && msg.travelSpots.length > 0 && (
                     <div className="pt-2 border-t-2 border-black space-y-3">
                       <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider text-black bg-[#fef08a] px-2 py-0.5 border border-black inline-block">
@@ -215,7 +241,7 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
                     </div>
                   )}
 
-                  {/* 2. Mood-Based Cheer-Up Cooking & Image Generation Card */}
+                  {/* Mood-Based Cheer-Up Cooking & Image Generation Card */}
                   {msg.recipeData && (
                     <div className="pt-2 border-t-2 border-black space-y-3">
                       <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider text-black bg-[#bbf7d0] px-2 py-0.5 border border-black inline-block">
@@ -256,7 +282,7 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
                   {msg.suggestedTasks && msg.suggestedTasks.length > 0 && (
                     <div className="pt-2 border-t-2 border-black space-y-2">
                       <span className="text-xs font-bold text-black uppercase tracking-wider block">
-                        Proposed Wellness & Travel Tasks
+                        Proposed Wellness & Lifestyle Tasks
                       </span>
                       {msg.suggestedTasks.map((st, i) => {
                         const key = `${msg.id}_${st.title}`;
@@ -305,7 +331,7 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
           {loading && (
             <div className="flex items-center space-x-2 text-sm text-zinc-600 font-mono p-3 bg-zinc-100 border-2 border-black rounded inline-flex">
               <Sparkles className="w-4 h-4 animate-spin text-black" />
-              <span>Analyzing wellness memory, retrieving maps & generating visualization...</span>
+              <span>Chat Buddy is listening and writing to your diary...</span>
             </div>
           )}
         </div>
@@ -316,7 +342,7 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
             type="text"
             value={inputPrompt}
             onChange={(e) => setInputPrompt(e.target.value)}
-            placeholder="Share your daily updates, travel dreams, or ask for a cheer-up recipe..."
+            placeholder="Tell your buddy about your day (e.g. 'I am so happy today I bought a cycle!')..."
             className="flex-1 text-sm font-medium"
             disabled={loading}
           />
