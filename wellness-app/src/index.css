@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #ffffff;
+    color: #202124;
+    font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Material card subtle elevation */
+.material-card {
+  background-color: #ffffff;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.material-card:hover {
+  box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+}
+
+.material-card-flat {
+  background-color: #ffffff;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+}
+
+/* Google-style primary button */
+.google-btn-primary {
+  background-color: #1a73e8;
+  color: #ffffff;
+  font-weight: 500;
+  border-radius: 4px;
+  padding: 8px 24px;
+  transition: background-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+}
+
+.google-btn-primary:hover {
+  background-color: #1557b0;
+  box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+}
+
+.google-btn-outlined {
+  background-color: #ffffff;
+  color: #1a73e8;
+  font-weight: 500;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  padding: 8px 24px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.google-btn-outlined:hover {
+  background-color: #f8fafd;
+  border-color: #d2e3fc;
+}
