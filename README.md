@@ -6,6 +6,16 @@ An empathetic, supportive AI companion and habit management agent for personal w
 
 ---
 
+## 🌐 Live Web Deployment
+
+Experience the live web application:
+- **Primary Live URL**: [https://qwiklabs-gcp-03-478f309b432f.web.app](https://qwiklabs-gcp-03-478f309b432f.web.app)
+- **Alternative Mirror**: [https://qwiklabs-gcp-03-478f309b432f.firebaseapp.com](https://qwiklabs-gcp-03-478f309b432f.firebaseapp.com)
+
+*(To deploy this application to your own personal Firebase / GCP account, see the [Personal Project Deployment Guide](PERSONAL_PROJECT_DEPLOYMENT_GUIDE.md)).*
+
+---
+
 ## 🌟 What the Agent Does
 
 The Who-Hum Wellness Companion pairs conversational companionship with structured action cards and multimedia generation to guide users through daily wellness routines, celebrate physical accomplishments, and recommend rejuvenating meals and activities.
