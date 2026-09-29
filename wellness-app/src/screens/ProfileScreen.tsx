@@ -19,8 +19,16 @@ import {
   DollarSign, 
   Info,
   CheckCircle2,
-  Sparkles
+  Sparkles,
+  Bell,
+  Smartphone
 } from 'lucide-react';
+import { 
+  DAILY_CHECKIN_SCHEDULE, 
+  requestNotificationPermission, 
+  testScheduleCheckInNotification, 
+  getNotificationPermission 
+} from '../services/notificationService';
 
 interface ProfileScreenProps {
   userId: string;
@@ -50,6 +58,26 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
   const [customUserId, setCustomUserId] = useState(userId);
   const [savedStatus, setSavedStatus] = useState<string>('');
+  const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(() => {
+    return localStorage.getItem('whohum_notifications_enabled') === 'true' && getNotificationPermission() === 'granted';
+  });
+
+  const handleToggleNotifications = async () => {
+    playCompanionBoop();
+    if (!notificationsEnabled) {
+      const granted = await requestNotificationPermission();
+      if (granted) {
+        setNotificationsEnabled(true);
+        localStorage.setItem('whohum_notifications_enabled', 'true');
+        testScheduleCheckInNotification();
+      } else {
+        alert('Please allow notifications in your browser/device settings to enable daily mental health check-ins.');
+      }
+    } else {
+      setNotificationsEnabled(false);
+      localStorage.setItem('whohum_notifications_enabled', 'false');
+    }
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -336,6 +364,64 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               </button>
             );
           })}
+        </div>
+      </div>
+
+      {/* 4x Daily Timely Mental Health Notifications */}
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
+              <Bell className="w-5 h-5 text-emerald-600" />
+              <span>4x Daily Timely Mental Health Pings</span>
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Scheduled check-ins to monitor your mental wellness throughout your active day until bedtime.
+            </p>
+          </div>
+          <div className="flex items-center space-x-2">
+            <button
+              type="button"
+              onClick={handleToggleNotifications}
+              className={`px-3.5 py-1.5 text-xs font-semibold rounded-xl transition-all ${
+                notificationsEnabled
+                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-300 shadow-2xs'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200'
+              }`}
+            >
+              {notificationsEnabled ? '✓ Daily Pings Active' : 'Enable 4x Daily Pings'}
+            </button>
+            {notificationsEnabled && (
+              <button
+                type="button"
+                onClick={() => {
+                  playCompanionBoop();
+                  testScheduleCheckInNotification();
+                }}
+                className="brutalist-btn-outlined text-xs py-1.5 px-3 rounded-xl"
+                title="Send a sample check-in notification now"
+              >
+                Send Test Ping
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* 4 Scheduled Touchpoints Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+          {DAILY_CHECKIN_SCHEDULE.map((slot) => (
+            <div key={slot.slot} className="p-3 bg-slate-50/70 border border-slate-200/60 rounded-xl space-y-1">
+              <div className="flex justify-between items-center text-xs">
+                <span className="font-bold text-slate-900">{slot.name}</span>
+                <span className="font-mono text-emerald-800 bg-white px-2 py-0.5 rounded-md border border-slate-200/60 text-[10px]">
+                  {slot.time}
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-600 leading-tight">
+                {slot.body}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
 
