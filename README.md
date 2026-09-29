@@ -21,6 +21,27 @@ Experience the live web application:
 
 ---
 
+## 📸 Application Screenshots
+
+Captured directly from the live web deployment at [qwiklabs-gcp-03-478f309b432f.web.app](https://qwiklabs-gcp-03-478f309b432f.web.app):
+
+### Today Dashboard & Companion Chat
+| **Today Dashboard & Human Rhythm Tracking** | **Companion Chat & Culinary Recipe Visualization** |
+| :---: | :---: |
+| ![Today Dashboard](screenshot.png) | ![Companion Chat](screenshot-chat.png) |
+
+### Visual Themes & Design Engine
+| **Neo-Brutalism Retro High-Contrast Theme** | **Cozy Ember Restorative Night Mode** |
+| :---: | :---: |
+| ![Neo-Brutalism Theme](docs/screenshots/05_neo_brutalism_dashboard.png) | ![Cozy Ember Mode](docs/screenshots/06_cozy_ember_dashboard.png) |
+
+### Onboarding & Settings
+| **Non-Unique Username & Companion Selection** | **Custom Theme Engine & Audio Controls** |
+| :---: | :---: |
+| ![Onboarding Modal](docs/screenshots/01_onboarding.png) | ![Settings Theme Engine](docs/screenshots/04_settings_themes.png) |
+
+---
+
 ## 🌟 What the Agent Does
 
 The Who-Hum Wellness Companion pairs conversational companionship with structured action cards and multimedia generation to guide users through daily wellness routines, celebrate physical accomplishments, and recommend rejuvenating meals and activities.
