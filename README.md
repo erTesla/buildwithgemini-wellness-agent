@@ -69,6 +69,15 @@ It covers:
 
 ---
 
+## 🏛️ Clean Architecture Guide
+
+The application follows **Clean Architecture** patterns separating pure domain models, repositories, application services, and UI presentation components:
+👉 **[WHO-HUM Architecture Guide](./ARCHITECTURE.md)**
+
+Includes layer diagrams, companion registry design, offline-first fallback patterns, and step-by-step instructions on extending characters.
+
+---
+
 ## 🛠️ Local Development & Setup
 
 ### Prerequisites

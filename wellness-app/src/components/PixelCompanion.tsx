@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { CompanionType, CompanionEmotion } from '../domain/companions';
 
-export type CompanionType = 'puppy' | 'cat' | 'racoon' | 'trex';
-export type CompanionEmotion = 'idle' | 'thinking' | 'smile' | 'sad';
+export type { CompanionType, CompanionEmotion };
 
 export interface PixelCompanionProps {
   type?: CompanionType;
@@ -250,6 +250,86 @@ export const PixelCompanion: React.FC<PixelCompanionProps> = ({
           )}
 
           {/* ========================================================== */}
+          {/* E. CLOUD POTATO (🥔☁️)                                      */}
+          {/* ========================================================== */}
+          {type === 'cloud_potato' && (
+            <g id="potato-base">
+              {/* Little green leafy sprout sprouting on top of head */}
+              <rect x="11" y="1" width="2" height="3" fill="#000000" />
+              <rect x="11" y="2" width="1" height="2" fill="#15803d" />
+              <rect x="9" y="1" width="2" height="2" fill="#000000" />
+              <rect x="10" y="1" width="1" height="1" fill="#22c55e" />
+              <rect x="13" y="1" width="2" height="2" fill="#000000" />
+              <rect x="13" y="1" width="1" height="1" fill="#22c55e" />
+
+              {/* Cloud Potato Outline (Puffy scalloped cloud silhouette) */}
+              <rect x="5" y="4" width="14" height="16" fill="#000000" />
+              <rect x="3" y="6" width="18" height="12" fill="#000000" />
+              <rect x="2" y="8" width="20" height="8" fill="#000000" />
+
+              {/* Golden Russet Potato Body */}
+              <rect x="6" y="5" width="12" height="14" fill="#d97706" />
+              <rect x="4" y="7" width="16" height="10" fill="#d97706" />
+              <rect x="3" y="9" width="18" height="6" fill="#d97706" />
+
+              {/* Fluffy Warm Cloud Belly & Cheeks (Soft Potato Puree Cream) */}
+              <rect x="6" y="8" width="12" height="9" fill="#fef08a" />
+              <rect x="5" y="9" width="14" height="7" fill="#fef08a" />
+              <rect x="7" y="7" width="10" height="2" fill="#fde047" />
+
+              {/* Potato Russet Specks (Cute Starch Freckles) */}
+              <rect x="5" y="6" width="1" height="1" fill="#b45309" />
+              <rect x="18" y="7" width="1" height="1" fill="#b45309" />
+              <rect x="4" y="14" width="1" height="1" fill="#b45309" />
+              <rect x="19" y="14" width="1" height="1" fill="#b45309" />
+
+              {/* Soft Rosy Potato Blushing Cheeks */}
+              <rect x="4" y="13" width="2" height="2" fill="#f43f5e" />
+              <rect x="18" y="13" width="2" height="2" fill="#f43f5e" />
+            </g>
+          )}
+
+          {/* ========================================================== */}
+          {/* F. CLOUD BLUEBERRY (🫐☁️)                                    */}
+          {/* ========================================================== */}
+          {type === 'cloud_blueberry' && (
+            <g id="blueberry-base">
+              {/* Star Crown Calyx (Fresh Green Berry Crown) */}
+              <rect x="11" y="2" width="2" height="3" fill="#000000" />
+              <rect x="11" y="3" width="2" height="2" fill="#15803d" />
+              {/* Left Leaf Crown */}
+              <rect x="8" y="3" width="3" height="2" fill="#000000" />
+              <rect x="9" y="3" width="2" height="1" fill="#22c55e" />
+              {/* Right Leaf Crown */}
+              <rect x="13" y="3" width="3" height="2" fill="#000000" />
+              <rect x="13" y="3" width="2" height="1" fill="#22c55e" />
+
+              {/* Plump Berry Cloud Outline */}
+              <rect x="6" y="5" width="12" height="15" fill="#000000" />
+              <rect x="4" y="7" width="16" height="11" fill="#000000" />
+              <rect x="3" y="9" width="18" height="7" fill="#000000" />
+
+              {/* Deep Indigo Blueberry Base */}
+              <rect x="7" y="6" width="10" height="13" fill="#3730a3" />
+              <rect x="5" y="8" width="14" height="9" fill="#3730a3" />
+              <rect x="4" y="10" width="16" height="5" fill="#3730a3" />
+
+              {/* Soft Cloud-Berry Highlight Belly (Bright Periwinkle / Violet) */}
+              <rect x="6" y="8" width="12" height="8" fill="#6366f1" />
+              <rect x="7" y="9" width="10" height="6" fill="#818cf8" />
+              <rect x="8" y="11" width="8" height="3" fill="#a5b4fc" />
+
+              {/* Berry Gloss Accent Reflection (Top Left Shine) */}
+              <rect x="6" y="7" width="3" height="1" fill="#c7d2fe" />
+              <rect x="5" y="8" width="1" height="2" fill="#c7d2fe" />
+
+              {/* Soft Rosy Violet Blushing Cheeks */}
+              <rect x="5" y="13" width="2" height="2" fill="#ec4899" />
+              <rect x="17" y="13" width="2" height="2" fill="#ec4899" />
+            </g>
+          )}
+
+          {/* ========================================================== */}
           {/* 2. DYNAMIC EXPRESSIVE EYES                                 */}
           {/* ========================================================== */}
 
@@ -346,6 +426,20 @@ export const PixelCompanion: React.FC<PixelCompanionProps> = ({
                 <g id="trex-teeth">
                   <rect x="10" y="15" width="1" height="1" fill="#ffffff" />
                   <rect x="13" y="15" width="1" height="1" fill="#ffffff" />
+                </g>
+              )}
+              {type === 'cloud_potato' && (
+                // Warm potato steam curls
+                <g id="potato-steam">
+                  <rect x="7" y="2" width="1" height="1" fill="#fef3c7" />
+                  <rect x="16" y="2" width="1" height="1" fill="#fef3c7" />
+                </g>
+              )}
+              {type === 'cloud_blueberry' && (
+                // Sweet berry aura sparkles
+                <g id="blueberry-shine">
+                  <rect x="7" y="16" width="1" height="1" fill="#e0e7ff" />
+                  <rect x="16" y="16" width="1" height="1" fill="#e0e7ff" />
                 </g>
               )}
             </g>

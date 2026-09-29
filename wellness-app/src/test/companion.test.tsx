@@ -49,6 +49,28 @@ describe('PixelCompanion Component', () => {
     expect(container.querySelector('#trex-teeth')).not.toBeNull();
   });
 
+  it('renders Cloud Potato with fluffy body and green leafy sprout', () => {
+    const { container } = render(<PixelCompanion type="cloud_potato" emotion="idle" size="md" />);
+    expect(container.querySelector('#potato-base')).not.toBeNull();
+    expect(container.querySelector('#eyes-idle')).not.toBeNull();
+  });
+
+  it('renders Cloud Potato steam curls on smile', () => {
+    const { container } = render(<PixelCompanion type="cloud_potato" emotion="smile" size="lg" />);
+    expect(container.querySelector('#potato-steam')).not.toBeNull();
+  });
+
+  it('renders Cloud Blueberry with berry crown calyx and indigo body', () => {
+    const { container } = render(<PixelCompanion type="cloud_blueberry" emotion="idle" size="md" />);
+    expect(container.querySelector('#blueberry-base')).not.toBeNull();
+    expect(container.querySelector('#eyes-idle')).not.toBeNull();
+  });
+
+  it('renders Cloud Blueberry sparkles on smile', () => {
+    const { container } = render(<PixelCompanion type="cloud_blueberry" emotion="smile" size="lg" />);
+    expect(container.querySelector('#blueberry-shine')).not.toBeNull();
+  });
+
   it('reacts to click by wiggling and temporarily smiling', () => {
     const { container } = render(<PixelCompanion type="puppy" emotion="idle" interactive={true} />);
     const wrapper = container.firstChild as HTMLElement;
@@ -69,7 +91,7 @@ describe('PixelLoadingScreen Component', () => {
 });
 
 describe('CompanionOnboardingModal Component', () => {
-  it('renders all 4 companions: Cat, Racoon Dog, Dog, and T-Rex', async () => {
+  it('renders all 6 companions: Cat, Racoon Dog, Dog, T-Rex, Cloud Potato, and Cloud Blueberry', async () => {
     const { CompanionOnboardingModal } = await import('../components/CompanionOnboardingModal');
     let selectedCompanion = '';
     const { container } = render(
@@ -79,22 +101,24 @@ describe('CompanionOnboardingModal Component', () => {
       />
     );
 
-    // Verify 4 companions are presented
+    // Verify companions are presented
     expect(screen.getByText(/Choose Your Quiet Companion/i)).toBeTruthy();
     expect(screen.getByText(/Racoon Dog/i)).toBeTruthy();
     expect(screen.getByText(/T-Rex/i)).toBeTruthy();
+    expect(screen.getByText(/Cloud Potato/i)).toBeTruthy();
+    expect(screen.getByText(/Cloud Blueberry/i)).toBeTruthy();
 
-    // Select T-Rex
-    const trexBtn = screen.getByRole('button', { name: /T-Rex/i });
-    fireEvent.click(trexBtn);
+    // Select Cloud Potato
+    const potatoBtn = screen.getByRole('button', { name: /Cloud Potato/i });
+    fireEvent.click(potatoBtn);
 
     // Confirm selection
-    const confirmBtn = screen.getByRole('button', { name: /Bond with T-Rex/i });
+    const confirmBtn = screen.getByRole('button', { name: /Bond with Cloud Potato/i });
     fireEvent.click(confirmBtn);
 
-    expect(selectedCompanion).toBe('trex');
+    expect(selectedCompanion).toBe('cloud_potato');
     expect(localStorage.getItem('whohum_companion_chosen')).toBe('true');
-    expect(localStorage.getItem('whohum_companion')).toBe('trex');
+    expect(localStorage.getItem('whohum_companion')).toBe('cloud_potato');
   });
 
   it('does not render when isOpen is false', async () => {

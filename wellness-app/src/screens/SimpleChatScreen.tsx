@@ -7,6 +7,7 @@ import {
   UserPreferences 
 } from '../types';
 import { askAgentAssistant, CRISIS_SUPPORT_TEXT } from '../services/aiService';
+import { formatCompanionLabel } from '../domain/companions';
 import { 
   Bot, 
   Send, 
@@ -272,7 +273,7 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
             <div className="flex items-center gap-1.5 mt-0.5 text-xs text-zinc-500 font-mono">
               <span>Companion:</span>
               <span className="font-bold text-black">
-                {companionType === 'trex' ? '🦖 T-Rex' : companionType === 'cat' ? '🐱 Cat' : companionType === 'racoon' ? '🦝 Racoon Dog' : '🐶 Dog'}
+                {formatCompanionLabel(companionType)}
               </span>
             </div>
           </div>

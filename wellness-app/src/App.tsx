@@ -41,10 +41,10 @@ export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<TabType>('dashboard');
   const [userId, setUserId] = useState<string>(getCurrentUserId());
   
-  // Companion choice: cat, racoon, puppy (dog), trex (persisted)
+  // Companion choice: cat, racoon, puppy (dog), trex, cloud_potato, cloud_blueberry (persisted)
   const [companionType, setCompanionType] = useState<CompanionType>(() => {
     const saved = localStorage.getItem('whohum_companion');
-    if (saved === 'cat' || saved === 'racoon' || saved === 'puppy' || saved === 'trex') {
+    if (saved === 'cat' || saved === 'racoon' || saved === 'puppy' || saved === 'trex' || saved === 'cloud_potato' || saved === 'cloud_blueberry') {
       return saved as CompanionType;
     }
     return 'cat';

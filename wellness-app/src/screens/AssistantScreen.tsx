@@ -23,6 +23,7 @@ import {
   BookMarked
 } from 'lucide-react';
 import { PixelCompanion, CompanionType, CompanionEmotion } from '../components/PixelCompanion';
+import { formatCompanionLabel } from '../domain/companions';
 
 interface AssistantScreenProps {
   userId: string;
@@ -174,7 +175,7 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
           {/* Companion Status Badge */}
           <div className="flex items-center space-x-2 bg-[#fef08a] px-3 py-1.5 border-2 border-black rounded-lg self-start sm:self-auto shadow-[2px_2px_0px_#000000] text-xs font-mono font-bold text-black">
             <span>Active Companion:</span>
-            <span>{companionType === 'trex' ? '🦖 T-Rex' : companionType === 'cat' ? '🐱 Cat' : companionType === 'racoon' ? '🦝 Racoon Dog' : '🐶 Dog'}</span>
+            <span>{formatCompanionLabel(companionType)}</span>
           </div>
         </div>
       </div>

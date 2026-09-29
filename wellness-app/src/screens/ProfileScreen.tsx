@@ -5,7 +5,8 @@ import {
   exportAllUserData, 
   clearAllUserData 
 } from '../services/wellnessService';
-import { PixelCompanion, CompanionType } from '../components/PixelCompanion';
+import { PixelCompanion } from '../components/PixelCompanion';
+import { CompanionType, ALL_COMPANIONS, formatCompanionLabel } from '../domain/companions';
 import { playCompanionBoop } from '../services/soundEffects';
 import { 
   User, 
@@ -297,27 +298,22 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             </p>
           </div>
           <span className="text-xs font-mono font-bold px-2 py-0.5 bg-[#fef08a] border border-black rounded self-start sm:self-auto">
-            Current: {companionType === 'trex' ? '🦖 T-Rex' : companionType === 'cat' ? '🐱 Cat' : companionType === 'racoon' ? '🦝 Racoon Dog' : '🐶 Dog'}
+            Current: {formatCompanionLabel(companionType)}
           </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
-          {[
-            { type: 'cat' as CompanionType, name: 'Cat', emoji: '🐱', desc: 'Quiet & Observant' },
-            { type: 'racoon' as CompanionType, name: 'Racoon Dog', emoji: '🦝', desc: 'Curious & Gentle' },
-            { type: 'puppy' as CompanionType, name: 'Dog', emoji: '🐶', desc: 'Loyal & Cheerful' },
-            { type: 'trex' as CompanionType, name: 'T-Rex', emoji: '🦖', desc: 'Big Heart Dino' }
-          ].map((item) => {
-            const isSelected = companionType === item.type;
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 pt-1">
+          {ALL_COMPANIONS.map((item) => {
+            const isSelected = companionType === item.id;
             return (
               <button
-                key={item.type}
+                key={item.id}
                 type="button"
                 onClick={() => {
                   if (onChangeCompanionType) {
                     playCompanionBoop();
-                    onChangeCompanionType(item.type);
-                    localStorage.setItem('whohum_companion', item.type);
+                    onChangeCompanionType(item.id);
+                    localStorage.setItem('whohum_companion', item.id);
                     localStorage.setItem('whohum_companion_chosen', 'true');
                   }
                 }}
@@ -328,14 +324,14 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 }`}
               >
                 <div className="p-1 rounded-lg border border-black bg-white">
-                  <PixelCompanion type={item.type} emotion={isSelected ? 'smile' : 'idle'} size={36} interactive={false} />
+                  <PixelCompanion type={item.id} emotion={isSelected ? 'smile' : 'idle'} size={36} interactive={false} />
                 </div>
                 <div className="text-xs font-bold flex items-center gap-1">
                   <span>{item.emoji}</span>
                   <span>{item.name}</span>
                 </div>
                 <div className={`text-[10px] font-mono ${isSelected ? 'text-yellow-300 font-bold' : 'text-zinc-500'}`}>
-                  {item.desc}
+                  {item.tagline}
                 </div>
               </button>
             );

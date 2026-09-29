@@ -1,51 +1,8 @@
 import React, { useState } from 'react';
-import { PixelCompanion, CompanionType } from './PixelCompanion';
+import { PixelCompanion } from './PixelCompanion';
+import { CompanionType, ALL_COMPANIONS, getCompanionMetadata } from '../domain/companions';
 import { playCompanionBoop, playTaskSuccess } from '../services/soundEffects';
 import { Sparkles, Check, Heart } from 'lucide-react';
-
-interface CompanionOption {
-  type: CompanionType;
-  name: string;
-  emoji: string;
-  tagline: string;
-  description: string;
-  accentBg: string;
-}
-
-const COMPANIONS: CompanionOption[] = [
-  {
-    type: 'cat',
-    name: 'Cat',
-    emoji: '🐱',
-    tagline: 'Quiet & Observant',
-    description: 'Purrs softly, listens without judgment, and brings calm to your day.',
-    accentBg: '#fed7aa'
-  },
-  {
-    type: 'racoon',
-    name: 'Racoon Dog',
-    emoji: '🦝',
-    tagline: 'Curious & Thoughtful',
-    description: 'Gentle bandit mask, playful spirit, and deeply attentive companion.',
-    accentBg: '#cbd5e1'
-  },
-  {
-    type: 'puppy',
-    name: 'Dog',
-    emoji: '🐶',
-    tagline: 'Loyal & Cheerful',
-    description: 'Floppy ears, warm heart, and always ready to celebrate small wins.',
-    accentBg: '#fef08a'
-  },
-  {
-    type: 'trex',
-    name: 'T-Rex',
-    emoji: '🦖',
-    tagline: 'Tiny Arms, Big Heart',
-    description: 'Fiercely encouraging, retro dino spikes, and toothy joyful smiles.',
-    accentBg: '#bbf7d0'
-  }
-];
 
 interface CompanionOnboardingModalProps {
   isOpen: boolean;
@@ -60,7 +17,7 @@ export const CompanionOnboardingModal: React.FC<CompanionOnboardingModalProps> =
 
   if (!isOpen) return null;
 
-  const activeCompanion = COMPANIONS.find(c => c.type === selected) || COMPANIONS[0];
+  const activeCompanion = getCompanionMetadata(selected);
 
   const handleConfirm = () => {
     playTaskSuccess();
@@ -111,16 +68,16 @@ export const CompanionOnboardingModal: React.FC<CompanionOnboardingModalProps> =
           </div>
         </div>
 
-        {/* 4 Choices Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-          {COMPANIONS.map((c) => {
-            const isSelected = selected === c.type;
+        {/* 6 Choices Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+          {ALL_COMPANIONS.map((c) => {
+            const isSelected = selected === c.id;
             return (
               <button
-                key={c.type}
+                key={c.id}
                 type="button"
                 onClick={() => {
-                  setSelected(c.type);
+                  setSelected(c.id);
                   playCompanionBoop();
                 }}
                 className={`p-2.5 border-2 rounded-xl text-center transition-all flex flex-col items-center justify-between space-y-1.5 ${
@@ -130,7 +87,7 @@ export const CompanionOnboardingModal: React.FC<CompanionOnboardingModalProps> =
                 }`}
               >
                 <div className="p-1 rounded-lg border border-black bg-white">
-                  <PixelCompanion type={c.type} emotion="idle" size={32} interactive={false} />
+                  <PixelCompanion type={c.id} emotion="idle" size={32} interactive={false} />
                 </div>
                 <div className="text-xs font-bold truncate w-full flex items-center justify-center gap-1">
                   <span>{c.emoji}</span>
