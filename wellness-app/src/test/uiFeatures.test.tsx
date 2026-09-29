@@ -94,3 +94,42 @@ describe('Mobile Bottom Navigation Bar', () => {
     expect(handleSelectTab).toHaveBeenCalledWith('dashboard');
   });
 });
+
+describe('UI Theme Selection & Neo-Brutalism Option', () => {
+  it('renders all 3 theme options in Settings: Clean Light, Cozy Ember, and Neo-Brutalism', async () => {
+    const { ProfileScreen } = await import('../screens/ProfileScreen');
+    const onSelectTheme = vi.fn();
+    const mockPrefs = {
+      userId: 'test_user',
+      budgetLevel: 'moderate' as const,
+      typicalAvailableTimeMinutes: 30,
+      consentExternalAI: true,
+      enableCrisisAssistance: true,
+      theme: 'light' as const,
+      updatedAt: new Date().toISOString()
+    };
+
+    render(
+      <ProfileScreen
+        userId="test_user"
+        preferences={mockPrefs}
+        onSavePreferences={vi.fn()}
+        onReloadAllData={vi.fn()}
+        theme="light"
+        onSelectTheme={onSelectTheme}
+      />
+    );
+
+    // Verify UI Theme header and 3 options
+    expect(screen.getByText(/UI Theme & Visual Style/i)).not.toBeNull();
+    expect(screen.getAllByText(/Clean Light/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Cozy Ember/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Neo-Brutalism/i).length).toBeGreaterThan(0);
+
+    // Click Neo-Brutalism theme
+    const brutalistBtn = screen.getByRole('button', { name: /Neo-Brutalism/i });
+    fireEvent.click(brutalistBtn);
+
+    expect(onSelectTheme).toHaveBeenCalledWith('brutalist');
+  });
+});

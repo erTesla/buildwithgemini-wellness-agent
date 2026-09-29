@@ -77,6 +77,8 @@ export interface ActivityRecommendation {
   userFeedback?: 'tried_loved' | 'saved' | 'dismissed';
 }
 
+export type AppTheme = 'light' | 'ember' | 'brutalist';
+
 export interface UserPreferences {
   userId: string;
   preferredLocation?: string;
@@ -87,7 +89,7 @@ export interface UserPreferences {
   travelPreferences?: string;
   consentExternalAI: boolean;
   enableCrisisAssistance: boolean;
-  theme: 'google-light' | 'google-calm';
+  theme: 'google-light' | 'google-calm' | 'light' | 'ember' | 'brutalist';
   updatedAt: string;
 }
 

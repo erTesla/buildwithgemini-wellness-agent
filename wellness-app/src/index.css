@@ -349,6 +349,110 @@ body.theme-ember,
 }
 
 /* ==============================================================================
+   Neo-Brutalism / Bold Graphic Theme
+   ============================================================================== */
+
+body.theme-brutalist,
+.theme-brutalist {
+  background-color: #fbf9f4 !important;
+  color: #0f172a !important;
+}
+
+.theme-brutalist header {
+  background-color: #ffffff !important;
+  border-bottom: 2px solid #0f172a !important;
+  box-shadow: 0 4px 0px 0px #0f172a !important;
+}
+
+.theme-brutalist .material-card,
+.theme-brutalist .brutalist-card,
+.theme-brutalist .material-card-flat {
+  background-color: #ffffff !important;
+  border: 2px solid #0f172a !important;
+  border-radius: 14px !important;
+  box-shadow: 4px 4px 0px 0px #0f172a !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.theme-brutalist .material-card:hover,
+.theme-brutalist .brutalist-card:hover {
+  transform: translate(-2px, -2px) !important;
+  box-shadow: 6px 6px 0px 0px #0f172a !important;
+}
+
+.theme-brutalist .brutalist-btn-primary,
+.theme-brutalist .google-btn-primary {
+  background: #059669 !important;
+  color: #ffffff !important;
+  border: 2px solid #0f172a !important;
+  border-radius: 10px !important;
+  box-shadow: 3px 3px 0px 0px #0f172a !important;
+  font-weight: 700 !important;
+}
+
+.theme-brutalist .brutalist-btn-primary:hover,
+.theme-brutalist .google-btn-primary:hover {
+  transform: translate(-1px, -1px) !important;
+  box-shadow: 4px 4px 0px 0px #0f172a !important;
+}
+
+.theme-brutalist .brutalist-btn-primary:active,
+.theme-brutalist .google-btn-primary:active {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 1px 1px 0px 0px #0f172a !important;
+}
+
+.theme-brutalist .brutalist-btn-outlined,
+.theme-brutalist .google-btn-outlined,
+.theme-brutalist .brutalist-btn-secondary {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border: 2px solid #0f172a !important;
+  border-radius: 10px !important;
+  box-shadow: 3px 3px 0px 0px #0f172a !important;
+  font-weight: 700 !important;
+}
+
+.theme-brutalist .brutalist-btn-outlined:hover,
+.theme-brutalist .google-btn-outlined:hover,
+.theme-brutalist .brutalist-btn-secondary:hover {
+  background-color: #f1f5f9 !important;
+  transform: translate(-1px, -1px) !important;
+  box-shadow: 4px 4px 0px 0px #0f172a !important;
+}
+
+.theme-brutalist .brutalist-btn-outlined:active,
+.theme-brutalist .google-btn-outlined:active,
+.theme-brutalist .brutalist-btn-secondary:active {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 1px 1px 0px 0px #0f172a !important;
+}
+
+.theme-brutalist input[type="text"],
+.theme-brutalist input[type="number"],
+.theme-brutalist input[type="date"],
+.theme-brutalist select,
+.theme-brutalist textarea {
+  border: 2px solid #0f172a !important;
+  border-radius: 10px !important;
+  box-shadow: 3px 3px 0px 0px #0f172a !important;
+}
+
+.theme-brutalist input[type="text"]:focus,
+.theme-brutalist input[type="number"]:focus,
+.theme-brutalist input[type="date"]:focus,
+.theme-brutalist select:focus,
+.theme-brutalist textarea:focus {
+  border-color: #059669 !important;
+  box-shadow: 3px 3px 0px 0px #059669 !important;
+}
+
+.theme-brutalist footer {
+  border-top: 2px solid #0f172a !important;
+  background-color: #ffffff !important;
+}
+
+/* ==============================================================================
    Responsive Guarantees & Fluid Mobile/Web Adaptability
    ============================================================================== */
 
@@ -384,6 +488,12 @@ body.theme-ember,
   background-color: rgba(15, 23, 42, 0.95) !important;
   border-top-color: #1f2937 !important;
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+.theme-brutalist .mobile-bottom-nav-bar {
+  background-color: #ffffff !important;
+  border-top: 2px solid #0f172a !important;
+  box-shadow: 0 -4px 0px 0px #0f172a !important;
 }
 
 /* Viewport safety */

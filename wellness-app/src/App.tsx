@@ -36,8 +36,9 @@ import {
   TaskItem, 
   HobbyItem, 
   ActivityRecommendation, 
-  UserPreferences 
-} from './types';
+  UserPreferences,
+  AppTheme
+} from './domain/types';
 
 export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<TabType>('dashboard');
@@ -94,16 +95,27 @@ export const App: React.FC = () => {
     localStorage.setItem('wellness_ui_mode', simple ? 'simple' : 'advanced');
   };
 
-  // Theme: light vs Cozy Ember (persisted)
-  const [theme, setTheme] = useState<'light' | 'ember'>(() => {
+  // Theme: Clean Light vs Cozy Ember vs Neo-Brutalism (persisted)
+  const [theme, setTheme] = useState<AppTheme>(() => {
     const saved = localStorage.getItem('whohum_theme');
-    return saved === 'ember' ? 'ember' : 'light';
+    if (saved === 'ember' || saved === 'brutalist' || saved === 'light') {
+      return saved as AppTheme;
+    }
+    return 'light';
   });
 
+  const handleSelectTheme = (newTheme: AppTheme) => {
+    setTheme(newTheme);
+    localStorage.setItem('whohum_theme', newTheme);
+  };
+
   const handleToggleTheme = () => {
-    const nextTheme = theme === 'light' ? 'ember' : 'light';
-    setTheme(nextTheme);
-    localStorage.setItem('whohum_theme', nextTheme);
+    const cycle: Record<AppTheme, AppTheme> = {
+      light: 'ember',
+      ember: 'brutalist',
+      brutalist: 'light'
+    };
+    handleSelectTheme(cycle[theme]);
   };
 
   // Sound FX: enabled vs muted (persisted)
@@ -116,10 +128,11 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
+    document.body.classList.remove('theme-ember', 'theme-brutalist');
     if (theme === 'ember') {
       document.body.classList.add('theme-ember');
-    } else {
-      document.body.classList.remove('theme-ember');
+    } else if (theme === 'brutalist') {
+      document.body.classList.add('theme-brutalist');
     }
   }, [theme]);
   
@@ -370,6 +383,8 @@ export const App: React.FC = () => {
                 userId={userId}
                 userName={userName}
                 onUpdateUserName={handleUpdateUserName}
+                theme={theme}
+                onSelectTheme={handleSelectTheme}
                 preferences={preferences}
                 onSavePreferences={handleSavePreferences}
                 onReloadAllData={loadUserData}

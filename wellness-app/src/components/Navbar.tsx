@@ -12,10 +12,12 @@ import {
   MessageSquare,
   Sun,
   Moon,
+  Palette,
   Volume2,
   VolumeX
 } from 'lucide-react';
 import { playCompanionBoop } from '../services/soundEffects';
+import { AppTheme } from '../domain/types';
 
 export type TabType = 'dashboard' | 'checkin' | 'tasks' | 'hobbies' | 'discover' | 'history' | 'profile' | 'assistant';
 
@@ -26,7 +28,7 @@ interface NavbarProps {
   userName?: string;
   isSimpleMode: boolean;
   onToggleSimpleMode: (simple: boolean) => void;
-  theme?: 'light' | 'ember';
+  theme?: AppTheme;
   onToggleTheme?: () => void;
   soundEnabled?: boolean;
   onToggleSound?: () => void;
@@ -131,7 +133,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             )}
 
-            {/* Theme Toggle (Light / Cozy Ember) */}
+            {/* Theme Toggle (Light / Cozy Ember / Neo-Brutalist) */}
             {onToggleTheme && (
               <button
                 type="button"
@@ -140,9 +142,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onToggleTheme();
                 }}
                 className="p-2 rounded-xl border border-slate-200/80 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 shadow-2xs transition-all"
-                title={theme === 'ember' ? 'Switch to Light Theme' : 'Switch to Cozy Ember (Night Mode)'}
+                title={
+                  theme === 'light' 
+                    ? 'Theme: Clean Light (Click for Cozy Ember)' 
+                    : theme === 'ember' 
+                    ? 'Theme: Cozy Ember (Click for Neo-Brutalist)' 
+                    : 'Theme: Neo-Brutalist (Click for Clean Light)'
+                }
               >
-                {theme === 'ember' ? <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500" /> : <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-600" />}
+                {theme === 'ember' ? (
+                  <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500" />
+                ) : theme === 'brutalist' ? (
+                  <Palette className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600" />
+                ) : (
+                  <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500" />
+                )}
               </button>
             )}
 

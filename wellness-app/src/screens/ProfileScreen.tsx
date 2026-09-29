@@ -23,8 +23,13 @@ import {
   CheckCircle2,
   Sparkles,
   Bell,
-  Smartphone
+  Smartphone,
+  Sun,
+  Moon,
+  Palette,
+  Check
 } from 'lucide-react';
+import { AppTheme } from '../domain/types';
 import { 
   DAILY_CHECKIN_SCHEDULE, 
   requestNotificationPermission, 
@@ -41,6 +46,8 @@ interface ProfileScreenProps {
   onChangeCompanionType?: (type: CompanionType) => void;
   userName?: string;
   onUpdateUserName?: (name: string) => Promise<void>;
+  theme?: AppTheme;
+  onSelectTheme?: (theme: AppTheme) => void;
 }
 
 export const ProfileScreen: React.FC<ProfileScreenProps> = ({
@@ -51,7 +58,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   companionType = 'cat',
   onChangeCompanionType,
   userName,
-  onUpdateUserName
+  onUpdateUserName,
+  theme,
+  onSelectTheme
 }) => {
   const [preferredLocation, setPreferredLocation] = useState(preferences.preferredLocation || 'San Francisco, CA');
   const [budgetLevel, setBudgetLevel] = useState(preferences.budgetLevel);
@@ -65,6 +74,28 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   const [customUserName, setCustomUserName] = useState(userName || getCurrentUserName());
   const [customUserId, setCustomUserId] = useState(userId);
   const [savedStatus, setSavedStatus] = useState<string>('');
+  const [selectedTheme, setSelectedTheme] = useState<AppTheme>(() => {
+    if (theme) return theme;
+    const saved = localStorage.getItem('whohum_theme');
+    if (saved === 'ember' || saved === 'brutalist' || saved === 'light') {
+      return saved as AppTheme;
+    }
+    return 'light';
+  });
+
+  const handleThemeChange = (newTheme: AppTheme) => {
+    setSelectedTheme(newTheme);
+    if (onSelectTheme) {
+      onSelectTheme(newTheme);
+    } else {
+      localStorage.setItem('whohum_theme', newTheme);
+      document.body.classList.remove('theme-ember', 'theme-brutalist');
+      if (newTheme === 'ember') document.body.classList.add('theme-ember');
+      if (newTheme === 'brutalist') document.body.classList.add('theme-brutalist');
+    }
+    playCompanionBoop();
+  };
+
   const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(() => {
     return localStorage.getItem('whohum_notifications_enabled') === 'true' && getNotificationPermission() === 'granted';
   });
@@ -98,6 +129,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       travelPreferences: travel,
       consentExternalAI: consentAI,
       enableCrisisAssistance: enableCrisis,
+      theme: selectedTheme,
       updatedAt: new Date().toISOString()
     };
     await onSavePreferences(updated);
@@ -198,6 +230,108 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             Update Username
           </button>
         </form>
+      </div>
+
+      {/* Visual Style & UI Theme Switcher */}
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-semibold text-slate-900 flex items-center space-x-2">
+            <Palette className="w-5 h-5 text-emerald-600" />
+            <span>UI Theme & Visual Style</span>
+          </h2>
+          <span className="text-[11px] font-semibold bg-emerald-50 text-emerald-700 px-2.5 py-0.5 rounded-full border border-emerald-200/60 capitalize">
+            {selectedTheme === 'brutalist' ? 'Neo-Brutalism' : selectedTheme === 'ember' ? 'Cozy Ember' : 'Clean Light'} Active
+          </span>
+        </div>
+        <p className="text-xs text-slate-500 leading-relaxed">
+          Customize how Who-Hum looks and feels. Switch seamlessly between modern Clean Light, soothing Cozy Ember night mode, or bold high-contrast Neo-Brutalism.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-1">
+          {/* Theme 1: Clean Light */}
+          <button
+            type="button"
+            onClick={() => handleThemeChange('light')}
+            className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between space-y-3 cursor-pointer ${
+              selectedTheme === 'light'
+                ? 'border-emerald-500 ring-2 ring-emerald-500/20 bg-emerald-50/40 shadow-xs'
+                : 'border-slate-200/80 bg-white hover:bg-slate-50/80 shadow-2xs'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div className="p-2 rounded-xl bg-amber-50 border border-amber-200/60 text-amber-600">
+                <Sun className="w-5 h-5" />
+              </div>
+              {selectedTheme === 'light' && (
+                <span className="text-[10px] font-bold bg-emerald-600 text-white px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                  <Check className="w-2.5 h-2.5" /> Active
+                </span>
+              )}
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-slate-900">Clean Light</h3>
+              <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
+                Soft diffuse shadows, serene emerald accents, and clean modern cards.
+              </p>
+            </div>
+          </button>
+
+          {/* Theme 2: Cozy Ember */}
+          <button
+            type="button"
+            onClick={() => handleThemeChange('ember')}
+            className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between space-y-3 cursor-pointer ${
+              selectedTheme === 'ember'
+                ? 'border-amber-500 ring-2 ring-amber-500/20 bg-slate-900 text-white shadow-xs'
+                : 'border-slate-200/80 bg-slate-900/90 text-slate-200 hover:bg-slate-900 shadow-2xs'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div className="p-2 rounded-xl bg-slate-800 border border-slate-700 text-amber-400">
+                <Moon className="w-5 h-5" />
+              </div>
+              {selectedTheme === 'ember' && (
+                <span className="text-[10px] font-bold bg-amber-500 text-slate-900 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                  <Check className="w-2.5 h-2.5" /> Active
+                </span>
+              )}
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-white">Cozy Ember</h3>
+              <p className="text-[11px] text-slate-400 mt-0.5 leading-relaxed">
+                Restorative deep slate & charcoal night mode for calming evening reflection.
+              </p>
+            </div>
+          </button>
+
+          {/* Theme 3: Neo-Brutalism */}
+          <button
+            type="button"
+            onClick={() => handleThemeChange('brutalist')}
+            className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between space-y-3 cursor-pointer ${
+              selectedTheme === 'brutalist'
+                ? 'border-2 border-black bg-yellow-50 text-slate-900 shadow-[3px_3px_0px_#000]'
+                : 'border-2 border-slate-300 bg-white hover:border-black text-slate-800 shadow-[2px_2px_0px_rgba(0,0,0,0.15)]'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div className="p-2 rounded-lg bg-emerald-100 border-2 border-black text-black">
+                <Sparkles className="w-5 h-5 text-black" />
+              </div>
+              {selectedTheme === 'brutalist' && (
+                <span className="text-[10px] font-black bg-black text-yellow-300 px-2 py-0.5 rounded-md flex items-center gap-0.5 uppercase tracking-wider">
+                  <Check className="w-2.5 h-2.5 stroke-[3]" /> Active
+                </span>
+              )}
+            </div>
+            <div>
+              <h3 className="text-sm font-black text-slate-900">Neo-Brutalism</h3>
+              <p className="text-[11px] text-slate-700 mt-0.5 font-medium leading-relaxed">
+                Bold 2px borders, hard drop shadows, punchy retro cards, and high graphic contrast.
+              </p>
+            </div>
+          </button>
+        </div>
       </div>
 
       {/* Account Identity Switcher */}
