@@ -85,6 +85,24 @@ export interface UserPreferences {
   updatedAt: string;
 }
 
+export interface TravelSpot {
+  name: string;
+  rating: number; // e.g. 4.8
+  reviewCount: number;
+  description: string;
+  mapsUrl: string;
+  category: string;
+}
+
+export interface RecipeCardData {
+  dishName: string;
+  imageUrl: string;
+  moodBenefit: string;
+  prepTimeMinutes: number;
+  ingredients: string[];
+  steps: string[];
+}
+
 export interface AIChatMessage {
   id: string;
   role: 'user' | 'assistant' | 'system';
@@ -92,5 +110,7 @@ export interface AIChatMessage {
   timestamp: string;
   suggestedTasks?: Partial<TaskItem>[];
   suggestedHobbies?: Partial<HobbyItem>[];
+  travelSpots?: TravelSpot[];
+  recipeData?: RecipeCardData;
   crisisAlert?: boolean;
 }
