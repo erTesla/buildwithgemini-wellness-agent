@@ -341,6 +341,13 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
                     </div>
                   )}
 
+                  {msg.loggedCheckIn && (
+                    <div className="flex items-center space-x-1.5 text-[11px] font-medium text-emerald-700 bg-emerald-50/70 border border-emerald-200/60 rounded-lg px-2 py-1 mt-2 w-fit">
+                      <Check className="w-3 h-3 text-emerald-600 shrink-0" />
+                      <span>Saved quietly to Insights & Journal (Mood: {msg.loggedCheckIn.mood})</span>
+                    </div>
+                  )}
+
                   <div className={`text-[10px] text-right pt-1 ${isUser ? 'text-emerald-100' : 'text-slate-400'}`}>
                     {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </div>
@@ -372,6 +379,33 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
                 <p className="text-[11px] text-slate-500">
                   Listening and capturing your day quietly in the background...
                 </p>
+              </div>
+            </div>
+          )}
+
+          {/* Quick Conversation Starter Chips */}
+          {messages.length <= 2 && (
+            <div className="pt-2">
+              <p className="text-[11px] font-semibold text-slate-500 mb-1.5">Try asking or sharing:</p>
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  "🚲 I bought a cycle today!",
+                  "🎯 Today was really productive at work",
+                  "🌲 Suggest a quiet 15-minute walk",
+                  "🍲 Quick healthy dinner idea",
+                  "🧘 Feeling a bit overwhelmed today"
+                ].map((promptText, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => {
+                      setInputPrompt(promptText);
+                    }}
+                    className="text-xs bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/80 rounded-xl px-2.5 py-1 transition-all"
+                  >
+                    {promptText}
+                  </button>
+                ))}
               </div>
             </div>
           )}

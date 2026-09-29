@@ -240,7 +240,7 @@ export const App: React.FC = () => {
             defaultType={companionType} 
           />
         ) : isSimpleMode ? (
-          <SimpleChatScreen
+          <AssistantScreen
             userId={userId}
             checkins={checkins}
             tasks={tasks}
@@ -249,7 +249,6 @@ export const App: React.FC = () => {
             onSaveTask={handleSaveTask}
             onSaveHobby={handleSaveHobby}
             onSaveCheckIn={handleSaveCheckIn}
-            onSwitchToAdvanced={() => handleToggleSimpleMode(false)}
             companionType={companionType}
             onChangeCompanionType={handleCompanionTypeChange}
           />
@@ -295,8 +294,11 @@ export const App: React.FC = () => {
                 userId={userId}
                 hobbies={hobbies}
                 preferences={preferences}
+                recommendations={recommendations}
                 onSaveHobby={handleSaveHobby}
                 onDeleteHobby={handleDeleteHobby}
+                onSaveAsTask={handleSaveRecommendationAsTask}
+                onSaveFeedback={handleFeedback}
               />
             )}
 
@@ -305,6 +307,9 @@ export const App: React.FC = () => {
                 userId={userId}
                 preferences={preferences}
                 recommendations={recommendations}
+                hobbies={hobbies}
+                onSaveHobby={handleSaveHobby}
+                onDeleteHobby={handleDeleteHobby}
                 onSaveAsTask={handleSaveRecommendationAsTask}
                 onSaveFeedback={handleFeedback}
               />

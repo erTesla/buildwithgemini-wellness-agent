@@ -42,13 +42,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   soundEnabled = true,
   onToggleSound
 }) => {
-  const advancedNavItems = [
-    { id: 'dashboard' as TabType, label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'assistant' as TabType, label: 'AI Partner', icon: Bot },
-    { id: 'checkin' as TabType, label: 'Check-in', icon: HeartHandshake },
+  const navItems = [
+    { id: 'dashboard' as TabType, label: 'Today', icon: LayoutDashboard },
+    { id: 'assistant' as TabType, label: 'Companion Chat', icon: Bot },
     { id: 'tasks' as TabType, label: 'Tasks', icon: CheckSquare },
-    { id: 'hobbies' as TabType, label: 'Hobbies', icon: Sparkles },
-    { id: 'discover' as TabType, label: 'Discover', icon: Compass },
+    { id: 'hobbies' as TabType, label: 'Activities & Rest', icon: Sparkles },
     { id: 'history' as TabType, label: 'Insights', icon: BarChart3 },
     { id: 'profile' as TabType, label: 'Settings', icon: User },
   ];
@@ -148,12 +146,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Tab Navigation - Only shown in Advanced Mode on desktop (mobile uses bottom nav) */}
+        {/* Tab Navigation - Desktop */}
         {!isSimpleMode && (
           <nav className="hidden md:flex items-center space-x-1 overflow-x-auto no-scrollbar py-2.5 border-t border-slate-100">
-            {advancedNavItems.map((item) => {
+            {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = currentTab === item.id;
+              const isActive = currentTab === item.id || (item.id === 'hobbies' && currentTab === 'discover');
               return (
                 <button
                   key={item.id}

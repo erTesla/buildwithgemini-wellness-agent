@@ -4,9 +4,8 @@ import {
   MessageSquare, 
   LayoutDashboard, 
   CheckSquare, 
-  HeartHandshake, 
   Sparkles,
-  Sliders
+  BarChart3
 } from 'lucide-react';
 import { playCompanionBoop } from '../services/soundEffects';
 
@@ -33,7 +32,8 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
 
   const handleSimpleChatClick = () => {
     playCompanionBoop();
-    onToggleSimpleMode(true);
+    onToggleSimpleMode(false);
+    onSelectTab('assistant');
   };
 
   return (
@@ -42,20 +42,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
       className="mobile-bottom-nav-bar md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-2 py-1.5 shadow-lg flex items-center justify-around transition-colors"
       style={{ position: 'fixed', bottom: 0, left: 0, right: 0, width: '100%', zIndex: 50 }}
     >
-      {/* Simple Chat Tab */}
-      <button
-        onClick={handleSimpleChatClick}
-        className={`flex flex-col items-center py-1 px-3 rounded-xl transition-all ${
-          isSimpleMode
-            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-2xs'
-            : 'text-slate-500 hover:text-slate-800 font-medium'
-        }`}
-      >
-        <MessageSquare className="w-4 h-4" />
-        <span className="text-[11px] mt-0.5">Chat</span>
-      </button>
-
-      {/* Dashboard */}
+      {/* Home */}
       <button
         onClick={() => handleTabClick('dashboard')}
         className={`flex flex-col items-center py-1 px-3 rounded-xl transition-all ${
@@ -68,17 +55,17 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
         <span className="text-[11px] mt-0.5">Home</span>
       </button>
 
-      {/* Checkin */}
+      {/* Chat */}
       <button
-        onClick={() => handleTabClick('checkin')}
+        onClick={handleSimpleChatClick}
         className={`flex flex-col items-center py-1 px-3 rounded-xl transition-all ${
-          !isSimpleMode && currentTab === 'checkin'
+          isSimpleMode || currentTab === 'assistant'
             ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-2xs'
             : 'text-slate-500 hover:text-slate-800 font-medium'
         }`}
       >
-        <HeartHandshake className="w-4 h-4" />
-        <span className="text-[11px] mt-0.5">Check-in</span>
+        <MessageSquare className="w-4 h-4" />
+        <span className="text-[11px] mt-0.5">Chat</span>
       </button>
 
       {/* Tasks */}
@@ -94,17 +81,30 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
         <span className="text-[11px] mt-0.5">Tasks</span>
       </button>
 
-      {/* Hobbies */}
+      {/* Activities & Rest */}
       <button
         onClick={() => handleTabClick('hobbies')}
         className={`flex flex-col items-center py-1 px-3 rounded-xl transition-all ${
-          !isSimpleMode && currentTab === 'hobbies'
+          !isSimpleMode && (currentTab === 'hobbies' || currentTab === 'discover')
             ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-2xs'
             : 'text-slate-500 hover:text-slate-800 font-medium'
         }`}
       >
         <Sparkles className="w-4 h-4" />
-        <span className="text-[11px] mt-0.5">Hobbies</span>
+        <span className="text-[11px] mt-0.5">Activities</span>
+      </button>
+
+      {/* Insights */}
+      <button
+        onClick={() => handleTabClick('history')}
+        className={`flex flex-col items-center py-1 px-3 rounded-xl transition-all ${
+          !isSimpleMode && currentTab === 'history'
+            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-2xs'
+            : 'text-slate-500 hover:text-slate-800 font-medium'
+        }`}
+      >
+        <BarChart3 className="w-4 h-4" />
+        <span className="text-[11px] mt-0.5">Insights</span>
       </button>
     </nav>
   );
