@@ -13,17 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import base64
 import datetime
 import urllib.parse
+import uuid
 from zoneinfo import ZoneInfo
 
 from a2ui.basic_catalog.provider import BasicCatalog
 from a2ui.schema.manager import A2uiSchemaManager
+from google import genai
 from google.adk.agents import Agent
 from google.adk.agents.callback_context import CallbackContext
 from google.adk.apps import App
 from google.adk.models import Gemini
 from google.adk.tools.preload_memory_tool import PreloadMemoryTool
+from google.adk.tools.tool_context import ToolContext
+from google.cloud import storage
 from google.genai import types
 
 from app.a2ui_utils import a2ui_callback
@@ -97,6 +102,73 @@ def generate_healthy_recipe_image(dish_name: str, mood_benefit: str = "cheer up 
     )
 
 
+async def generate_wellness_video(item_description: str, tool_context: ToolContext) -> str:
+    """Generates a short video for an item in the agent's domain using Google's Omni model (gemini-omni-flash-preview) in the global region.
+
+    Saves the video with tool_context.save_artifact so it shows up in the Playground's Artifacts panel,
+    and uploads the video bytes to the public Cloud Storage bucket, returning its public https URL.
+
+    Args:
+        item_description: Description of the wellness item, activity, or scene (e.g., 'Japanese zen rock garden with bamboo water fountain', 'Sunset yoga flow on the beach', 'Steaming herbal tea ceremony with calming lavender').
+        tool_context: The ADK tool execution context used to save the artifact in the playground.
+
+    Returns:
+        The public Cloud Storage https URL of the generated video.
+    """
+    client = genai.Client(
+        vertexai=True,
+        project="qwiklabs-gcp-03-478f309b432f",
+        location="global",
+    )
+    prompt = f"Cinematic, high quality, peaceful video depicting {item_description}. Serene, beautiful lighting, tranquil motion."
+
+    interaction = client.interactions.create(
+        timeout=300.0,
+        model="gemini-omni-flash-preview",
+        input=[{"type": "text", "text": prompt}],
+        response_format=[{
+            "type": "video",
+            "aspect_ratio": "16:9",
+            "resolution": "720p",
+            "duration": "5s",
+        }],
+        generation_config={"video_config": {"task": "text_to_video"}},
+    )
+
+    video_bytes = None
+    for step in getattr(interaction, "steps", []):
+        for content in getattr(step, "content", []):
+            if getattr(content, "type", "") == "video" and getattr(content, "data", None):
+                data_val = content.data
+                if isinstance(data_val, str):
+                    video_bytes = base64.b64decode(data_val)
+                elif isinstance(data_val, (bytes, bytearray)):
+                    video_bytes = bytes(data_val)
+                break
+        if video_bytes:
+            break
+
+    if not video_bytes:
+        return "Error: No video bytes returned from model."
+
+    object_name = f"wellness_video_{uuid.uuid4().hex[:8]}.mp4"
+
+    # 1. Save artifact with tool_context.save_artifact so it shows up in Playground's Artifacts panel
+    if tool_context is not None:
+        video_artifact = types.Part.from_bytes(data=video_bytes, mime_type="video/mp4")
+        await tool_context.save_artifact(filename=object_name, artifact=video_artifact)
+
+    # 2. Upload same video bytes to the public Cloud Storage bucket and return its public https URL
+    bucket_name = "bwg3-qwiklabs-gcp-03-478f309b432f"
+    storage_client = storage.Client(project="qwiklabs-gcp-03-478f309b432f")
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(object_name)
+    blob.upload_from_string(video_bytes, content_type="video/mp4")
+
+    public_url = f"https://storage.googleapis.com/{bucket_name}/{object_name}"
+    return public_url
+
+
 def get_weather(query: str) -> str:
     """Simulates a web search. Use it to get information on weather.
 
@@ -132,7 +204,10 @@ def get_current_time(query: str) -> str:
 
 # WRITE: after each turn, send the session to Memory Bank for extraction.
 async def generate_memories_callback(callback_context: CallbackContext):
-    await callback_context.add_session_to_memory()
+    try:
+        await callback_context.add_session_to_memory()
+    except Exception:
+        pass
     return None
 
 
@@ -157,7 +232,9 @@ WORKFLOW_DESCRIPTION = """Analyze the user's conversation, daily events, dreams,
 3. Mood-Boosting Cooking & Nutrition:
    - When suggesting cooking to cheer up the user or support a healthy diet adapted to their mood, call `generate_healthy_recipe_image`.
    - Embed the resulting public https:// image directly into the A2UI Card via an `Image` component.
-4. A2UI Surface Rules:
+4. Mindful Video Generation:
+   - When the user asks for a relaxing visual, meditation guide, mindful video, or scene visualization for their wellness item or hobby (look at project_brief.md), call `generate_wellness_video`.
+5. A2UI Surface Rules:
    - Output must follow the v0.8 A2UI schema rules wrapped in <a2ui-json> blocks."""
 
 UI_DESCRIPTION = """NEO-BRUTALISM DESIGN SPECIFICATION & GUIDELINES:
@@ -212,6 +289,7 @@ root_agent = Agent(
         PreloadMemoryTool(),
         search_travel_places,
         generate_healthy_recipe_image,
+        generate_wellness_video,
         get_weather,
         get_current_time
     ],
