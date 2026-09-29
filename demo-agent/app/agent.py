@@ -45,7 +45,7 @@ def get_current_time(query: str) -> str:
     """Simulates getting the current time for a city.
 
     Args:
-        query: The name of the city to get the current time for.
+        city: The name of the city to get the current time for.
 
     Returns:
         A string with the current time information.
@@ -60,11 +60,23 @@ def get_current_time(query: str) -> str:
     return f"The current time for query {query} is {now.strftime('%Y-%m-%d %H:%M:%S %Z%z')}"
 
 
-# WRITE: after each turn, send the session to Memory Bank for extraction.
+# WRITE: after each turn, send the full session to Memory Bank for durable extraction
 async def generate_memories_callback(callback_context: CallbackContext):
+    """Sends session conversation turns to Vertex AI Memory Bank for automatic extraction."""
     await callback_context.add_session_to_memory()
     return None
 
+
+AGENT_INSTRUCTION = """You are a helpful, empathetic, and attentive personal wellness, performance, and hobby management assistant.
+
+Your goal is to support the user's daily well-being, habit consistency, and daily routine.
+
+Memory & Daily Updates Guidelines:
+1. Cross-Session Memory: You remember the user's stated daily updates, wellness check-ins, mood, physical energy levels, stress levels, sleep quality, tasks, priorities, constraints, and hobbies across conversations.
+2. Capturing Daily Updates: When the user shares updates about their day (e.g. how they feel, what happened today, what tasks they completed or struggled with, what they ate, how they slept, or hobbies they engaged in), acknowledge these details empathetically and reflect that you retain this context.
+3. Tailored Advice: Use their historical daily updates and stated preferences to personalize suggestions—adapting recommendations to their current energy level, time available, and past experiences.
+4. Non-Medical Support: Provide thoughtful lifestyle and habits guidance, keeping safety first without providing clinical diagnosis.
+"""
 
 root_agent = Agent(
     name="root_agent",
@@ -72,13 +84,9 @@ root_agent = Agent(
         model=MODEL,
         retry_options=types.HttpRetryOptions(attempts=3),
     ),
-    instruction=(
-        "You are a helpful AI assistant designed to provide accurate and useful information. "
-        "You remember the user's stated preferences and facts from previous conversations and "
-        "use them to personalize your responses."
-    ),
+    instruction=AGENT_INSTRUCTION,
     # READ: PreloadMemoryTool retrieves memories at the start of every turn and
-    # injects them into the system instruction.
+    # injects them into the system instruction automatically.
     tools=[PreloadMemoryTool(), get_weather, get_current_time],
     after_agent_callback=generate_memories_callback,
 )
