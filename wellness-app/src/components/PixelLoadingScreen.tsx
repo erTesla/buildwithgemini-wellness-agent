@@ -33,23 +33,6 @@ export const PixelLoadingScreen: React.FC<PixelLoadingScreenProps> = ({
     <div className="flex flex-col items-center justify-center min-h-[500px] py-16 px-4">
       <div className="bg-white border-3 border-black p-8 sm:p-10 rounded-xl shadow-[8px_8px_0px_#000000] flex flex-col items-center max-w-md w-full text-center space-y-6">
         
-        {/* Companions Pill Selector Preview */}
-        <div className="flex items-center space-x-1.5 bg-[#f1f3f4] p-1.5 border-2 border-black rounded-lg shadow-[2px_2px_0px_#000000]">
-          {(['puppy', 'cat', 'racoon'] as CompanionType[]).map((t) => (
-            <button
-              key={t}
-              onClick={() => setCompanion(t)}
-              className={`px-3 py-1 text-xs font-mono font-bold rounded capitalize transition-all ${
-                companion === t 
-                  ? 'bg-black text-white shadow-[1px_1px_0px_#000000]' 
-                  : 'text-zinc-600 hover:text-black'
-              }`}
-            >
-              {t === 'puppy' ? '🐶 Puppy' : t === 'cat' ? '🐱 Cat' : '🦝 Raccoon'}
-            </button>
-          ))}
-        </div>
-
         {/* Large Pixel Companion in Thinking / Welcoming Motion */}
         <div className="p-4 bg-[#fef08a] border-2 border-black rounded-xl shadow-[4px_4px_0px_#000000]">
           <PixelCompanion 

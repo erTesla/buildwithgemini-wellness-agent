@@ -56,11 +56,11 @@ export const AmbientCompanionWidget: React.FC<AmbientCompanionWidgetProps> = ({
     return (
       <button
         onClick={() => setIsClosed(false)}
-        className="fixed bottom-4 right-4 z-40 bg-[#facc15] text-black border-2 border-black rounded-full p-2.5 shadow-[3px_3px_0px_#000000] hover:scale-105 transition-all flex items-center space-x-1.5 text-xs font-black uppercase font-mono"
+        className="hidden md:flex fixed bottom-6 right-6 z-40 bg-[#facc15] text-black border-2 border-black rounded-full p-2.5 shadow-[3px_3px_0px_#000000] hover:scale-105 transition-all items-center space-x-1.5 text-xs font-black uppercase font-mono"
         title="Summon Ambient Companion"
       >
         <Sparkles className="w-4 h-4 fill-black" />
-        <span className="hidden sm:inline">Buddy</span>
+        <span>Buddy</span>
       </button>
     );
   }
@@ -69,13 +69,13 @@ export const AmbientCompanionWidget: React.FC<AmbientCompanionWidgetProps> = ({
     return (
       <div 
         onClick={() => setIsMinimized(false)}
-        className="fixed bottom-4 right-4 z-40 bg-white border-2 border-black rounded-xl p-2 shadow-[4px_4px_0px_#000000] cursor-pointer hover:-translate-y-1 transition-all flex items-center space-x-2"
+        className="hidden md:flex fixed bottom-6 right-6 z-40 bg-white border-2 border-black rounded-xl p-2 shadow-[4px_4px_0px_#000000] cursor-pointer hover:-translate-y-1 transition-all items-center space-x-2"
         title="Click to expand companion"
       >
         <div className="bg-[#fef08a] p-1 border border-black rounded-lg">
           <PixelCompanion type={companionType} emotion="idle" size={32} interactive={false} />
         </div>
-        <div className="text-xs font-black font-mono text-black pr-1 hidden sm:block">
+        <div className="text-xs font-black font-mono text-black pr-1">
           Who-Hum
         </div>
         <Maximize2 className="w-3.5 h-3.5 text-zinc-500 hover:text-black" />
@@ -84,7 +84,7 @@ export const AmbientCompanionWidget: React.FC<AmbientCompanionWidgetProps> = ({
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-40 w-72 sm:w-80 bg-white border-2 border-black rounded-2xl shadow-[5px_5px_0px_#000000] p-4 transition-all">
+    <div className="hidden md:block fixed bottom-6 right-6 z-40 w-72 sm:w-80 bg-white border-2 border-black rounded-2xl shadow-[5px_5px_0px_#000000] p-4 transition-all">
       {/* Top Bar */}
       <div className="flex items-center justify-between pb-2 mb-2 border-b-2 border-black">
         <div className="flex items-center space-x-1.5">
@@ -145,36 +145,17 @@ export const AmbientCompanionWidget: React.FC<AmbientCompanionWidgetProps> = ({
               onClick={handleNextThought}
               className="text-[11px] font-bold text-zinc-600 hover:text-black font-mono underline"
             >
-              Another thought →
+              Next thought →
             </button>
           </div>
         </div>
       </div>
 
-      {/* Companion Switcher Footer */}
-      {onChangeCompanionType && (
-        <div className="mt-3 pt-2 border-t border-zinc-200 flex items-center justify-between">
-          <span className="text-[10px] font-bold uppercase font-mono text-zinc-500">Buddy:</span>
-          <div className="flex space-x-1">
-            {(['puppy', 'cat', 'racoon'] as CompanionType[]).map((t) => (
-              <button
-                key={t}
-                onClick={() => {
-                  onChangeCompanionType(t);
-                  playCompanionBoop();
-                }}
-                className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded border ${
-                  companionType === t 
-                    ? 'bg-black text-white border-black' 
-                    : 'bg-zinc-100 text-zinc-700 border-zinc-300 hover:border-black'
-                }`}
-              >
-                {t === 'puppy' ? '🐶 Dog' : t === 'cat' ? '🐱 Cat' : '🦝 Raccoon'}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Quiet Buddy Indicator (non-intrusive) */}
+      <div className="mt-2.5 pt-1.5 border-t border-zinc-200 flex items-center justify-between text-[10px] font-mono font-bold text-zinc-400">
+        <span>Buddy: {companionType === 'trex' ? '🦖 T-Rex' : companionType === 'cat' ? '🐱 Cat' : companionType === 'racoon' ? '🦝 Racoon Dog' : '🐶 Dog'}</span>
+        <span className="text-emerald-600 flex items-center gap-1">● Active</span>
+      </div>
     </div>
   );
 };

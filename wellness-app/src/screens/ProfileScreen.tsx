@@ -5,6 +5,8 @@ import {
   exportAllUserData, 
   clearAllUserData 
 } from '../services/wellnessService';
+import { PixelCompanion, CompanionType } from '../components/PixelCompanion';
+import { playCompanionBoop } from '../services/soundEffects';
 import { 
   User, 
   Shield, 
@@ -15,7 +17,8 @@ import {
   Clock, 
   DollarSign, 
   Info,
-  CheckCircle2
+  CheckCircle2,
+  Sparkles
 } from 'lucide-react';
 
 interface ProfileScreenProps {
@@ -23,13 +26,17 @@ interface ProfileScreenProps {
   preferences: UserPreferences;
   onSavePreferences: (prefs: UserPreferences) => Promise<void>;
   onReloadAllData: () => Promise<void>;
+  companionType?: CompanionType;
+  onChangeCompanionType?: (type: CompanionType) => void;
 }
 
 export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   userId,
   preferences,
   onSavePreferences,
-  onReloadAllData
+  onReloadAllData,
+  companionType = 'cat',
+  onChangeCompanionType
 }) => {
   const [preferredLocation, setPreferredLocation] = useState(preferences.preferredLocation || 'San Francisco, CA');
   const [budgetLevel, setBudgetLevel] = useState(preferences.budgetLevel);
@@ -276,6 +283,65 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           </button>
         </div>
       </form>
+
+      {/* Quiet Companion Preference */}
+      <div className="material-card p-6 bg-white space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h2 className="text-base font-black text-[#202124] flex items-center gap-2">
+              <Sparkles className="w-4 h-4 fill-[#facc15] text-black" />
+              <span>Quiet Companion Preference</span>
+            </h2>
+            <p className="text-xs text-[#5f6368] mt-0.5">
+              Choose which companion accompanies your wellness journey. Changes apply across your chats and dashboards.
+            </p>
+          </div>
+          <span className="text-xs font-mono font-bold px-2 py-0.5 bg-[#fef08a] border border-black rounded self-start sm:self-auto">
+            Current: {companionType === 'trex' ? '🦖 T-Rex' : companionType === 'cat' ? '🐱 Cat' : companionType === 'racoon' ? '🦝 Racoon Dog' : '🐶 Dog'}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+          {[
+            { type: 'cat' as CompanionType, name: 'Cat', emoji: '🐱', desc: 'Quiet & Observant' },
+            { type: 'racoon' as CompanionType, name: 'Racoon Dog', emoji: '🦝', desc: 'Curious & Gentle' },
+            { type: 'puppy' as CompanionType, name: 'Dog', emoji: '🐶', desc: 'Loyal & Cheerful' },
+            { type: 'trex' as CompanionType, name: 'T-Rex', emoji: '🦖', desc: 'Big Heart Dino' }
+          ].map((item) => {
+            const isSelected = companionType === item.type;
+            return (
+              <button
+                key={item.type}
+                type="button"
+                onClick={() => {
+                  if (onChangeCompanionType) {
+                    playCompanionBoop();
+                    onChangeCompanionType(item.type);
+                    localStorage.setItem('whohum_companion', item.type);
+                    localStorage.setItem('whohum_companion_chosen', 'true');
+                  }
+                }}
+                className={`p-3 border-2 rounded-xl text-center transition-all flex flex-col items-center justify-between space-y-2 ${
+                  isSelected
+                    ? 'border-black bg-black text-white shadow-[3px_3px_0px_#facc15]'
+                    : 'border-zinc-300 hover:border-black bg-zinc-50 text-black shadow-[2px_2px_0px_#000000]'
+                }`}
+              >
+                <div className="p-1 rounded-lg border border-black bg-white">
+                  <PixelCompanion type={item.type} emotion={isSelected ? 'smile' : 'idle'} size={36} interactive={false} />
+                </div>
+                <div className="text-xs font-bold flex items-center gap-1">
+                  <span>{item.emoji}</span>
+                  <span>{item.name}</span>
+                </div>
+                <div className={`text-[10px] font-mono ${isSelected ? 'text-yellow-300 font-bold' : 'text-zinc-500'}`}>
+                  {item.desc}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       {/* Data Export & Deletion */}
       <div className="material-card p-6 bg-white space-y-4">

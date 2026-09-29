@@ -146,9 +146,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Tab Navigation - Only shown in Advanced Mode */}
+        {/* Tab Navigation - Only shown in Advanced Mode on desktop (mobile uses bottom nav) */}
         {!isSimpleMode && (
-          <nav className="flex space-x-2 overflow-x-auto no-scrollbar py-2">
+          <nav className="hidden md:flex space-x-2 overflow-x-auto no-scrollbar py-2">
             {advancedNavItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentTab === item.id;

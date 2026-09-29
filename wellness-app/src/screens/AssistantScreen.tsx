@@ -171,22 +171,10 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
             </div>
           </div>
 
-          {/* Quick Companion Switcher */}
-          <div className="flex items-center space-x-1.5 bg-[#f1f3f4] p-1 border-2 border-black rounded-lg self-start sm:self-auto shadow-[2px_2px_0px_#000000]">
-            {(['puppy', 'cat', 'racoon'] as CompanionType[]).map((t) => (
-              <button
-                key={t}
-                type="button"
-                onClick={() => onChangeCompanionType && onChangeCompanionType(t)}
-                className={`px-2.5 py-1 text-xs font-mono font-bold rounded transition-all ${
-                  companionType === t 
-                    ? 'bg-black text-white shadow-[1px_1px_0px_#000000]' 
-                    : 'text-zinc-600 hover:text-black'
-                }`}
-              >
-                {t === 'puppy' ? '🐶 Puppy' : t === 'cat' ? '🐱 Cat' : '🦝 Raccoon'}
-              </button>
-            ))}
+          {/* Companion Status Badge */}
+          <div className="flex items-center space-x-2 bg-[#fef08a] px-3 py-1.5 border-2 border-black rounded-lg self-start sm:self-auto shadow-[2px_2px_0px_#000000] text-xs font-mono font-bold text-black">
+            <span>Active Companion:</span>
+            <span>{companionType === 'trex' ? '🦖 T-Rex' : companionType === 'cat' ? '🐱 Cat' : companionType === 'racoon' ? '🦝 Racoon Dog' : '🐶 Dog'}</span>
           </div>
         </div>
       </div>

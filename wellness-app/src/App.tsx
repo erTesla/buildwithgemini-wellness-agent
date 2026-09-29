@@ -13,6 +13,7 @@ import { PixelLoadingScreen } from './components/PixelLoadingScreen';
 import { CompanionType } from './components/PixelCompanion';
 import { AmbientCompanionWidget } from './components/AmbientCompanionWidget';
 import { MobileBottomNav } from './components/MobileBottomNav';
+import { CompanionOnboardingModal } from './components/CompanionOnboardingModal';
 import { isSoundEnabled, setSoundEnabled } from './services/soundEffects';
 
 import { 
@@ -40,10 +41,18 @@ export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<TabType>('dashboard');
   const [userId, setUserId] = useState<string>(getCurrentUserId());
   
-  // Companion choice: puppy, cat, racoon (persisted)
+  // Companion choice: cat, racoon, puppy (dog), trex (persisted)
   const [companionType, setCompanionType] = useState<CompanionType>(() => {
     const saved = localStorage.getItem('whohum_companion');
-    return (saved === 'cat' || saved === 'racoon') ? saved : 'puppy';
+    if (saved === 'cat' || saved === 'racoon' || saved === 'puppy' || saved === 'trex') {
+      return saved as CompanionType;
+    }
+    return 'cat';
+  });
+
+  // One-time companion onboarding: only show modal if never selected before
+  const [showCompanionModal, setShowCompanionModal] = useState<boolean>(() => {
+    return localStorage.getItem('whohum_companion_chosen') !== 'true';
   });
 
   const handleCompanionTypeChange = (newType: CompanionType) => {
@@ -330,19 +339,21 @@ export const App: React.FC = () => {
                 preferences={preferences}
                 onSavePreferences={handleSavePreferences}
                 onReloadAllData={loadUserData}
+                companionType={companionType}
+                onChangeCompanionType={handleCompanionTypeChange}
               />
             )}
           </>
         )}
       </main>
 
-      {/* Floating Ambient Companion Widget ("Tamagotchi Mode") */}
+      {/* Floating Ambient Companion Widget ("Tamagotchi Mode") - Desktop Only */}
       <AmbientCompanionWidget 
         companionType={companionType}
         onChangeCompanionType={handleCompanionTypeChange}
       />
 
-      {/* Thumb-friendly Mobile Bottom Navigation */}
+      {/* Thumb-friendly Mobile Bottom Navigation - Mobile Only */}
       <MobileBottomNav 
         currentTab={currentTab}
         onSelectTab={setCurrentTab}
@@ -350,8 +361,17 @@ export const App: React.FC = () => {
         onToggleSimpleMode={handleToggleSimpleMode}
       />
 
-      {/* Calm Google Footer */}
-      <footer className="border-t border-[#dadce0] py-6 text-center text-xs text-[#5f6368] bg-[#f8f9fa]">
+      {/* One-Time Companion Selection Onboarding Modal */}
+      <CompanionOnboardingModal 
+        isOpen={showCompanionModal}
+        onSelectCompanion={(selected) => {
+          setCompanionType(selected);
+          setShowCompanionModal(false);
+        }}
+      />
+
+      {/* Calm Google Footer - Desktop Only */}
+      <footer className="hidden md:block border-t border-[#dadce0] py-6 text-center text-xs text-[#5f6368] bg-[#f8f9fa]">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
           <span>Personal Wellness, Performance & Hobby Management Agent</span>
           <div className="flex gap-4">

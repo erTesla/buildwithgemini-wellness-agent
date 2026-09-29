@@ -38,6 +38,17 @@ describe('PixelCompanion Component', () => {
     expect(container.querySelector('#eyes-sad')).not.toBeNull();
   });
 
+  it('renders T-Rex companion with dino spikes and arms', () => {
+    const { container } = render(<PixelCompanion type="trex" emotion="idle" size="md" />);
+    expect(container.querySelector('#trex-base')).not.toBeNull();
+    expect(container.querySelector('#eyes-idle')).not.toBeNull();
+  });
+
+  it('renders T-Rex teeth in smile mode', () => {
+    const { container } = render(<PixelCompanion type="trex" emotion="smile" size="lg" />);
+    expect(container.querySelector('#trex-teeth')).not.toBeNull();
+  });
+
   it('reacts to click by wiggling and temporarily smiling', () => {
     const { container } = render(<PixelCompanion type="puppy" emotion="idle" interactive={true} />);
     const wrapper = container.firstChild as HTMLElement;
@@ -48,9 +59,52 @@ describe('PixelCompanion Component', () => {
 });
 
 describe('PixelLoadingScreen Component', () => {
-  it('mounts and renders companion and loading progress', () => {
-    render(<PixelLoadingScreen message="Who-Hum is waking up..." />);
+  it('mounts and renders companion and loading progress without pill selector', () => {
+    const { container } = render(<PixelLoadingScreen message="Who-Hum is waking up..." />);
     expect(screen.getByText(/Who-Hum is waking up/i)).toBeTruthy();
     expect(screen.getByText(/WHO-HUM COMPANION ENGINE/i)).toBeTruthy();
+    // Verify no interactive pill selectors are rendered
+    expect(container.querySelector('button')).toBeNull();
+  });
+});
+
+describe('CompanionOnboardingModal Component', () => {
+  it('renders all 4 companions: Cat, Racoon Dog, Dog, and T-Rex', async () => {
+    const { CompanionOnboardingModal } = await import('../components/CompanionOnboardingModal');
+    let selectedCompanion = '';
+    const { container } = render(
+      <CompanionOnboardingModal 
+        isOpen={true} 
+        onSelectCompanion={(c) => { selectedCompanion = c; }} 
+      />
+    );
+
+    // Verify 4 companions are presented
+    expect(screen.getByText(/Choose Your Quiet Companion/i)).toBeTruthy();
+    expect(screen.getByText(/Racoon Dog/i)).toBeTruthy();
+    expect(screen.getByText(/T-Rex/i)).toBeTruthy();
+
+    // Select T-Rex
+    const trexBtn = screen.getByRole('button', { name: /T-Rex/i });
+    fireEvent.click(trexBtn);
+
+    // Confirm selection
+    const confirmBtn = screen.getByRole('button', { name: /Bond with T-Rex/i });
+    fireEvent.click(confirmBtn);
+
+    expect(selectedCompanion).toBe('trex');
+    expect(localStorage.getItem('whohum_companion_chosen')).toBe('true');
+    expect(localStorage.getItem('whohum_companion')).toBe('trex');
+  });
+
+  it('does not render when isOpen is false', async () => {
+    const { CompanionOnboardingModal } = await import('../components/CompanionOnboardingModal');
+    const { container } = render(
+      <CompanionOnboardingModal 
+        isOpen={false} 
+        onSelectCompanion={() => {}} 
+      />
+    );
+    expect(container.firstChild).toBeNull();
   });
 });

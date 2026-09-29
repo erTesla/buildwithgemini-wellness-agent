@@ -268,23 +268,12 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse border border-black"></span>
             </div>
             
-            {/* Quick 1-tap Companion Switcher */}
-            <div className="flex items-center space-x-1.5 mt-1">
-              {(['puppy', 'cat', 'racoon'] as CompanionType[]).map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => onChangeCompanionType && onChangeCompanionType(t)}
-                  className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded border transition-all ${
-                    companionType === t 
-                      ? 'bg-black text-white border-black shadow-[1px_1px_0px_#000000]' 
-                      : 'bg-zinc-100 text-zinc-700 border-zinc-300 hover:border-black'
-                  }`}
-                  title={`Switch companion to ${t}`}
-                >
-                  {t === 'puppy' ? '🐶 Puppy' : t === 'cat' ? '🐱 Cat' : '🦝 Raccoon'}
-                </button>
-              ))}
+            {/* Companion Status */}
+            <div className="flex items-center gap-1.5 mt-0.5 text-xs text-zinc-500 font-mono">
+              <span>Companion:</span>
+              <span className="font-bold text-black">
+                {companionType === 'trex' ? '🦖 T-Rex' : companionType === 'cat' ? '🐱 Cat' : companionType === 'racoon' ? '🦝 Racoon Dog' : '🐶 Dog'}
+              </span>
             </div>
           </div>
         </div>
