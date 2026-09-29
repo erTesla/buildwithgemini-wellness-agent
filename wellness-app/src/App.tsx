@@ -166,6 +166,7 @@ export const App: React.FC = () => {
           <>
             {currentTab === 'dashboard' && (
               <DashboardScreen
+                userId={userId}
                 checkins={checkins}
                 tasks={tasks}
                 hobbies={hobbies}
@@ -173,6 +174,7 @@ export const App: React.FC = () => {
                 onNavigate={setCurrentTab}
                 onToggleTask={handleToggleTask}
                 onSaveRecommendationAsTask={handleSaveRecommendationAsTask}
+                onSaveCheckIn={handleSaveCheckIn}
               />
             )}
 
