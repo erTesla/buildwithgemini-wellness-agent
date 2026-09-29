@@ -233,7 +233,7 @@ export const App: React.FC = () => {
         onToggleSound={handleToggleSound}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10 pb-24 md:pb-10">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-3 sm:py-6 md:py-8 pb-20 md:pb-10">
         {loading ? (
           <PixelLoadingScreen 
             message="Who-Hum is waking up..." 

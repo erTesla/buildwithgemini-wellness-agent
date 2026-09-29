@@ -55,8 +55,9 @@ export const AmbientCompanionWidget: React.FC<AmbientCompanionWidgetProps> = ({
   if (isClosed) {
     return (
       <button
+        data-desktop-only="true"
         onClick={() => setIsClosed(false)}
-        className="hidden md:flex fixed bottom-6 right-6 z-40 bg-[#facc15] text-black border-2 border-black rounded-full p-2.5 shadow-[3px_3px_0px_#000000] hover:scale-105 transition-all items-center space-x-1.5 text-xs font-black uppercase font-mono"
+        className="ambient-companion-widget hidden md:flex fixed bottom-6 right-6 z-40 bg-[#facc15] text-black border-2 border-black rounded-full p-2.5 shadow-[3px_3px_0px_#000000] hover:scale-105 transition-all items-center space-x-1.5 text-xs font-black uppercase font-mono"
         title="Summon Ambient Companion"
       >
         <Sparkles className="w-4 h-4 fill-black" />
@@ -68,8 +69,9 @@ export const AmbientCompanionWidget: React.FC<AmbientCompanionWidgetProps> = ({
   if (isMinimized) {
     return (
       <div 
+        data-desktop-only="true"
         onClick={() => setIsMinimized(false)}
-        className="hidden md:flex fixed bottom-6 right-6 z-40 bg-white border-2 border-black rounded-xl p-2 shadow-[4px_4px_0px_#000000] cursor-pointer hover:-translate-y-1 transition-all items-center space-x-2"
+        className="ambient-companion-widget hidden md:flex fixed bottom-6 right-6 z-40 bg-white border-2 border-black rounded-xl p-2 shadow-[4px_4px_0px_#000000] cursor-pointer hover:-translate-y-1 transition-all items-center space-x-2"
         title="Click to expand companion"
       >
         <div className="bg-[#fef08a] p-1 border border-black rounded-lg">
@@ -84,7 +86,10 @@ export const AmbientCompanionWidget: React.FC<AmbientCompanionWidgetProps> = ({
   }
 
   return (
-    <div className="hidden md:block fixed bottom-6 right-6 z-40 w-72 sm:w-80 bg-white border-2 border-black rounded-2xl shadow-[5px_5px_0px_#000000] p-4 transition-all">
+    <div 
+      data-desktop-only="true"
+      className="ambient-companion-widget hidden md:block fixed bottom-6 right-6 z-40 w-72 sm:w-80 bg-white border-2 border-black rounded-2xl shadow-[5px_5px_0px_#000000] p-4 transition-all"
+    >
       {/* Top Bar */}
       <div className="flex items-center justify-between pb-2 mb-2 border-b-2 border-black">
         <div className="flex items-center space-x-1.5">

@@ -37,7 +37,11 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   };
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t-2 border-black px-2 py-1.5 shadow-[0px_-3px_0px_#000000] flex items-center justify-around">
+    <nav 
+      data-mobile-only="true"
+      className="mobile-bottom-nav-bar md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t-2 border-black px-1.5 py-1.5 shadow-[0px_-3px_0px_#000000] flex items-center justify-around"
+      style={{ position: 'fixed', bottom: 0, left: 0, right: 0, width: '100%', zIndex: 50 }}
+    >
       {/* Simple Chat Tab */}
       <button
         onClick={handleSimpleChatClick}

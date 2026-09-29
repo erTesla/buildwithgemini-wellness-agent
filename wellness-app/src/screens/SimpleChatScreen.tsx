@@ -251,26 +251,26 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
     : 'idle';
 
   return (
-    <div className="max-w-4xl mx-auto flex flex-col h-[calc(100vh-170px)] min-h-[620px] space-y-5 px-2 sm:px-4">
+    <div className="max-w-4xl mx-auto flex flex-col h-[calc(100dvh-130px)] md:h-[calc(100vh-160px)] space-y-3 sm:space-y-4 px-1 sm:px-4">
       {/* Friendly Airy Chat Header with Pixel Companion */}
-      <div className="p-4 sm:p-5 bg-white border-2 border-black rounded-lg shadow-[4px_4px_0px_#000000] flex justify-between items-center">
-        <div className="flex items-center space-x-3.5">
-          <div className="p-1 rounded-xl bg-[#fef08a] border-2 border-black shadow-[3px_3px_0px_#000000] flex items-center justify-center shrink-0">
+      <div className="p-3 sm:p-5 bg-white border-2 border-black rounded-lg shadow-[3px_3px_0px_#000000] sm:shadow-[4px_4px_0px_#000000] flex justify-between items-center gap-2">
+        <div className="flex items-center space-x-2.5 sm:space-x-3.5">
+          <div className="p-1 rounded-xl bg-[#fef08a] border-2 border-black shadow-[2px_2px_0px_#000000] sm:shadow-[3px_3px_0px_#000000] flex items-center justify-center shrink-0">
             <PixelCompanion 
               type={companionType} 
               emotion={headerEmotion} 
-              size={48} 
+              size={40} 
               interactive={true} 
             />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-lg font-black text-black">Who-Hum Buddy</h2>
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse border border-black"></span>
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <h2 className="text-base sm:text-lg font-black text-black">Who-Hum Buddy</h2>
+              <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-emerald-500 animate-pulse border border-black"></span>
             </div>
             
             {/* Companion Status */}
-            <div className="flex items-center gap-1.5 mt-0.5 text-xs text-zinc-500 font-mono">
+            <div className="flex items-center gap-1.5 mt-0.5 text-[11px] sm:text-xs text-zinc-500 font-mono">
               <span>Companion:</span>
               <span className="font-bold text-black">
                 {formatCompanionLabel(companionType)}
@@ -281,7 +281,7 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
 
         <button
           onClick={onSwitchToAdvanced}
-          className="text-xs font-bold font-mono px-3.5 py-2 border-2 border-black rounded-md bg-zinc-50 hover:bg-black hover:text-white transition-all shadow-[2px_2px_0px_#000000] flex items-center space-x-1.5"
+          className="text-xs font-bold font-mono px-2.5 sm:px-3.5 py-1.5 sm:py-2 border-2 border-black rounded-md bg-zinc-50 hover:bg-black hover:text-white transition-all shadow-[2px_2px_0px_#000000] flex items-center space-x-1.5 shrink-0"
           title="Switch to full dashboard with charts, tasks and hobbies"
         >
           <Sliders className="w-3.5 h-3.5" />
@@ -290,7 +290,7 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
       </div>
 
       {/* Spacious Main Chat Scroll Container */}
-      <div className="flex-1 bg-white border-2 border-black rounded-lg shadow-[5px_5px_0px_#000000] p-5 sm:p-6 overflow-y-auto space-y-6">
+      <div className="flex-1 min-h-0 bg-white border-2 border-black rounded-lg shadow-[3px_3px_0px_#000000] sm:shadow-[5px_5px_0px_#000000] p-3 sm:p-6 overflow-y-auto space-y-4 sm:space-y-6">
         {messages.map((msg) => {
           const isUser = msg.role === 'user';
           return (
@@ -534,14 +534,14 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
       </div>
 
       {/* Spacious Input Message Form with Voice & Auto-Expanding Textarea */}
-      <form onSubmit={handleSendMessage} className="space-y-1.5">
-        <div className="flex items-end space-x-2.5 bg-white border-2 border-black rounded-xl p-2 shadow-[4px_4px_0px_#000000] transition-all focus-within:shadow-[5px_5px_0px_#000000]">
+      <form onSubmit={handleSendMessage} className="space-y-1 sm:space-y-1.5">
+        <div className="flex items-end space-x-1.5 sm:space-x-2.5 bg-white border-2 border-black rounded-xl p-1.5 sm:p-2 shadow-[3px_3px_0px_#000000] sm:shadow-[4px_4px_0px_#000000] transition-all focus-within:shadow-[5px_5px_0px_#000000]">
           {/* Voice Dictation Button */}
           {voiceSupported && (
             <button
               type="button"
               onClick={toggleVoiceRecording}
-              className={`p-2.5 rounded-lg border-2 border-black transition-all flex items-center justify-center shrink-0 shadow-[1px_1px_0px_#000000] ${
+              className={`p-2 sm:p-2.5 rounded-lg border-2 border-black transition-all flex items-center justify-center shrink-0 shadow-[1px_1px_0px_#000000] ${
                 isListening 
                   ? 'bg-red-500 text-white animate-pulse' 
                   : 'bg-zinc-100 text-zinc-700 hover:bg-[#fef08a] hover:text-black'
@@ -567,20 +567,20 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
             placeholder={
               isListening 
                 ? 'Listening to you speak...' 
-                : "Tell your buddy about your day (e.g. 'I am so happy today I bought a cycle!')..."
+                : "Tell your buddy about your day..."
             }
             disabled={loading}
-            className="flex-1 text-sm font-medium p-1.5 border-none outline-none resize-none max-h-32 bg-transparent text-black"
+            className="flex-1 text-xs sm:text-sm font-medium p-1 sm:p-1.5 border-none outline-none resize-none max-h-32 bg-transparent text-black"
           />
 
           {/* Send Button */}
           <button
             type="submit"
             disabled={loading || !inputPrompt.trim()}
-            className="brutalist-btn-primary px-5 py-2.5 text-sm font-black flex items-center space-x-1.5 rounded-lg shadow-[2px_2px_0px_#000000] shrink-0 disabled:opacity-50"
+            className="brutalist-btn-primary px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-black flex items-center space-x-1 sm:space-x-1.5 rounded-lg shadow-[2px_2px_0px_#000000] shrink-0 disabled:opacity-50"
           >
             <span className="hidden sm:inline">Send</span>
-            <Send className="w-4 h-4" />
+            <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
         </div>
 

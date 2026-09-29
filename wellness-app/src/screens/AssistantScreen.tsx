@@ -181,9 +181,9 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
       </div>
 
       {/* Chat Container */}
-      <div className="material-card bg-white p-4 sm:p-6 flex flex-col h-[650px]">
+      <div className="material-card bg-white p-3 sm:p-6 flex flex-col h-[calc(100dvh-200px)] md:h-[650px] min-h-[420px]">
         {/* Messages List */}
-        <div className="flex-1 overflow-y-auto space-y-4 pr-1">
+        <div className="flex-1 min-h-0 overflow-y-auto space-y-4 pr-1">
           {messages.map((msg) => {
             const isUser = msg.role === 'user';
             return (
