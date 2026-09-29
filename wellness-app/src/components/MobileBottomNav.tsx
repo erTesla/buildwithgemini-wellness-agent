@@ -39,72 +39,72 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   return (
     <nav 
       data-mobile-only="true"
-      className="mobile-bottom-nav-bar md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t-2 border-black px-1.5 py-1.5 shadow-[0px_-3px_0px_#000000] flex items-center justify-around"
+      className="mobile-bottom-nav-bar md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-2 py-1.5 shadow-lg flex items-center justify-around transition-colors"
       style={{ position: 'fixed', bottom: 0, left: 0, right: 0, width: '100%', zIndex: 50 }}
     >
       {/* Simple Chat Tab */}
       <button
         onClick={handleSimpleChatClick}
-        className={`flex flex-col items-center py-1 px-2.5 rounded-lg border-2 transition-all ${
+        className={`flex flex-col items-center py-1 px-3 rounded-xl transition-all ${
           isSimpleMode
-            ? 'bg-[#facc15] text-black border-black shadow-[2px_2px_0px_#000000] font-black'
-            : 'border-transparent text-zinc-600 hover:text-black font-bold'
+            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-2xs'
+            : 'text-slate-500 hover:text-slate-800 font-medium'
         }`}
       >
         <MessageSquare className="w-4 h-4" />
-        <span className="text-[10px] uppercase font-mono tracking-wider mt-0.5">Chat</span>
+        <span className="text-[11px] mt-0.5">Chat</span>
       </button>
 
       {/* Dashboard */}
       <button
         onClick={() => handleTabClick('dashboard')}
-        className={`flex flex-col items-center py-1 px-2.5 rounded-lg border-2 transition-all ${
+        className={`flex flex-col items-center py-1 px-3 rounded-xl transition-all ${
           !isSimpleMode && currentTab === 'dashboard'
-            ? 'bg-black text-white border-black shadow-[2px_2px_0px_#facc15] font-black'
-            : 'border-transparent text-zinc-600 hover:text-black font-bold'
+            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-2xs'
+            : 'text-slate-500 hover:text-slate-800 font-medium'
         }`}
       >
         <LayoutDashboard className="w-4 h-4" />
-        <span className="text-[10px] uppercase font-mono tracking-wider mt-0.5">Home</span>
+        <span className="text-[11px] mt-0.5">Home</span>
       </button>
 
       {/* Checkin */}
       <button
         onClick={() => handleTabClick('checkin')}
-        className={`flex flex-col items-center py-1 px-2.5 rounded-lg border-2 transition-all ${
+        className={`flex flex-col items-center py-1 px-3 rounded-xl transition-all ${
           !isSimpleMode && currentTab === 'checkin'
-            ? 'bg-black text-white border-black shadow-[2px_2px_0px_#facc15] font-black'
-            : 'border-transparent text-zinc-600 hover:text-black font-bold'
+            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-2xs'
+            : 'text-slate-500 hover:text-slate-800 font-medium'
         }`}
       >
         <HeartHandshake className="w-4 h-4" />
-        <span className="text-[10px] uppercase font-mono tracking-wider mt-0.5">Check-in</span>
+        <span className="text-[11px] mt-0.5">Check-in</span>
       </button>
 
       {/* Tasks */}
       <button
         onClick={() => handleTabClick('tasks')}
-        className={`flex flex-col items-center py-1 px-2.5 rounded-lg border-2 transition-all ${
+        className={`flex flex-col items-center py-1 px-3 rounded-xl transition-all ${
           !isSimpleMode && currentTab === 'tasks'
-            ? 'bg-black text-white border-black shadow-[2px_2px_0px_#facc15] font-black'
-            : 'border-transparent text-zinc-600 hover:text-black font-bold'
+            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-2xs'
+            : 'text-slate-500 hover:text-slate-800 font-medium'
         }`}
       >
         <CheckSquare className="w-4 h-4" />
-        <span className="text-[10px] uppercase font-mono tracking-wider mt-0.5">Tasks</span>
+        <span className="text-[11px] mt-0.5">Tasks</span>
       </button>
 
       {/* Hobbies */}
       <button
         onClick={() => handleTabClick('hobbies')}
-        className={`flex flex-col items-center py-1 px-2.5 rounded-lg border-2 transition-all ${
+        className={`flex flex-col items-center py-1 px-3 rounded-xl transition-all ${
           !isSimpleMode && currentTab === 'hobbies'
-            ? 'bg-black text-white border-black shadow-[2px_2px_0px_#facc15] font-black'
-            : 'border-transparent text-zinc-600 hover:text-black font-bold'
+            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-2xs'
+            : 'text-slate-500 hover:text-slate-800 font-medium'
         }`}
       >
         <Sparkles className="w-4 h-4" />
-        <span className="text-[10px] uppercase font-mono tracking-wider mt-0.5">Hobbies</span>
+        <span className="text-[11px] mt-0.5">Hobbies</span>
       </button>
     </nav>
   );

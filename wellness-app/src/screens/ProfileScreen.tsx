@@ -103,42 +103,42 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
-      <div className="material-card-flat p-6 bg-white">
-        <h1 className="text-2xl font-normal text-[#202124]">
-          Profile & <span className="font-semibold text-[#1a73e8]">Application Settings</span>
+      <div className="p-6 bg-gradient-to-r from-emerald-50/70 via-teal-50/40 to-sky-50/50 border border-emerald-100/80 rounded-2xl shadow-xs">
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
+          Profile & <span className="text-emerald-700">Application Settings</span>
         </h1>
-        <p className="text-sm text-[#5f6368] mt-1">
+        <p className="text-sm text-slate-600 mt-1">
           Control your personal wellness preferences, manage data retention, and export or delete your information.
         </p>
       </div>
 
       {savedStatus && (
-        <div className="bg-[#e6f4ea] border border-[#ceead6] text-[#1e8e3e] px-4 py-3 rounded-lg flex items-center space-x-2 text-sm">
-          <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-xl flex items-center space-x-2 text-sm shadow-2xs">
+          <CheckCircle2 className="w-5 h-5 flex-shrink-0 text-emerald-600" />
           <span>{savedStatus}</span>
         </div>
       )}
 
       {/* Account Identity Switcher */}
-      <div className="material-card p-6 bg-white space-y-4">
-        <h2 className="text-base font-medium text-[#202124] flex items-center space-x-2">
-          <User className="w-5 h-5 text-[#1a73e8]" />
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs space-y-4">
+        <h2 className="text-base font-semibold text-slate-900 flex items-center space-x-2">
+          <User className="w-5 h-5 text-emerald-600" />
           <span>Account & Identity Isolation</span>
         </h2>
-        <p className="text-xs text-[#5f6368]">
+        <p className="text-xs text-slate-500 leading-relaxed">
           Each User ID accesses strictly isolated records in Firestore. You can switch IDs to test multiple user profiles or use a dedicated identifier.
         </p>
 
-        <div className="flex gap-3 items-center">
+        <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
           <input
             type="text"
             value={customUserId}
             onChange={(e) => setCustomUserId(e.target.value)}
-            className="p-2.5 border border-[#dadce0] rounded-md text-sm text-[#202124] flex-1 font-mono"
+            className="p-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-slate-900 flex-1 font-mono focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500"
           />
           <button
             onClick={handleSwitchAccount}
-            className="google-btn-outlined text-sm whitespace-nowrap"
+            className="brutalist-btn-outlined text-xs py-2 px-4 rounded-xl whitespace-nowrap"
           >
             Switch User ID
           </button>
@@ -146,14 +146,14 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       </div>
 
       {/* Preferences Form */}
-      <form onSubmit={handleSave} className="material-card p-6 bg-white space-y-6">
-        <h2 className="text-base font-medium text-[#202124]">Personal Activity Preferences</h2>
+      <form onSubmit={handleSave} className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs space-y-6">
+        <h2 className="text-base font-semibold text-slate-900">Personal Activity Preferences</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Location */}
           <div>
-            <label className="block text-xs font-medium text-[#202124] mb-1 flex items-center space-x-1">
-              <MapPin className="w-3.5 h-3.5 text-[#1a73e8]" />
+            <label className="block text-xs font-semibold text-slate-700 mb-1 flex items-center space-x-1">
+              <MapPin className="w-3.5 h-3.5 text-rose-500" />
               <span>Preferred Location / City</span>
             </label>
             <input
@@ -161,20 +161,20 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               value={preferredLocation}
               onChange={(e) => setPreferredLocation(e.target.value)}
               placeholder="e.g. San Francisco, CA"
-              className="w-full p-2.5 border border-[#dadce0] rounded-md text-sm text-[#202124]"
+              className="w-full p-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500"
             />
           </div>
 
           {/* Budget Level */}
           <div>
-            <label className="block text-xs font-medium text-[#202124] mb-1 flex items-center space-x-1">
-              <DollarSign className="w-3.5 h-3.5 text-[#1e8e3e]" />
+            <label className="block text-xs font-semibold text-slate-700 mb-1 flex items-center space-x-1">
+              <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
               <span>Budget Preference</span>
             </label>
             <select
               value={budgetLevel}
               onChange={(e) => setBudgetLevel(e.target.value as any)}
-              className="w-full p-2.5 border border-[#dadce0] rounded-md text-sm text-[#202124]"
+              className="w-full p-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500"
             >
               <option value="budget">Budget-Friendly (Free to Low Cost)</option>
               <option value="moderate">Moderate ($10 - $50)</option>
@@ -184,8 +184,8 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
           {/* Available Time */}
           <div>
-            <label className="block text-xs font-medium text-[#202124] mb-1 flex items-center space-x-1">
-              <Clock className="w-3.5 h-3.5 text-[#f9ab00]" />
+            <label className="block text-xs font-semibold text-slate-700 mb-1 flex items-center space-x-1">
+              <Clock className="w-3.5 h-3.5 text-amber-500" />
               <span>Typical Available Time (Minutes)</span>
             </label>
             <input
@@ -195,13 +195,13 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               max="240"
               value={availableTime}
               onChange={(e) => setAvailableTime(Number(e.target.value))}
-              className="w-full p-2.5 border border-[#dadce0] rounded-md text-sm text-[#202124]"
+              className="w-full p-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500"
             />
           </div>
 
           {/* Travel / Outings */}
           <div>
-            <label className="block text-xs font-medium text-[#202124] mb-1">
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
               Travel & Outing Preferences
             </label>
             <input
@@ -209,15 +209,15 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               value={travel}
               onChange={(e) => setTravel(e.target.value)}
               placeholder="e.g. Quiet gardens, art galleries, scenic coastal walks"
-              className="w-full p-2.5 border border-[#dadce0] rounded-md text-sm text-[#202124]"
+              className="w-full p-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500"
             />
           </div>
         </div>
 
         {/* Dietary & Reading */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 border-t border-[#dadce0]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-3 border-t border-slate-100">
           <div>
-            <label className="block text-xs font-medium text-[#202124] mb-1">
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
               Dietary & Cooking Interests
             </label>
             <textarea
@@ -225,12 +225,12 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               value={dietary}
               onChange={(e) => setDietary(e.target.value)}
               placeholder="e.g. Plant-based, Mediterranean, quick 20-min meals"
-              className="w-full p-2.5 border border-[#dadce0] rounded-md text-sm text-[#202124]"
+              className="w-full p-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[#202124] mb-1">
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
               Reading & Book Interests
             </label>
             <textarea
@@ -238,15 +238,15 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               value={reading}
               onChange={(e) => setReading(e.target.value)}
               placeholder="e.g. Behavioral psychology, biographies, nature essays"
-              className="w-full p-2.5 border border-[#dadce0] rounded-md text-sm text-[#202124]"
+              className="w-full p-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500"
             />
           </div>
         </div>
 
         {/* Privacy & Safety Consent */}
-        <div className="pt-2 border-t border-[#dadce0] space-y-3">
-          <h3 className="text-sm font-medium text-[#202124] flex items-center space-x-2">
-            <Shield className="w-4 h-4 text-[#1a73e8]" />
+        <div className="pt-3 border-t border-slate-100 space-y-3">
+          <h3 className="text-sm font-semibold text-slate-900 flex items-center space-x-2">
+            <Shield className="w-4 h-4 text-emerald-600" />
             <span>Privacy & AI Consent</span>
           </h3>
 
@@ -256,10 +256,10 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               id="consentAI"
               checked={consentAI}
               onChange={(e) => setConsentAI(e.target.checked)}
-              className="mt-1 h-4 w-4 text-[#1a73e8] rounded border-[#dadce0]"
+              className="mt-1 h-4 w-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500"
             />
-            <label htmlFor="consentAI" className="text-xs text-[#3c4043]">
-              <strong>Authorize AI Personalization:</strong> Allow the agent to process self-reported wellness notes and hobbies for personalized activity suggestions. No journal entries are used for external commercial advertising.
+            <label htmlFor="consentAI" className="text-xs text-slate-600 leading-relaxed">
+              <strong className="text-slate-800">Authorize AI Personalization:</strong> Allow the agent to process self-reported wellness notes and hobbies for personalized activity suggestions. No journal entries are used for external commercial advertising.
             </label>
           </div>
 
@@ -269,16 +269,16 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               id="enableCrisis"
               checked={enableCrisis}
               onChange={(e) => setEnableCrisis(e.target.checked)}
-              className="mt-1 h-4 w-4 text-[#1a73e8] rounded border-[#dadce0]"
+              className="mt-1 h-4 w-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500"
             />
-            <label htmlFor="enableCrisis" className="text-xs text-[#3c4043]">
-              <strong>Crisis & Distress Detection:</strong> Maintain immediate hotline recommendations and emergency resources if severe distress or harm triggers are recognized.
+            <label htmlFor="enableCrisis" className="text-xs text-slate-600 leading-relaxed">
+              <strong className="text-slate-800">Crisis & Distress Detection:</strong> Maintain immediate hotline recommendations and emergency resources if severe distress or harm triggers are recognized.
             </label>
           </div>
         </div>
 
         <div className="flex justify-end pt-3">
-          <button type="submit" className="google-btn-primary flex items-center space-x-2 text-sm">
+          <button type="submit" className="brutalist-btn-primary flex items-center space-x-2 text-sm py-2.5 px-5 rounded-xl">
             <Save className="w-4 h-4" />
             <span>Save Preferences</span>
           </button>
@@ -286,18 +286,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       </form>
 
       {/* Quiet Companion Preference */}
-      <div className="material-card p-6 bg-white space-y-4">
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h2 className="text-base font-black text-[#202124] flex items-center gap-2">
-              <Sparkles className="w-4 h-4 fill-[#facc15] text-black" />
+            <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-emerald-600" />
               <span>Quiet Companion Preference</span>
             </h2>
-            <p className="text-xs text-[#5f6368] mt-0.5">
+            <p className="text-xs text-slate-500 mt-0.5">
               Choose which companion accompanies your wellness journey. Changes apply across your chats and dashboards.
             </p>
           </div>
-          <span className="text-xs font-mono font-bold px-2 py-0.5 bg-[#fef08a] border border-black rounded self-start sm:self-auto">
+          <span className="text-xs font-semibold px-3 py-1 bg-slate-100 border border-slate-200/80 rounded-xl text-slate-700 self-start sm:self-auto shadow-2xs">
             Current: {formatCompanionLabel(companionType)}
           </span>
         </div>
@@ -317,20 +317,20 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                     localStorage.setItem('whohum_companion_chosen', 'true');
                   }
                 }}
-                className={`p-3 border-2 rounded-xl text-center transition-all flex flex-col items-center justify-between space-y-2 ${
+                className={`p-3 border rounded-2xl text-center transition-all flex flex-col items-center justify-between space-y-2 ${
                   isSelected
-                    ? 'border-black bg-black text-white shadow-[3px_3px_0px_#facc15]'
-                    : 'border-zinc-300 hover:border-black bg-zinc-50 text-black shadow-[2px_2px_0px_#000000]'
+                    ? 'border-emerald-400 ring-2 ring-emerald-500/20 bg-emerald-50/80 text-emerald-950 shadow-xs -translate-y-0.5 font-semibold'
+                    : 'border-slate-200/80 bg-white hover:bg-slate-50/70 text-slate-700 shadow-2xs font-medium'
                 }`}
               >
-                <div className="p-1 rounded-lg border border-black bg-white">
+                <div className="p-1 rounded-xl border border-slate-200/80 bg-white shadow-2xs">
                   <PixelCompanion type={item.id} emotion={isSelected ? 'smile' : 'idle'} size={36} interactive={false} />
                 </div>
-                <div className="text-xs font-bold flex items-center gap-1">
+                <div className="text-xs font-semibold flex items-center gap-1">
                   <span>{item.emoji}</span>
                   <span>{item.name}</span>
                 </div>
-                <div className={`text-[10px] font-mono ${isSelected ? 'text-yellow-300 font-bold' : 'text-zinc-500'}`}>
+                <div className={`text-[10px] ${isSelected ? 'text-emerald-700 font-semibold' : 'text-slate-400'}`}>
                   {item.tagline}
                 </div>
               </button>
@@ -340,16 +340,16 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       </div>
 
       {/* Data Export & Deletion */}
-      <div className="material-card p-6 bg-white space-y-4">
-        <h2 className="text-base font-medium text-[#202124]">Data Portability & Account Erasure</h2>
-        <p className="text-xs text-[#5f6368]">
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs space-y-4">
+        <h2 className="text-base font-semibold text-slate-900">Data Portability & Account Erasure</h2>
+        <p className="text-xs text-slate-500 leading-relaxed">
           You have full control over your personal records. You can download a complete JSON backup at any time or erase all records from this client.
         </p>
 
         <div className="flex flex-wrap gap-4 pt-2">
           <button
             onClick={handleExportData}
-            className="google-btn-outlined flex items-center space-x-2 text-xs py-2 px-4"
+            className="brutalist-btn-outlined flex items-center space-x-2 text-xs py-2 px-4 rounded-xl"
           >
             <Download className="w-4 h-4" />
             <span>Export Data as JSON</span>
@@ -357,7 +357,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
           <button
             onClick={handleClearData}
-            className="flex items-center space-x-2 text-xs py-2 px-4 rounded border border-[#fad2cf] text-[#d93025] hover:bg-[#fce8e6] font-medium"
+            className="flex items-center space-x-2 text-xs py-2 px-4 rounded-xl border border-rose-200 text-rose-700 hover:bg-rose-50 font-medium transition-colors"
           >
             <Trash2 className="w-4 h-4" />
             <span>Delete All My Stored Data</span>

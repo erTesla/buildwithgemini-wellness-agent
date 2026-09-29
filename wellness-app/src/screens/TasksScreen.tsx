@@ -98,18 +98,18 @@ export const TasksScreen: React.FC<TasksScreenProps> = ({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="material-card-flat p-6 bg-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="p-6 bg-gradient-to-r from-emerald-50/70 via-teal-50/40 to-sky-50/50 border border-emerald-100/80 rounded-2xl shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-normal text-[#202124]">
-            Tasks & <span className="font-semibold text-[#1a73e8]">Performance Goals</span>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
+            Tasks & <span className="text-emerald-700">Gentle Goals</span>
           </h1>
-          <p className="text-sm text-[#5f6368] mt-1">
-            Organize manageable priorities. Filter by energy level to prevent burnout.
+          <p className="text-sm text-slate-600 mt-1">
+            Organize manageable priorities. Filter by energy level to honor your pace.
           </p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="google-btn-primary flex items-center space-x-2 text-sm"
+          className="brutalist-btn-primary flex items-center space-x-2 text-xs sm:text-sm"
         >
           <Plus className="w-4 h-4" />
           <span>Add Task or Goal</span>
@@ -117,30 +117,30 @@ export const TasksScreen: React.FC<TasksScreenProps> = ({
       </div>
 
       {/* Filter and Control Bar */}
-      <div className="material-card p-4 bg-white flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-3">
           {/* Status Filter */}
-          <div className="flex rounded-md border border-[#dadce0] overflow-hidden text-xs">
+          <div className="flex rounded-xl bg-slate-100/90 p-1 border border-slate-200/80 text-xs">
             <button
               onClick={() => setFilterStatus('active')}
-              className={`px-3 py-1.5 font-medium ${
-                filterStatus === 'active' ? 'bg-[#1a73e8] text-white' : 'bg-white text-[#5f6368] hover:bg-[#f8f9fa]'
+              className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
+                filterStatus === 'active' ? 'bg-white text-emerald-800 shadow-2xs font-bold' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Active ({tasks.filter(t => t.status !== 'completed').length})
             </button>
             <button
               onClick={() => setFilterStatus('completed')}
-              className={`px-3 py-1.5 font-medium border-l border-[#dadce0] ${
-                filterStatus === 'completed' ? 'bg-[#1a73e8] text-white' : 'bg-white text-[#5f6368] hover:bg-[#f8f9fa]'
+              className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
+                filterStatus === 'completed' ? 'bg-white text-emerald-800 shadow-2xs font-bold' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Completed ({tasks.filter(t => t.status === 'completed').length})
             </button>
             <button
               onClick={() => setFilterStatus('all')}
-              className={`px-3 py-1.5 font-medium border-l border-[#dadce0] ${
-                filterStatus === 'all' ? 'bg-[#1a73e8] text-white' : 'bg-white text-[#5f6368] hover:bg-[#f8f9fa]'
+              className={`px-3 py-1.5 rounded-lg font-semibold transition-all ${
+                filterStatus === 'all' ? 'bg-white text-emerald-800 shadow-2xs font-bold' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               All
@@ -151,7 +151,7 @@ export const TasksScreen: React.FC<TasksScreenProps> = ({
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="text-xs border border-[#dadce0] rounded-md px-2.5 py-1.5 text-[#202124] focus:outline-none focus:border-[#1a73e8]"
+            className="text-xs border border-slate-200/80 rounded-xl px-3 py-1.5 text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500"
           >
             <option value="all">All Categories</option>
             <option value="wellness">Wellness</option>
@@ -164,28 +164,28 @@ export const TasksScreen: React.FC<TasksScreenProps> = ({
           {/* Energy Filter Toggle */}
           <button
             onClick={() => setShowEnergyFilter(!showEnergyFilter)}
-            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md border text-xs font-medium transition-colors ${
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-colors ${
               showEnergyFilter 
-                ? 'bg-[#e8f0fe] border-[#1a73e8] text-[#1a73e8]' 
-                : 'border-[#dadce0] text-[#5f6368] hover:bg-[#f8f9fa]'
+                ? 'bg-emerald-50 border-emerald-300 text-emerald-800 shadow-2xs' 
+                : 'border-slate-200/80 text-slate-600 hover:bg-slate-50'
             }`}
           >
-            <Zap className="w-3.5 h-3.5" />
+            <Zap className="w-3.5 h-3.5 text-emerald-600" />
             <span>Fit my energy (≤ {userEnergyLevel}/5)</span>
           </button>
         </div>
 
-        <div className="text-xs text-[#5f6368]">
-          Showing <strong>{filteredTasks.length}</strong> items
+        <div className="text-xs text-slate-500">
+          Showing <strong className="text-slate-800">{filteredTasks.length}</strong> items
         </div>
       </div>
 
       {/* Task List */}
       {filteredTasks.length === 0 ? (
-        <div className="material-card p-12 text-center text-[#5f6368]">
-          <CheckCircle2 className="w-12 h-12 mx-auto mb-3 text-[#1e8e3e] opacity-80" />
-          <h3 className="text-base font-medium text-[#202124]">No tasks match the active filters</h3>
-          <p className="text-xs text-[#5f6368] mt-1">
+        <div className="bg-white border border-slate-200/80 rounded-2xl p-12 text-center text-slate-500 shadow-xs">
+          <CheckCircle2 className="w-12 h-12 mx-auto mb-3 text-emerald-500 opacity-80" />
+          <h3 className="text-base font-semibold text-slate-900">No tasks match the active filters</h3>
+          <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
             {showEnergyFilter 
               ? "All pending tasks require higher energy than your current level. Take time to recharge or lower task demands!"
               : "You're either all done or ready to add your next personal goal."}
@@ -196,72 +196,72 @@ export const TasksScreen: React.FC<TasksScreenProps> = ({
           {filteredTasks.map((task) => (
             <div 
               key={task.id}
-              className={`material-card p-4 transition-all flex items-start gap-4 ${
-                task.status === 'completed' ? 'opacity-70 bg-[#fafafa]' : 'bg-white'
+              className={`bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-xs transition-all flex items-start gap-4 hover:shadow-sm ${
+                task.status === 'completed' ? 'opacity-70 bg-slate-50/50' : 'bg-white'
               }`}
             >
               <button 
                 onClick={() => handleToggleStatus(task)}
-                className="mt-1 flex-shrink-0 text-[#1a73e8] hover:opacity-80"
+                className="mt-0.5 flex-shrink-0 text-slate-400 hover:text-emerald-600 transition-colors"
               >
                 {task.status === 'completed' ? (
-                  <CheckCircle2 className="w-5 h-5 text-[#1e8e3e]" />
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                 ) : (
-                  <Circle className="w-5 h-5 text-[#5f6368]" />
+                  <Circle className="w-5 h-5" />
                 )}
               </button>
 
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <h3 className={`text-base font-medium ${
-                    task.status === 'completed' ? 'line-through text-[#5f6368]' : 'text-[#202124]'
+                  <h3 className={`text-base font-semibold ${
+                    task.status === 'completed' ? 'line-through text-slate-400' : 'text-slate-900'
                   }`}>
                     {task.title}
                   </h3>
                   {task.isAIGenerated && (
-                    <span className="flex items-center space-x-1 text-[11px] bg-[#e8f0fe] text-[#1a73e8] px-2 py-0.5 rounded-full font-medium">
+                    <span className="flex items-center space-x-1 text-[11px] bg-emerald-50 text-emerald-700 border border-emerald-200/60 px-2 py-0.5 rounded-full font-semibold">
                       <Sparkles className="w-3 h-3" />
                       <span>AI Suggested</span>
                     </span>
                   )}
                   {task.status === 'postponed' && (
-                    <span className="text-[11px] bg-[#feefc3] text-[#b06000] px-2 py-0.5 rounded-full font-medium">
+                    <span className="text-[11px] bg-amber-50 text-amber-800 border border-amber-200/60 px-2 py-0.5 rounded-full font-semibold">
                       Postponed
                     </span>
                   )}
                 </div>
 
                 {task.description && (
-                  <p className="text-xs text-[#5f6368] mt-1">{task.description}</p>
+                  <p className="text-xs text-slate-600 mt-1 leading-relaxed">{task.description}</p>
                 )}
 
                 {task.proposedReason && (
-                  <p className="text-xs text-[#1a73e8] mt-1 italic">Why: {task.proposedReason}</p>
+                  <p className="text-xs text-emerald-700 mt-1 italic">Why: {task.proposedReason}</p>
                 )}
 
-                <div className="flex flex-wrap items-center gap-3 mt-3 text-xs text-[#5f6368]">
+                <div className="flex flex-wrap items-center gap-2.5 mt-3 text-xs text-slate-500">
                   <span className="flex items-center space-x-1">
-                    <Clock className="w-3.5 h-3.5" />
+                    <Clock className="w-3.5 h-3.5 text-slate-400" />
                     <span>{task.estimatedDurationMinutes} mins</span>
                   </span>
-                  <span className="capitalize px-2 py-0.5 rounded bg-[#f1f3f4] text-[#3c4043]">
+                  <span className="capitalize px-2.5 py-0.5 rounded-full bg-slate-100 border border-slate-200/60 text-slate-700 text-[11px] font-medium">
                     {task.category}
                   </span>
-                  <span className={`capitalize font-medium ${
-                    task.priority === 'high' ? 'text-[#d93025]' :
-                    task.priority === 'medium' ? 'text-[#f9ab00]' : 'text-[#5f6368]'
+                  <span className={`capitalize font-semibold text-[11px] ${
+                    task.priority === 'high' ? 'text-rose-600' :
+                    task.priority === 'medium' ? 'text-amber-600' : 'text-slate-500'
                   }`}>
                     {task.priority} Priority
                   </span>
                   {task.minEnergyRequired && (
-                    <span className="flex items-center space-x-1 text-[#3c4043]">
-                      <Zap className="w-3 h-3 text-[#f9ab00]" />
+                    <span className="flex items-center space-x-1 text-slate-600">
+                      <Zap className="w-3 h-3 text-amber-500" />
                       <span>Energy {task.minEnergyRequired}/5</span>
                     </span>
                   )}
                   {task.dueDate && (
-                    <span className="flex items-center space-x-1 text-[#5f6368]">
-                      <Calendar className="w-3.5 h-3.5" />
+                    <span className="flex items-center space-x-1 text-slate-500">
+                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
                       <span>Due {task.dueDate}</span>
                     </span>
                   )}
@@ -273,14 +273,14 @@ export const TasksScreen: React.FC<TasksScreenProps> = ({
                 {task.status !== 'completed' && (
                   <button
                     onClick={() => handlePostpone(task)}
-                    className="text-xs text-[#5f6368] hover:text-[#202124] px-2 py-1 border border-[#dadce0] rounded hover:bg-[#f8f9fa]"
+                    className="text-xs text-slate-600 hover:text-slate-900 px-2.5 py-1 border border-slate-200/80 rounded-lg hover:bg-slate-50 transition-colors"
                   >
                     Postpone
                   </button>
                 )}
                 <button
                   onClick={() => onDeleteTask(task.id)}
-                  className="text-[#5f6368] hover:text-[#d93025] p-1.5 rounded hover:bg-[#fce8e6] transition-colors"
+                  className="text-slate-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition-colors"
                   title="Delete task"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -293,40 +293,40 @@ export const TasksScreen: React.FC<TasksScreenProps> = ({
 
       {/* Modal for creating task */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-lg w-full p-6 space-y-4">
-            <h2 className="text-lg font-medium text-[#202124]">Create Personal Task or Goal</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-xs p-4">
+          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 border border-slate-200/80 space-y-4">
+            <h2 className="text-lg font-semibold text-slate-900">Create Personal Task or Goal</h2>
             <form onSubmit={handleCreateTask} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-[#202124] mb-1">Title</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Title</label>
                 <input
                   type="text"
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. 20-minute evening walk, Prep lunch"
-                  className="w-full p-2.5 border border-[#dadce0] rounded-md text-sm text-[#202124] focus:border-[#1a73e8] focus:outline-none"
+                  className="w-full p-2.5 bg-slate-50/60 border border-slate-200/80 rounded-xl text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[#202124] mb-1">Description (Optional)</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Description (Optional)</label>
                 <textarea
                   rows={2}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Additional context or notes..."
-                  className="w-full p-2.5 border border-[#dadce0] rounded-md text-sm text-[#202124] focus:border-[#1a73e8] focus:outline-none"
+                  className="w-full p-2.5 bg-slate-50/60 border border-slate-200/80 rounded-xl text-sm text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500 focus:outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-[#202124] mb-1">Category</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Category</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as TaskCategory)}
-                    className="w-full p-2 border border-[#dadce0] rounded-md text-sm text-[#202124]"
+                    className="w-full p-2 bg-slate-50/60 border border-slate-200/80 rounded-xl text-sm text-slate-800"
                   >
                     <option value="wellness">Wellness</option>
                     <option value="hobby">Hobby</option>
@@ -336,11 +336,11 @@ export const TasksScreen: React.FC<TasksScreenProps> = ({
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-[#202124] mb-1">Priority</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Priority</label>
                   <select
                     value={priority}
                     onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                    className="w-full p-2 border border-[#dadce0] rounded-md text-sm text-[#202124]"
+                    className="w-full p-2 bg-slate-50/60 border border-slate-200/80 rounded-xl text-sm text-slate-800"
                   >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -351,40 +351,40 @@ export const TasksScreen: React.FC<TasksScreenProps> = ({
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-[#202124] mb-1">Est. Duration (Minutes)</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Est. Duration (Minutes)</label>
                   <input
                     type="number"
                     min="5"
                     step="5"
                     value={duration}
                     onChange={(e) => setDuration(Number(e.target.value))}
-                    className="w-full p-2 border border-[#dadce0] rounded-md text-sm text-[#202124]"
+                    className="w-full p-2 bg-slate-50/60 border border-slate-200/80 rounded-xl text-sm text-slate-800"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-[#202124] mb-1">Min. Energy (1-5)</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Min. Energy (1-5)</label>
                   <input
                     type="number"
                     min="1"
                     max="5"
                     value={energyRequired}
                     onChange={(e) => setEnergyRequired(Number(e.target.value))}
-                    className="w-full p-2 border border-[#dadce0] rounded-md text-sm text-[#202124]"
+                    className="w-full p-2 bg-slate-50/60 border border-slate-200/80 rounded-xl text-sm text-slate-800"
                   />
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-3 pt-3 border-t border-[#dadce0]">
+              <div className="flex justify-end space-x-3 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-sm text-[#5f6368] hover:text-[#202124]"
+                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="google-btn-primary text-sm"
+                  className="brutalist-btn-primary px-4 py-2 text-xs font-semibold rounded-xl"
                 >
                   Save Task
                 </button>

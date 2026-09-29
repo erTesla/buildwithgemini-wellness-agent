@@ -96,12 +96,12 @@ export const CheckinScreen: React.FC<CheckinScreenProps> = ({
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Title & Mode Switcher */}
-      <div className="material-card-flat p-6 bg-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="p-6 bg-gradient-to-r from-emerald-50/70 via-teal-50/40 to-sky-50/50 border border-emerald-100/80 rounded-2xl shadow-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-black flex items-center gap-2">
-            Daily <span className="bg-[#facc15] px-1.5 py-0.5 border-2 border-black rounded text-xl">Wellness Log</span>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+            Daily <span className="text-emerald-700">Wellness Log</span>
           </h1>
-          <p className="text-sm font-medium text-zinc-600 mt-1">
+          <p className="text-sm text-slate-600 mt-1">
             {logMode === 'simple' 
               ? 'Quick Log: Capture your mood & thoughts in 10 seconds.' 
               : 'Advanced Log: Fine-tune physical energy, sleep metrics, and constraints.'}
@@ -109,26 +109,26 @@ export const CheckinScreen: React.FC<CheckinScreenProps> = ({
         </div>
 
         {/* Mode Toggle Pills */}
-        <div className="flex items-center p-1 bg-zinc-100 border-2 border-black rounded shadow-[2px_2px_0px_#000000]">
+        <div className="flex items-center p-1 bg-slate-100/90 border border-slate-200/80 rounded-xl shadow-2xs">
           <button
             type="button"
             onClick={() => setLogMode('simple')}
-            className={`px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded transition-all flex items-center space-x-1.5 ${
+            className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center space-x-1.5 ${
               logMode === 'simple'
-                ? 'bg-[#facc15] text-black border-2 border-black shadow-[1px_1px_0px_#000000]'
-                : 'text-zinc-600 hover:text-black'
+                ? 'bg-white text-emerald-800 shadow-2xs font-bold'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Zap className="w-3.5 h-3.5" />
+            <Zap className="w-3.5 h-3.5 text-emerald-600" />
             <span>Simple (1-Tap)</span>
           </button>
           <button
             type="button"
             onClick={() => setLogMode('advanced')}
-            className={`px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded transition-all flex items-center space-x-1.5 ${
+            className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center space-x-1.5 ${
               logMode === 'advanced'
-                ? 'bg-black text-white border-2 border-black shadow-[1px_1px_0px_#000000]'
-                : 'text-zinc-600 hover:text-black'
+                ? 'bg-slate-900 text-white shadow-2xs font-bold'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <Sliders className="w-3.5 h-3.5" />
@@ -138,10 +138,10 @@ export const CheckinScreen: React.FC<CheckinScreenProps> = ({
       </div>
 
       {/* Main Logging Form */}
-      <form onSubmit={handleSubmit} className="material-card bg-white p-6 space-y-6">
+      <form onSubmit={handleSubmit} className="bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-7 shadow-xs space-y-6">
         {/* Step 1: Mood Selection */}
         <div>
-          <label className="block text-sm font-bold text-black mb-3 uppercase tracking-wider">
+          <label className="block text-xs font-bold text-slate-800 mb-3 uppercase tracking-wider">
             1. How are you feeling today?
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
@@ -150,26 +150,26 @@ export const CheckinScreen: React.FC<CheckinScreenProps> = ({
                 type="button"
                 key={opt.id}
                 onClick={() => handleSelectMood(opt.id)}
-                className={`p-3.5 rounded border-2 border-black text-left transition-all ${
+                className={`p-3.5 rounded-xl border text-left transition-all ${
                   mood === opt.id
-                    ? 'bg-[#facc15] shadow-[3px_3px_0px_#000000] -translate-y-0.5'
-                    : 'bg-white hover:bg-zinc-50 shadow-[2px_2px_0px_#000000]'
+                    ? 'bg-emerald-50/80 border-emerald-300 ring-2 ring-emerald-500/15 shadow-xs -translate-y-0.5'
+                    : 'bg-slate-50/50 hover:bg-white border-slate-200/70 shadow-2xs'
                 }`}
               >
-                <div className="text-3xl mb-1">{opt.emoji}</div>
-                <div className="text-sm font-bold text-black">{opt.label}</div>
-                <div className="text-xs text-zinc-600 line-clamp-1 mt-0.5">{opt.desc}</div>
+                <div className="text-2xl sm:text-3xl mb-1">{opt.emoji}</div>
+                <div className="text-sm font-semibold text-slate-900">{opt.label}</div>
+                <div className="text-xs text-slate-500 line-clamp-1 mt-0.5">{opt.desc}</div>
               </button>
             ))}
           </div>
         </div>
 
         {/* Step 2: Quick Note / Reflection */}
-        <div className="pt-2 border-t-2 border-black">
-          <label className="block text-sm font-bold text-black mb-1 uppercase tracking-wider">
+        <div className="pt-2 border-t border-slate-100">
+          <label className="block text-xs font-bold text-slate-800 mb-1 uppercase tracking-wider">
             2. Today's Highlight or Reflection
           </label>
-          <p className="text-xs font-medium text-zinc-600 mb-2">
+          <p className="text-xs text-slate-500 mb-2">
             A quick sentence about your day, a purchase (e.g. bought a cycle), or what you're thinking.
           </p>
           <textarea
@@ -177,82 +177,82 @@ export const CheckinScreen: React.FC<CheckinScreenProps> = ({
             value={journalText}
             onChange={(e) => setJournalText(e.target.value)}
             placeholder="e.g., I'm so happy today, I bought a cycle! / Finished my morning run feeling energized..."
-            className="w-full text-sm font-medium"
+            className="w-full text-sm font-normal p-3 bg-slate-50/60 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500"
           />
         </div>
 
         {/* ADVANCED SECTION (Sliders, Constraints, Specific Biometrics) */}
         {logMode === 'advanced' && (
-          <div className="space-y-6 pt-4 border-t-2 border-dashed border-black">
-            <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-black bg-[#bae6fd] px-2.5 py-1 border border-black inline-block">
+          <div className="space-y-6 pt-4 border-t border-slate-100">
+            <div className="flex items-center space-x-2 text-xs font-semibold text-teal-800 bg-teal-50 border border-teal-200/80 px-3 py-1 rounded-full inline-flex">
               <Sliders className="w-3.5 h-3.5" />
               <span>Advanced Metrics & Constraints</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Energy */}
-              <div className="p-3 border-2 border-black rounded bg-zinc-50 shadow-[2px_2px_0px_#000000]">
-                <div className="flex justify-between text-sm font-bold mb-1">
+              <div className="p-4 border border-slate-200/80 rounded-xl bg-slate-50/60 shadow-2xs">
+                <div className="flex justify-between text-xs font-semibold text-slate-800 mb-2">
                   <span>Physical Energy</span>
-                  <span className="font-mono bg-[#facc15] px-1.5 border border-black rounded">{energyLevel} / 5</span>
+                  <span className="font-mono bg-amber-50 text-amber-800 px-2 py-0.5 border border-amber-200/80 rounded-md text-xs">{energyLevel} / 5</span>
                 </div>
                 <input 
                   type="range" min="1" max="5" value={energyLevel} 
                   onChange={(e) => setEnergyLevel(Number(e.target.value))}
                   className="w-full" 
                 />
-                <div className="flex justify-between text-xs font-mono text-zinc-500 mt-1">
+                <div className="flex justify-between text-[11px] text-slate-400 mt-1">
                   <span>1 (Exhausted)</span>
                   <span>5 (High Energy)</span>
                 </div>
               </div>
 
               {/* Stress */}
-              <div className="p-3 border-2 border-black rounded bg-zinc-50 shadow-[2px_2px_0px_#000000]">
-                <div className="flex justify-between text-sm font-bold mb-1">
+              <div className="p-4 border border-slate-200/80 rounded-xl bg-slate-50/60 shadow-2xs">
+                <div className="flex justify-between text-xs font-semibold text-slate-800 mb-2">
                   <span>Perceived Stress</span>
-                  <span className="font-mono bg-[#fecaca] px-1.5 border border-black rounded">{stressLevel} / 5</span>
+                  <span className="font-mono bg-rose-50 text-rose-700 px-2 py-0.5 border border-rose-200/80 rounded-md text-xs">{stressLevel} / 5</span>
                 </div>
                 <input 
                   type="range" min="1" max="5" value={stressLevel} 
                   onChange={(e) => setStressLevel(Number(e.target.value))}
                   className="w-full" 
                 />
-                <div className="flex justify-between text-xs font-mono text-zinc-500 mt-1">
+                <div className="flex justify-between text-[11px] text-slate-400 mt-1">
                   <span>1 (Calm & Serene)</span>
                   <span>5 (High Stress)</span>
                 </div>
               </div>
 
               {/* Sleep Quality */}
-              <div className="p-3 border-2 border-black rounded bg-zinc-50 shadow-[2px_2px_0px_#000000]">
-                <div className="flex justify-between text-sm font-bold mb-1">
+              <div className="p-4 border border-slate-200/80 rounded-xl bg-slate-50/60 shadow-2xs">
+                <div className="flex justify-between text-xs font-semibold text-slate-800 mb-2">
                   <span>Sleep Quality</span>
-                  <span className="font-mono bg-[#bbf7d0] px-1.5 border border-black rounded">{sleepQuality} / 5</span>
+                  <span className="font-mono bg-emerald-50 text-emerald-800 px-2 py-0.5 border border-emerald-200/80 rounded-md text-xs">{sleepQuality} / 5</span>
                 </div>
                 <input 
                   type="range" min="1" max="5" value={sleepQuality} 
                   onChange={(e) => setSleepQuality(Number(e.target.value))}
                   className="w-full" 
                 />
-                <div className="flex justify-between text-xs font-mono text-zinc-500 mt-1">
+                <div className="flex justify-between text-[11px] text-slate-400 mt-1">
                   <span>1 (Restless / Poor)</span>
                   <span>5 (Deep & Rested)</span>
                 </div>
               </div>
 
               {/* Motivation */}
-              <div className="p-3 border-2 border-black rounded bg-zinc-50 shadow-[2px_2px_0px_#000000]">
-                <div className="flex justify-between text-sm font-bold mb-1">
+              <div className="p-4 border border-slate-200/80 rounded-xl bg-slate-50/60 shadow-2xs">
+                <div className="flex justify-between text-xs font-semibold text-slate-800 mb-2">
                   <span>Motivation & Drive</span>
-                  <span className="font-mono bg-[#fef08a] px-1.5 border border-black rounded">{motivationLevel} / 5</span>
+                  <span className="font-mono bg-teal-50 text-teal-800 px-2 py-0.5 border border-teal-200/80 rounded-md text-xs">{motivationLevel} / 5</span>
                 </div>
                 <input 
                   type="range" min="1" max="5" value={motivationLevel} 
                   onChange={(e) => setMotivationLevel(Number(e.target.value))}
                   className="w-full" 
                 />
-                <div className="flex justify-between text-xs font-mono text-zinc-500 mt-1">
+                <div className="flex justify-between text-[11px] text-slate-400 mt-1">
                   <span>1 (Low Drive)</span>
                   <span>5 (Ready to Conquer)</span>
                 </div>
@@ -261,7 +261,7 @@ export const CheckinScreen: React.FC<CheckinScreenProps> = ({
 
             {/* Optional Notes or Constraints */}
             <div>
-              <label className="block text-sm font-bold text-black mb-1 uppercase tracking-wider">
+              <label className="block text-xs font-bold text-slate-800 mb-1 uppercase tracking-wider">
                 Specific Constraints or Context
               </label>
               <input
@@ -269,15 +269,15 @@ export const CheckinScreen: React.FC<CheckinScreenProps> = ({
                 value={concerns}
                 onChange={(e) => setConcerns(e.target.value)}
                 placeholder="e.g. sore shoulder from workout, back-to-back meetings till 3 PM..."
-                className="w-full text-sm font-medium"
+                className="w-full text-sm font-normal p-3 bg-slate-50/60 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500"
               />
             </div>
           </div>
         )}
 
         {/* Submit Bar */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-4 border-t-2 border-black">
-          <div className="text-xs font-mono text-zinc-500">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-4 border-t border-slate-100">
+          <div className="text-xs text-slate-500">
             {logMode === 'simple' ? (
               <span>⚡ Fast 1-tap mode active. Energy automatically calibrated to {energyLevel}/5.</span>
             ) : (
@@ -287,7 +287,7 @@ export const CheckinScreen: React.FC<CheckinScreenProps> = ({
           <button
             type="submit"
             disabled={isSubmitting}
-            className="brutalist-btn-primary px-6 py-2.5 flex items-center space-x-2 text-sm disabled:opacity-50 w-full sm:w-auto justify-center"
+            className="brutalist-btn-primary px-6 py-2.5 flex items-center space-x-2 text-xs sm:text-sm disabled:opacity-50 w-full sm:w-auto justify-center"
           >
             {isSubmitting ? (
               <span>Saving & Synthesizing...</span>
@@ -303,38 +303,40 @@ export const CheckinScreen: React.FC<CheckinScreenProps> = ({
 
       {/* AI Empathy & Next Steps Feedback */}
       {lastAnalysis && (
-        <div className={`p-6 border-2 border-black rounded shadow-[4px_4px_0px_#000000] ${
-          lastAnalysis.crisisAlert ? 'bg-[#fecaca]' : 'bg-[#fef08a]'
+        <div className={`p-6 border rounded-2xl shadow-xs ${
+          lastAnalysis.crisisAlert 
+            ? 'bg-rose-50 border-rose-200 text-rose-950' 
+            : 'bg-emerald-50/80 border-emerald-200 text-emerald-950'
         }`}>
           {lastAnalysis.crisisAlert ? (
             <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-red-700 font-bold text-base">
-                <AlertTriangle className="w-5 h-5" />
+              <div className="flex items-center space-x-2 text-rose-700 font-bold text-base">
+                <AlertTriangle className="w-5 h-5 text-rose-600" />
                 <span>Crisis & Safety Support Resources</span>
               </div>
-              <p className="text-sm text-black whitespace-pre-line leading-relaxed font-medium">
+              <p className="text-sm text-rose-900 whitespace-pre-line leading-relaxed font-normal">
                 {CRISIS_SUPPORT_TEXT}
               </p>
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="flex items-center space-x-2 text-black font-bold text-base">
-                <Sparkles className="w-5 h-5 text-black" />
+              <div className="flex items-center space-x-2 text-slate-900 font-bold text-base">
+                <Sparkles className="w-5 h-5 text-emerald-600" />
                 <span>Agent Buddy Synthesis</span>
               </div>
-              <p className="text-sm font-medium text-black leading-relaxed">
+              <p className="text-sm text-slate-700 leading-relaxed font-normal">
                 {lastAnalysis.empatheticSummary}
               </p>
 
               {lastAnalysis.recommendedSteps.length > 0 && (
-                <div className="pt-2 border-t-2 border-black">
-                  <span className="text-xs font-bold uppercase tracking-wider text-black block mb-2">
+                <div className="pt-3 border-t border-emerald-200/60">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-2">
                     Actionable Next Steps for Today:
                   </span>
-                  <ul className="space-y-1 text-sm font-medium text-black">
+                  <ul className="space-y-1.5 text-sm font-medium text-slate-800">
                     {lastAnalysis.recommendedSteps.map((step: string, i: number) => (
                       <li key={i} className="flex items-start space-x-2">
-                        <span className="text-black font-bold">✓</span>
+                        <span className="text-emerald-700 font-bold">✓</span>
                         <span>{step}</span>
                       </li>
                     ))}

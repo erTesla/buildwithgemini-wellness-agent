@@ -40,72 +40,78 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="material-card-flat p-6 bg-white">
-        <h1 className="text-2xl font-normal text-[#202124]">
-          History & <span className="font-semibold text-[#1a73e8]">Wellness Insights</span>
+      <div className="p-6 bg-gradient-to-r from-emerald-50/70 via-teal-50/40 to-sky-50/50 border border-emerald-100/80 rounded-2xl shadow-xs">
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
+          History & <span className="text-emerald-700">Wellness Journey</span>
         </h1>
-        <p className="text-sm text-[#5f6368] mt-1">
+        <p className="text-sm text-slate-600 mt-1">
           Review recorded patterns, habit consistency, and journal reflections over time.
         </p>
       </div>
 
       {/* Non-diagnostic disclaimer alert */}
-      <div className="bg-[#f8f9fa] border border-[#dadce0] rounded-lg p-4 flex items-start space-x-3 text-xs text-[#5f6368]">
-        <Info className="w-4 h-4 text-[#1a73e8] mt-0.5 flex-shrink-0" />
+      <div className="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4 flex items-start space-x-3 text-xs text-slate-600 shadow-2xs">
+        <Info className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
         <p>
-          <strong>Objective pattern review:</strong> These visualizations display self-reported user inputs over time. They do not calculate hidden clinical risk metrics or infer psychological diagnoses.
+          <strong className="text-slate-800">Objective pattern review:</strong> These visualizations display self-reported reflections over time. They do not calculate hidden clinical risk metrics or infer psychological diagnoses.
         </p>
       </div>
 
       {/* Metrics Overview Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="material-card p-5 bg-white text-center">
-          <Calendar className="w-6 h-6 text-[#1a73e8] mx-auto mb-2" />
-          <span className="text-2xl font-semibold text-[#202124]">{checkins.length}</span>
-          <p className="text-xs text-[#5f6368] mt-1">Total Wellness Check-ins</p>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div className="bg-white border border-slate-200/80 rounded-2xl p-5 text-center shadow-xs">
+          <Calendar className="w-6 h-6 text-emerald-600 mx-auto mb-2" />
+          <span className="text-2xl font-bold text-slate-900">{checkins.length}</span>
+          <p className="text-xs text-slate-500 mt-1 font-medium">Total Wellness Check-ins</p>
         </div>
 
-        <div className="material-card p-5 bg-white text-center">
-          <CheckCircle className="w-6 h-6 text-[#1e8e3e] mx-auto mb-2" />
-          <span className="text-2xl font-semibold text-[#202124]">{completedTasks.length}</span>
-          <p className="text-xs text-[#5f6368] mt-1">Completed Tasks & Goals</p>
+        <div className="bg-white border border-slate-200/80 rounded-2xl p-5 text-center shadow-xs">
+          <CheckCircle className="w-6 h-6 text-teal-600 mx-auto mb-2" />
+          <span className="text-2xl font-bold text-slate-900">{completedTasks.length}</span>
+          <p className="text-xs text-slate-500 mt-1 font-medium">Completed Tasks & Goals</p>
         </div>
 
-        <div className="material-card p-5 bg-white text-center">
-          <TrendingUp className="w-6 h-6 text-[#f9ab00] mx-auto mb-2" />
-          <span className="text-2xl font-semibold text-[#202124]">
+        <div className="bg-white border border-slate-200/80 rounded-2xl p-5 text-center shadow-xs">
+          <TrendingUp className="w-6 h-6 text-amber-500 mx-auto mb-2" />
+          <span className="text-2xl font-bold text-slate-900">
             {hobbies.filter(h => h.status === 'active').length}
           </span>
-          <p className="text-xs text-[#5f6368] mt-1">Active Restorative Hobbies</p>
+          <p className="text-xs text-slate-500 mt-1 font-medium">Active Restorative Hobbies</p>
         </div>
       </div>
 
       {/* Mood Distribution Bar Chart */}
-      <div className="material-card p-6 bg-white space-y-4">
-        <h2 className="text-base font-medium text-[#202124] flex items-center space-x-2">
-          <Smile className="w-5 h-5 text-[#1a73e8]" />
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs space-y-4">
+        <h2 className="text-base font-semibold text-slate-900 flex items-center space-x-2">
+          <Smile className="w-5 h-5 text-emerald-600" />
           <span>Recorded Mood Distribution</span>
         </h2>
 
         {checkins.length === 0 ? (
-          <p className="text-sm text-[#5f6368]">No check-in data recorded yet.</p>
+          <p className="text-sm text-slate-500">No check-in data recorded yet.</p>
         ) : (
           <div className="space-y-3 pt-2">
-            {['thriving', 'good', 'okay', 'low', 'overwhelmed'].map((m) => {
+            {[
+              { id: 'thriving', color: '#10b981' },
+              { id: 'good', color: '#0d9488' },
+              { id: 'okay', color: '#f59e0b' },
+              { id: 'low', color: '#f43f5e' },
+              { id: 'overwhelmed', color: '#e11d48' }
+            ].map(({ id: m, color }) => {
               const count = moodCounts[m] || 0;
               const pct = checkins.length > 0 ? Math.round((count / checkins.length) * 100) : 0;
               return (
                 <div key={m} className="space-y-1">
-                  <div className="flex justify-between text-xs text-[#5f6368]">
-                    <span className="capitalize font-medium text-[#202124]">{m}</span>
-                    <span>{count} entries ({pct}%)</span>
+                  <div className="flex justify-between text-xs text-slate-600">
+                    <span className="capitalize font-semibold text-slate-800">{m}</span>
+                    <span className="text-slate-500">{count} entries ({pct}%)</span>
                   </div>
-                  <div className="w-full bg-[#f1f3f4] rounded-full h-3">
+                  <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
                     <div 
-                      className="h-3 rounded-full transition-all duration-500"
+                      className="h-2.5 rounded-full transition-all duration-500"
                       style={{ 
                         width: `${pct}%`,
-                        backgroundColor: moodColors[m] || '#1a73e8'
+                        backgroundColor: color
                       }}
                     />
                   </div>
@@ -117,51 +123,51 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
       </div>
 
       {/* Chronological Journal Timeline */}
-      <div className="material-card p-6 bg-white space-y-4">
-        <h2 className="text-base font-medium text-[#202124] flex items-center space-x-2">
-          <Clock className="w-5 h-5 text-[#1a73e8]" />
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs space-y-4">
+        <h2 className="text-base font-semibold text-slate-900 flex items-center space-x-2">
+          <Clock className="w-5 h-5 text-emerald-600" />
           <span>Journal & Check-in Timeline</span>
         </h2>
 
         {checkins.length === 0 ? (
-          <p className="text-sm text-[#5f6368]">Your timeline will display check-in entries chronologically.</p>
+          <p className="text-sm text-slate-500">Your timeline will display check-in entries chronologically.</p>
         ) : (
-          <div className="relative pl-6 border-l-2 border-[#dadce0] space-y-6 pt-2">
+          <div className="relative pl-6 border-l-2 border-emerald-100 space-y-6 pt-2">
             {checkins.map((item) => (
               <div key={item.id} className="relative group">
-                <span className="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-white border-2 border-[#1a73e8]" />
+                <span className="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-white border-2 border-emerald-600" />
                 
-                <div className="p-4 rounded-lg border border-[#dadce0] bg-[#ffffff] space-y-2">
+                <div className="p-4 rounded-xl border border-slate-200/80 bg-slate-50/50 space-y-2 hover:bg-slate-50 transition-colors">
                   <div className="flex flex-wrap justify-between items-center gap-2">
                     <div className="flex items-center space-x-2">
-                      <span className="text-xs font-semibold text-[#1a73e8]">
+                      <span className="text-xs font-semibold text-emerald-800">
                         {new Date(item.timestamp).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })} at {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                       {item.source === 'chat' && (
-                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#fef08a] text-black border border-black flex items-center space-x-1 shadow-[1px_1px_0px_#000000]">
+                        <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 flex items-center space-x-1">
                           <span>💬</span>
                           <span>Generated from Chat</span>
                         </span>
                       )}
                     </div>
-                    <span className="text-xs uppercase px-2 py-0.5 rounded font-medium bg-[#f1f3f4] text-[#3c4043]">
+                    <span className="text-[11px] uppercase px-2.5 py-0.5 rounded-full font-semibold bg-white border border-slate-200/80 text-slate-700">
                       Mood: {item.mood}
                     </span>
                   </div>
 
                   {item.journalText && (
-                    <p className="text-sm text-[#202124] italic">
+                    <p className="text-sm text-slate-800 italic leading-relaxed">
                       "{item.journalText}"
                     </p>
                   )}
 
                   {item.aiSummary && (
-                    <p className="text-xs text-[#5f6368] pt-1 border-t border-[#dadce0]">
-                      <strong>AI Summary:</strong> {item.aiSummary}
+                    <p className="text-xs text-slate-600 pt-2 border-t border-slate-200/60 leading-relaxed">
+                      <strong className="text-slate-800">AI Summary:</strong> {item.aiSummary}
                     </p>
                   )}
 
-                  <div className="flex gap-4 text-[11px] text-[#5f6368] pt-1">
+                  <div className="flex gap-4 text-[11px] text-slate-500 pt-1">
                     <span>⚡ Energy: {item.energyLevel || 3}/5</span>
                     <span>🧘 Stress: {item.stressLevel || 2}/5</span>
                     <span>🌙 Sleep: {item.sleepQuality || 4}/5</span>

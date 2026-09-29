@@ -103,15 +103,15 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   const getMoodBadge = (mood: MoodType) => {
     switch (mood) {
       case 'thriving':
-        return <span className="bg-[#bbf7d0] text-black border-2 border-black px-2.5 py-0.5 rounded text-xs font-bold shadow-[1px_1px_0px_#000000]">🌟 Thriving</span>;
+        return <span className="bg-emerald-50 text-emerald-700 border border-emerald-200/60 px-2.5 py-0.5 rounded-full text-xs font-semibold">🌟 Thriving</span>;
       case 'good':
-        return <span className="bg-[#fef08a] text-black border-2 border-black px-2.5 py-0.5 rounded text-xs font-bold shadow-[1px_1px_0px_#000000]">😊 Good</span>;
+        return <span className="bg-teal-50 text-teal-700 border border-teal-200/60 px-2.5 py-0.5 rounded-full text-xs font-semibold">😊 Good</span>;
       case 'okay':
-        return <span className="bg-[#e0e7ff] text-black border-2 border-black px-2.5 py-0.5 rounded text-xs font-bold shadow-[1px_1px_0px_#000000]">😐 Okay / Steady</span>;
+        return <span className="bg-sky-50 text-sky-700 border border-sky-200/60 px-2.5 py-0.5 rounded-full text-xs font-semibold">😐 Okay / Steady</span>;
       case 'low':
-        return <span className="bg-[#fed7aa] text-black border-2 border-black px-2.5 py-0.5 rounded text-xs font-bold shadow-[1px_1px_0px_#000000]">🌧️ Low Energy</span>;
+        return <span className="bg-amber-50 text-amber-800 border border-amber-200/60 px-2.5 py-0.5 rounded-full text-xs font-semibold">🌧️ Low Energy</span>;
       case 'overwhelmed':
-        return <span className="bg-[#fecaca] text-black border-2 border-black px-2.5 py-0.5 rounded text-xs font-bold shadow-[1px_1px_0px_#000000]">⚠️ Overwhelmed</span>;
+        return <span className="bg-rose-50 text-rose-700 border border-rose-200/60 px-2.5 py-0.5 rounded-full text-xs font-semibold">⚠️ Overwhelmed</span>;
     }
   };
 
@@ -125,28 +125,28 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   const currentPhase = getDayPhase();
 
   const rhythmPhases = [
-    { id: 'morning', label: 'Morning Rise', time: '5:00 - 12:00', icon: Sun, color: '#fef08a', advice: 'Hydrate, set a gentle intention & step into light.' },
-    { id: 'afternoon', label: 'Afternoon Flow', time: '12:00 - 17:00', icon: Sunset, color: '#bae6fd', advice: 'Steady focus, nourish your body & stretch out tension.' },
-    { id: 'evening', label: 'Evening Decompress', time: '17:00 - 22:00', icon: Moon, color: '#fed7aa', advice: 'Dim harsh lights, chat with your buddy & unwind gently.' },
-    { id: 'night', label: 'Night Rest', time: '22:00 - 5:00', icon: Sparkles, color: '#ddd6fe', advice: 'Deep restorative rest. Tomorrow is an unhurried new canvas.' }
+    { id: 'morning', label: 'Morning Rise', time: '5:00 - 12:00', icon: Sun, color: '#fef3c7', advice: 'Hydrate, set a gentle intention & step into light.' },
+    { id: 'afternoon', label: 'Afternoon Flow', time: '12:00 - 17:00', icon: Sunset, color: '#e0f2fe', advice: 'Steady focus, nourish your body & stretch out tension.' },
+    { id: 'evening', label: 'Evening Decompress', time: '17:00 - 22:00', icon: Moon, color: '#ffedd5', advice: 'Dim harsh lights, chat with your buddy & unwind gently.' },
+    { id: 'night', label: 'Night Rest', time: '22:00 - 5:00', icon: Sparkles, color: '#ede9fe', advice: 'Deep restorative rest. Tomorrow is an unhurried new canvas.' }
   ];
 
   const weeklyStreak = Math.max(checkins.length, 1);
   const celebratoryEntry = checkins.find(c => c.mood === 'thriving' || c.mood === 'good' || c.source === 'chat') || latestCheckin;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Top Welcome Banner */}
-      <div className="material-card-flat p-6 sm:p-7 bg-white flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      <div className="p-6 sm:p-7 bg-gradient-to-r from-emerald-50/70 via-teal-50/40 to-sky-50/50 border border-emerald-100/80 rounded-2xl shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-2xl font-black text-black flex items-center gap-2">
-            Welcome to <span className="bg-[#facc15] px-2 py-0.5 border-2 border-black rounded text-xl">Who-Hum Hub</span>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+            Welcome to <span className="text-emerald-700">Who-Hum Hub</span>
           </h1>
-          <p className="text-sm font-medium text-zinc-600 mt-1">
+          <p className="text-sm text-slate-600 mt-1 max-w-xl">
             A quiet companion for humans. Daily rhythm, honest reflections, and restorative habits.
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2.5 sm:gap-3 shrink-0">
           <button 
             onClick={() => onNavigate('checkin')} 
             className="brutalist-btn-primary flex items-center space-x-2 text-xs"
@@ -156,25 +156,25 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
           </button>
           <button 
             onClick={() => onNavigate('assistant')} 
-            className="brutalist-btn-secondary flex items-center space-x-2 text-xs"
+            className="brutalist-btn-outlined flex items-center space-x-2 text-xs"
           >
-            <Sparkles className="w-4 h-4" />
+            <Sparkles className="w-4 h-4 text-emerald-600" />
             <span>Chat Buddy</span>
           </button>
         </div>
       </div>
 
       {/* DAY AT A GLANCE: Human Circadian Rhythm Strip */}
-      <div className="p-5 bg-white border-2 border-black rounded-xl shadow-[4px_4px_0px_#000000] space-y-3">
+      <div className="p-5 bg-white border border-slate-200/80 rounded-2xl shadow-xs space-y-3.5">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <span className="text-xs font-black uppercase tracking-wider font-mono text-black flex items-center gap-1.5">
+            <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
               <span>⏰</span>
               <span>Day at a Glance • Human Rhythm</span>
             </span>
           </div>
-          <span className="text-[11px] font-mono font-bold text-zinc-600">
-            Current Phase: <strong className="text-black uppercase">{currentPhase}</strong>
+          <span className="text-xs text-slate-500">
+            Current Phase: <strong className="text-emerald-700 capitalize">{currentPhase}</strong>
           </span>
         </div>
 
@@ -185,24 +185,23 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
             return (
               <div
                 key={phase.id}
-                className={`p-3.5 rounded-lg border-2 border-black transition-all ${
+                className={`p-3.5 rounded-xl border transition-all ${
                   isCurrent 
-                    ? 'shadow-[4px_4px_0px_#000000] ring-2 ring-black -translate-y-0.5' 
-                    : 'bg-zinc-50 opacity-80 hover:opacity-100 shadow-[2px_2px_0px_#000000]'
+                    ? 'border-emerald-300 ring-2 ring-emerald-500/15 shadow-xs bg-emerald-50/50' 
+                    : 'border-slate-200/70 bg-slate-50/50 hover:bg-white'
                 }`}
-                style={{ backgroundColor: isCurrent ? phase.color : undefined }}
               >
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center space-x-1.5">
-                    <Icon className="w-4 h-4 text-black" />
-                    <span className="text-xs font-black uppercase text-black">{phase.label}</span>
+                    <Icon className={`w-4 h-4 ${isCurrent ? 'text-emerald-700' : 'text-slate-600'}`} />
+                    <span className="text-xs font-semibold text-slate-900">{phase.label}</span>
                   </div>
                   {isCurrent && (
-                    <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse border border-black" />
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   )}
                 </div>
-                <div className="text-[10px] font-mono text-zinc-600 mb-1">{phase.time}</div>
-                <p className="text-[11px] font-medium text-black leading-snug">
+                <div className="text-[11px] text-slate-500 mb-1">{phase.time}</div>
+                <p className="text-xs text-slate-600 leading-snug">
                   {phase.advice}
                 </p>
               </div>
@@ -212,24 +211,24 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
       </div>
 
       {/* QUICK 1-TAP MOOD STRIP (Simplified Logging) */}
-      <div className="p-4 bg-white border-2 border-black rounded shadow-[4px_4px_0px_#000000] space-y-3">
+      <div className="p-4 sm:p-5 bg-white border border-slate-200/80 rounded-2xl shadow-xs space-y-3.5">
         <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-black">
-            <Zap className="w-4 h-4 text-black fill-[#facc15]" />
+          <div className="flex items-center space-x-2 text-xs font-bold text-slate-800">
+            <Zap className="w-4 h-4 text-emerald-600 fill-emerald-100" />
             <span>Quick 1-Tap Mood Log</span>
           </div>
           <button 
             onClick={() => onNavigate('checkin')}
-            className="text-xs font-mono font-bold text-zinc-600 hover:text-black underline flex items-center space-x-1"
+            className="text-xs text-emerald-700 hover:text-emerald-800 font-medium flex items-center space-x-1 hover:underline"
           >
-            <span>Open Full / Advanced Log</span>
-            <ArrowRight className="w-3 h-3" />
+            <span>Open Full Log</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
         {quickLoggedSuccess ? (
-          <div className="p-3 bg-[#bbf7d0] border-2 border-black rounded flex items-center space-x-2 text-xs font-bold text-black">
-            <Check className="w-4 h-4 text-emerald-800" />
+          <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl flex items-center space-x-2 text-xs font-medium">
+            <Check className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>Awesome! Mood logged in 1 tap and saved to your wellness record.</span>
           </div>
         ) : (
@@ -240,10 +239,10 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                   key={m.id}
                   onClick={() => handleQuickLog(m.id)}
                   title={m.label}
-                  className="p-2 border-2 border-black rounded bg-zinc-50 hover:bg-[#fef08a] transition-all text-center shadow-[2px_2px_0px_#000000] hover:-translate-y-0.5 active:translate-y-0.5"
+                  className="p-2 sm:p-2.5 border border-slate-200/80 rounded-xl bg-slate-50/70 hover:bg-emerald-50 hover:border-emerald-200 transition-all text-center shadow-2xs hover:-translate-y-0.5 active:translate-y-0"
                 >
-                  <div className="text-xl">{m.emoji}</div>
-                  <div className="text-[10px] font-bold text-black truncate mt-0.5">{m.label}</div>
+                  <div className="text-xl sm:text-2xl">{m.emoji}</div>
+                  <div className="text-[11px] font-medium text-slate-700 truncate mt-1">{m.label}</div>
                 </button>
               ))}
             </div>
@@ -254,7 +253,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                 value={quickNote}
                 onChange={(e) => setQuickNote(e.target.value)}
                 placeholder="Optional 1-sentence note (e.g. 'Feeling great, bought a cycle!')..."
-                className="text-xs font-medium flex-1 py-2"
+                className="w-full text-xs font-normal py-2.5 px-3 bg-slate-50/70 border border-slate-200/80 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500 placeholder:text-slate-400"
               />
             </div>
           </div>
@@ -264,31 +263,31 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
       {/* WEEKLY HUMAN PULSE: AI Reflection & Milestone Polaroid Card */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Weekly Pulse Card */}
-        <div className="lg:col-span-2 p-5 bg-[#fef08a] border-2 border-black rounded-xl shadow-[4px_4px_0px_#000000] space-y-3">
+        <div className="lg:col-span-2 p-5 sm:p-6 bg-gradient-to-br from-amber-50/80 via-orange-50/40 to-emerald-50/50 border border-amber-200/60 rounded-2xl shadow-xs space-y-3.5">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
-              <Flame className="w-5 h-5 text-amber-600 fill-amber-500" />
-              <span className="text-xs font-black uppercase tracking-wider font-mono text-black">
+              <Flame className="w-5 h-5 text-amber-500 fill-amber-400" />
+              <span className="text-xs font-bold text-slate-900">
                 Weekly Human Pulse • {weeklyStreak} Days Active
               </span>
             </div>
-            <span className="text-[10px] font-mono font-bold bg-black text-[#fef08a] px-2 py-0.5 rounded uppercase">
+            <span className="text-[10px] font-semibold bg-white/90 text-amber-800 border border-amber-200/80 px-2 py-0.5 rounded-full uppercase">
               AI Synthesized
             </span>
           </div>
 
-          <p className="text-sm font-medium text-black leading-relaxed">
+          <p className="text-sm text-slate-700 leading-relaxed font-normal">
             "You're honoring your own pace. Whether it's picking up new gear, resting when energy dips, or taking five quiet minutes to reflect—consistency in being human is the greatest achievement."
           </p>
 
-          <div className="flex flex-wrap items-center gap-3 pt-1 text-xs font-bold font-mono">
-            <span className="bg-white px-2.5 py-1 border border-black rounded shadow-[1px_1px_0px_#000000]">
+          <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+            <span className="bg-white/90 px-3 py-1 border border-slate-200/70 rounded-full text-slate-700 font-medium shadow-2xs">
               🌱 {completedToday.length} Tasks Checked Today
             </span>
-            <span className="bg-white px-2.5 py-1 border border-black rounded shadow-[1px_1px_0px_#000000]">
+            <span className="bg-white/90 px-3 py-1 border border-slate-200/70 rounded-full text-slate-700 font-medium shadow-2xs">
               🎯 {hobbies.length} Hobbies Tracked
             </span>
-            <span className="bg-white px-2.5 py-1 border border-black rounded shadow-[1px_1px_0px_#000000]">
+            <span className="bg-white/90 px-3 py-1 border border-slate-200/70 rounded-full text-slate-700 font-medium shadow-2xs">
               ❤️ {checkins.length} Total Check-ins
             </span>
           </div>
@@ -296,28 +295,28 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
 
         {/* Milestone Polaroid Card */}
         {celebratoryEntry && (
-          <div className="bg-white border-2 border-black rounded-xl p-4 shadow-[4px_4px_0px_#000000] flex flex-col justify-between transform hover:rotate-1 transition-all">
-            <div className="flex items-center justify-between pb-2 mb-2 border-b-2 border-black">
-              <span className="text-[10px] font-mono font-black uppercase tracking-wider text-black flex items-center gap-1">
-                <Camera className="w-3.5 h-3.5" />
+          <div className="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col justify-between transition-all hover:shadow-sm">
+            <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+              <span className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+                <Camera className="w-3.5 h-3.5 text-slate-500" />
                 <span>Polaroid Milestone</span>
               </span>
-              <span className="text-[10px] font-mono text-zinc-500">
+              <span className="text-xs text-slate-400">
                 {new Date(celebratoryEntry.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' })}
               </span>
             </div>
 
-            <div className="p-3 bg-[#f8fafc] border-2 border-black rounded-lg flex items-center space-x-3 my-2">
-              <div className="p-1 bg-[#facc15] border-2 border-black rounded-lg shrink-0">
+            <div className="p-3 bg-slate-50/70 border border-slate-200/60 rounded-xl flex items-center space-x-3 my-2">
+              <div className="p-1 bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200/60 rounded-xl shrink-0">
                 <PixelCompanion type={companionType} emotion="smile" size={36} interactive={false} />
               </div>
-              <p className="text-xs font-bold text-black italic line-clamp-2">
+              <p className="text-xs font-medium text-slate-700 italic line-clamp-2">
                 "{celebratoryEntry.journalText || 'Had a wonderful and mindful day!'}"
               </p>
             </div>
 
             <div className="flex items-center justify-between pt-1">
-              <span className="text-[10px] font-mono text-zinc-600">
+              <span className="text-xs text-slate-400">
                 Logged with Who-Hum
               </span>
               <button
@@ -326,7 +325,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                   playCompanionBoop();
                   alert(`Milestone card exported! "${celebratoryEntry.journalText || 'Mindful Moment'}"`);
                 }}
-                className="px-2 py-1 bg-black text-white text-[10px] font-mono font-bold rounded flex items-center space-x-1 hover:bg-zinc-800"
+                className="px-2.5 py-1 bg-slate-900 text-white text-xs font-medium rounded-lg flex items-center space-x-1 hover:bg-slate-800 transition-colors"
               >
                 <Download className="w-3 h-3" />
                 <span>Save</span>
@@ -339,68 +338,68 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
       {/* Grid: Wellness Status & Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Today's Wellness Summary Card */}
-        <div className="material-card p-5 md:col-span-2">
+        <div className="bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 shadow-xs md:col-span-2">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-base font-bold text-black flex items-center space-x-2">
-              <Smile className="w-5 h-5 text-black" />
+            <h2 className="text-base font-semibold text-slate-900 flex items-center space-x-2">
+              <Smile className="w-5 h-5 text-emerald-600" />
               <span>Current Wellness & State</span>
             </h2>
             <button 
               onClick={() => onNavigate('checkin')} 
-              className="text-xs text-black font-bold hover:underline flex items-center space-x-1"
+              className="text-xs text-emerald-700 font-semibold hover:underline flex items-center space-x-1"
             >
               <span>{latestCheckin ? 'Update Details' : 'Start Check-in'}</span>
-              <ArrowRight className="w-3 h-3" />
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
           {latestCheckin ? (
-            <div className="space-y-3">
+            <div className="space-y-3.5">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-zinc-600">Mood:</span>
+                <span className="text-xs font-semibold text-slate-500">Mood:</span>
                 {getMoodBadge(latestCheckin.mood)}
                 {latestCheckin.source === 'chat' && (
-                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#fef08a] text-black border border-black flex items-center space-x-1 shadow-[1px_1px_0px_#000000]">
+                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 flex items-center space-x-1 shadow-2xs">
                     <span>💬</span>
                     <span>Generated from Chat</span>
                   </span>
                 )}
-                <span className="text-xs font-mono text-zinc-500 ml-auto">
+                <span className="text-xs text-slate-400 ml-auto font-mono">
                   {new Date(latestCheckin.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </div>
 
               {latestCheckin.journalText && (
-                <div className="bg-zinc-50 border-2 border-black rounded p-3 text-sm text-black italic shadow-[2px_2px_0px_#000000]">
+                <div className="bg-slate-50/70 border border-slate-200/70 rounded-xl p-3.5 text-sm text-slate-800 italic leading-relaxed">
                   "{latestCheckin.journalText}"
                 </div>
               )}
 
               {/* Energy / Stress / Sleep meters */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
-                <div className="bg-white p-2 rounded border-2 border-black text-center shadow-[1px_1px_0px_#000000]">
-                  <span className="block text-[11px] font-bold text-zinc-600 uppercase">Energy</span>
-                  <span className="text-sm font-mono font-bold text-black">{latestCheckin.energyLevel || 3} / 5</span>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
+                <div className="bg-slate-50/80 p-2.5 rounded-xl border border-slate-200/70 text-center">
+                  <span className="block text-[11px] font-semibold text-slate-500 uppercase">Energy</span>
+                  <span className="text-sm font-semibold text-slate-900">{latestCheckin.energyLevel || 3} / 5</span>
                 </div>
-                <div className="bg-white p-2 rounded border-2 border-black text-center shadow-[1px_1px_0px_#000000]">
-                  <span className="block text-[11px] font-bold text-zinc-600 uppercase">Stress</span>
-                  <span className="text-sm font-mono font-bold text-black">{latestCheckin.stressLevel || 2} / 5</span>
+                <div className="bg-slate-50/80 p-2.5 rounded-xl border border-slate-200/70 text-center">
+                  <span className="block text-[11px] font-semibold text-slate-500 uppercase">Stress</span>
+                  <span className="text-sm font-semibold text-slate-900">{latestCheckin.stressLevel || 2} / 5</span>
                 </div>
-                <div className="bg-white p-2 rounded border-2 border-black text-center shadow-[1px_1px_0px_#000000]">
-                  <span className="block text-[11px] font-bold text-zinc-600 uppercase">Sleep Quality</span>
-                  <span className="text-sm font-mono font-bold text-black">{latestCheckin.sleepQuality || 4} / 5</span>
+                <div className="bg-slate-50/80 p-2.5 rounded-xl border border-slate-200/70 text-center">
+                  <span className="block text-[11px] font-semibold text-slate-500 uppercase">Sleep Quality</span>
+                  <span className="text-sm font-semibold text-slate-900">{latestCheckin.sleepQuality || 4} / 5</span>
                 </div>
-                <div className="bg-white p-2 rounded border-2 border-black text-center shadow-[1px_1px_0px_#000000]">
-                  <span className="block text-[11px] font-bold text-zinc-600 uppercase">Motivation</span>
-                  <span className="text-sm font-mono font-bold text-black">{latestCheckin.motivationLevel || 3} / 5</span>
+                <div className="bg-slate-50/80 p-2.5 rounded-xl border border-slate-200/70 text-center">
+                  <span className="block text-[11px] font-semibold text-slate-500 uppercase">Motivation</span>
+                  <span className="text-sm font-semibold text-slate-900">{latestCheckin.motivationLevel || 3} / 5</span>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="text-center py-6 bg-zinc-50 rounded border-2 border-dashed border-black">
-              <AlertCircle className="w-8 h-8 text-black mx-auto mb-2" />
-              <p className="text-sm text-black font-bold">No check-in recorded yet today.</p>
-              <p className="text-xs text-zinc-600 mt-1 mb-3 font-medium">Use the 1-tap strip above or log your full day.</p>
+            <div className="text-center py-8 bg-slate-50/60 rounded-xl border border-dashed border-slate-200">
+              <AlertCircle className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+              <p className="text-sm text-slate-800 font-semibold">No check-in recorded yet today.</p>
+              <p className="text-xs text-slate-500 mt-1 mb-3">Use the 1-tap strip above or log your full day.</p>
               <button onClick={() => onNavigate('checkin')} className="brutalist-btn-primary text-xs">
                 Log First Check-in
               </button>
@@ -409,47 +408,47 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
         </div>
 
         {/* Quick Progress Indicator */}
-        <div className="material-card p-5">
-          <h2 className="text-base font-bold text-black mb-3 flex items-center space-x-2">
-            <CheckCircle2 className="w-5 h-5 text-black" />
+        <div className="bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 shadow-xs">
+          <h2 className="text-base font-semibold text-slate-900 mb-3 flex items-center space-x-2">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600" />
             <span>Today's Completion</span>
           </h2>
           <div className="space-y-4">
             <div>
-              <div className="flex justify-between text-xs font-mono font-bold text-black mb-1">
+              <div className="flex justify-between text-xs font-semibold text-slate-700 mb-1.5">
                 <span>Task Progress</span>
-                <span>
+                <span className="text-emerald-700 font-bold">
                   {tasks.length > 0 
                     ? `${Math.round((completedToday.length / tasks.length) * 100)}%`
                     : '0%'}
                 </span>
               </div>
-              <div className="w-full bg-zinc-200 border-2 border-black rounded h-4 overflow-hidden">
+              <div className="w-full bg-slate-100 border border-slate-200/60 rounded-full h-3 overflow-hidden">
                 <div 
-                  className="bg-[#facc15] h-full border-r-2 border-black transition-all duration-300"
+                  className="bg-gradient-to-r from-emerald-500 to-teal-500 h-full rounded-full transition-all duration-300"
                   style={{ width: `${tasks.length > 0 ? (completedToday.length / tasks.length) * 100 : 0}%` }}
                 ></div>
               </div>
             </div>
 
-            <div className="pt-2 border-t-2 border-black text-xs font-mono text-black space-y-1.5">
+            <div className="pt-2 border-t border-slate-100 text-xs text-slate-600 space-y-2">
               <div className="flex justify-between">
                 <span>Active Goals:</span>
-                <span className="font-bold">{pendingTasks.length}</span>
+                <span className="font-semibold text-slate-900">{pendingTasks.length}</span>
               </div>
               <div className="flex justify-between">
                 <span>Completed Tasks:</span>
-                <span className="font-bold">{completedToday.length}</span>
+                <span className="font-semibold text-emerald-700">{completedToday.length}</span>
               </div>
               <div className="flex justify-between">
                 <span>Active Hobbies:</span>
-                <span className="font-bold">{hobbies.filter(h => h.status === 'active').length}</span>
+                <span className="font-semibold text-slate-900">{hobbies.filter(h => h.status === 'active').length}</span>
               </div>
             </div>
 
             <button 
               onClick={() => onNavigate('tasks')} 
-              className="w-full brutalist-btn-secondary text-xs py-2 mt-2"
+              className="w-full brutalist-btn-outlined text-xs py-2 mt-2"
             >
               Manage Tasks
             </button>
@@ -460,22 +459,22 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
       {/* Two Columns: Priorities and Mood-Aware Suggestions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Priority Tasks */}
-        <div className="material-card p-5">
+        <div className="bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 shadow-xs">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-base font-bold text-black flex items-center space-x-2">
-              <Calendar className="w-5 h-5 text-black" />
+            <h2 className="text-base font-semibold text-slate-900 flex items-center space-x-2">
+              <Calendar className="w-5 h-5 text-emerald-600" />
               <span>Priority Tasks & Focus</span>
             </h2>
             <button 
               onClick={() => onNavigate('tasks')}
-              className="text-xs text-black font-bold hover:underline"
+              className="text-xs text-emerald-700 font-semibold hover:underline"
             >
               View all ({tasks.length})
             </button>
           </div>
 
           {pendingTasks.length === 0 ? (
-            <div className="text-center py-8 text-sm font-bold text-zinc-600">
+            <div className="text-center py-8 text-sm font-medium text-slate-500">
               🎉 All caught up! No pending tasks right now.
             </div>
           ) : (
@@ -483,26 +482,26 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
               {pendingTasks.slice(0, 4).map((task) => (
                 <div 
                   key={task.id} 
-                  className="flex items-start space-x-3 p-3 rounded border-2 border-black bg-white shadow-[2px_2px_0px_#000000]"
+                  className="flex items-start space-x-3 p-3 rounded-xl border border-slate-200/70 bg-slate-50/50 hover:bg-white transition-all"
                 >
                   <input
                     type="checkbox"
                     checked={task.status === 'completed'}
                     onChange={() => onToggleTask(task)}
-                    className="mt-1"
+                    className="mt-1 text-emerald-600 rounded focus:ring-emerald-500"
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-black truncate">{task.title}</p>
-                    <div className="flex items-center space-x-3 text-xs font-mono text-zinc-600 mt-0.5">
+                    <p className="text-sm font-medium text-slate-900 truncate">{task.title}</p>
+                    <div className="flex items-center space-x-2.5 text-xs text-slate-500 mt-0.5">
                       <span className="flex items-center space-x-1">
-                        <Clock className="w-3 h-3" />
+                        <Clock className="w-3 h-3 text-slate-400" />
                         <span>{task.estimatedDurationMinutes}m</span>
                       </span>
-                      <span className="capitalize px-1.5 py-0.2 bg-[#fef08a] border border-black rounded text-[10px]">
+                      <span className="capitalize px-2 py-0.5 bg-slate-100 border border-slate-200/70 rounded-full text-[10px] font-medium text-slate-700">
                         {task.category}
                       </span>
                       {task.priority === 'high' && (
-                        <span className="text-red-700 font-bold">High Priority</span>
+                        <span className="text-rose-600 font-semibold text-[11px]">High Priority</span>
                       )}
                     </div>
                   </div>
@@ -513,46 +512,46 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
         </div>
 
         {/* Suggested Restorative Activities */}
-        <div className="material-card p-5">
+        <div className="bg-white border border-slate-200/80 rounded-2xl p-5 sm:p-6 shadow-xs">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-base font-bold text-black flex items-center space-x-2">
-              <Compass className="w-5 h-5 text-black" />
+            <h2 className="text-base font-semibold text-slate-900 flex items-center space-x-2">
+              <Compass className="w-5 h-5 text-teal-600" />
               <span>Personalized Activities for You</span>
             </h2>
             <button 
               onClick={() => onNavigate('discover')}
-              className="text-xs text-black font-bold hover:underline"
+              className="text-xs text-teal-700 font-semibold hover:underline"
             >
               Discover more
             </button>
           </div>
 
           {recommendations.length === 0 ? (
-            <div className="text-center py-8 text-sm font-bold text-zinc-600">
+            <div className="text-center py-8 text-sm font-medium text-slate-500">
               Log a wellness check-in to generate tailored recommendations.
             </div>
           ) : (
             <div className="space-y-3">
               {recommendations.slice(0, 2).map((rec) => (
-                <div key={rec.id} className="p-3.5 rounded border-2 border-black bg-white shadow-[2px_2px_0px_#000000] space-y-2">
+                <div key={rec.id} className="p-3.5 rounded-xl border border-slate-200/70 bg-slate-50/50 hover:bg-white transition-all space-y-2">
                   <div className="flex justify-between items-start">
                     <div>
-                      <span className="inline-block px-2 py-0.5 text-[11px] font-bold font-mono rounded bg-[#bae6fd] border border-black text-black capitalize mb-1">
+                      <span className="inline-block px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-teal-50 text-teal-700 border border-teal-200/60 capitalize mb-1">
                         {rec.category}
                       </span>
-                      <h3 className="text-sm font-bold text-black">{rec.title}</h3>
+                      <h3 className="text-sm font-semibold text-slate-900">{rec.title}</h3>
                     </div>
-                    <span className="text-xs font-mono text-zinc-600 flex items-center space-x-1">
-                      <Clock className="w-3 h-3" />
+                    <span className="text-xs text-slate-500 flex items-center space-x-1">
+                      <Clock className="w-3 h-3 text-slate-400" />
                       <span>{rec.estimatedDurationMinutes}m</span>
                     </span>
                   </div>
-                  <p className="text-xs font-medium text-zinc-700">{rec.whyItFits}</p>
-                  <div className="pt-2 flex justify-between items-center border-t border-black">
-                    <span className="text-xs font-mono font-bold text-black">Cost: {rec.approximateCost}</span>
+                  <p className="text-xs text-slate-600 leading-relaxed">{rec.whyItFits}</p>
+                  <div className="pt-2 flex justify-between items-center border-t border-slate-100">
+                    <span className="text-xs font-semibold text-slate-700">Cost: {rec.approximateCost}</span>
                     <button 
                       onClick={() => onSaveRecommendationAsTask(rec)}
-                      className="brutalist-btn-secondary text-xs py-1 px-3"
+                      className="brutalist-btn-primary text-xs py-1 px-3"
                     >
                       + Save to Tasks
                     </button>

@@ -220,7 +220,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-[#202124] flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans transition-colors duration-200">
       <Navbar 
         currentTab={currentTab} 
         onSelectTab={setCurrentTab} 
@@ -370,14 +370,20 @@ export const App: React.FC = () => {
         }}
       />
 
-      {/* Calm Google Footer - Desktop Only */}
-      <footer className="hidden md:block border-t border-[#dadce0] py-6 text-center text-xs text-[#5f6368] bg-[#f8f9fa]">
+      {/* Calm Modern Footer - Desktop Only */}
+      <footer className="hidden md:block border-t border-slate-200/80 py-6 text-center text-xs text-slate-500 bg-white/70 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
-          <span>Personal Wellness, Performance & Hobby Management Agent</span>
-          <div className="flex gap-4">
-            <span>Vertex AI Gemini 3.6 Flash</span>
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-slate-700">Who-Hum</span>
+            <span className="text-slate-300">•</span>
+            <span>A calm wellness & performance companion for humans</span>
+          </div>
+          <div className="flex items-center gap-3 text-slate-400">
+            <span>Vertex AI Gemini</span>
+            <span>•</span>
             <span>Cloud Firestore</span>
-            <span>Firebase Hosting</span>
+            <span>•</span>
+            <span>Firebase</span>
           </div>
         </div>
       </footer>

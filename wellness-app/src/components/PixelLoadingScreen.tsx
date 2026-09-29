@@ -31,10 +31,10 @@ export const PixelLoadingScreen: React.FC<PixelLoadingScreenProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[500px] py-16 px-4">
-      <div className="bg-white border-3 border-black p-8 sm:p-10 rounded-xl shadow-[8px_8px_0px_#000000] flex flex-col items-center max-w-md w-full text-center space-y-6">
+      <div className="bg-white/95 backdrop-blur-md border border-slate-200/90 p-8 sm:p-10 rounded-3xl shadow-xl flex flex-col items-center max-w-md w-full text-center space-y-6">
         
         {/* Large Pixel Companion in Thinking / Welcoming Motion */}
-        <div className="p-4 bg-[#fef08a] border-2 border-black rounded-xl shadow-[4px_4px_0px_#000000]">
+        <div className="p-5 bg-gradient-to-b from-emerald-50/70 to-teal-50/40 border border-emerald-200/70 rounded-2xl shadow-xs">
           <PixelCompanion 
             type={companion} 
             emotion="thinking" 
@@ -45,33 +45,33 @@ export const PixelLoadingScreen: React.FC<PixelLoadingScreenProps> = ({
         </div>
 
         {/* Status Message */}
-        <div className="space-y-2">
-          <h3 className="text-xl font-black text-black tracking-tight">
+        <div className="space-y-1.5">
+          <h3 className="text-xl font-bold text-slate-900 tracking-tight">
             {message}
             <span className="inline-block w-6 text-left">{dots}</span>
           </h3>
-          <p className="text-xs font-mono font-bold text-zinc-600">
+          <p className="text-xs text-slate-500 font-medium">
             Tuning into your rhythm & preparing your quiet space
           </p>
         </div>
 
-        {/* Retro Pixel-Style Segmented Progress Bar */}
+        {/* Clean Modern Progress Bar */}
         <div className="w-full space-y-2 pt-2">
-          <div className="w-full bg-zinc-100 border-2 border-black h-5 p-0.5 rounded shadow-[2px_2px_0px_#000000] flex items-center">
+          <div className="w-full bg-slate-100 border border-slate-200/80 h-3 p-0.5 rounded-full shadow-inner flex items-center overflow-hidden">
             <div 
-              className="bg-[#facc15] h-full transition-all duration-300 border-r-2 border-black"
+              className="bg-gradient-to-r from-emerald-500 to-teal-500 h-full rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <div className="flex justify-between items-center text-[11px] font-mono font-bold text-zinc-500">
+          <div className="flex justify-between items-center text-[11px] font-semibold text-slate-400">
             <span>WHO-HUM COMPANION ENGINE</span>
             <span>{progress}%</span>
           </div>
         </div>
 
         {/* Gentle Tip */}
-        <p className="text-[11px] text-zinc-600 italic">
-          💡 Click on your companion to see them smile!
+        <p className="text-[11px] text-slate-400 italic">
+          💡 Click on your companion to interact!
         </p>
       </div>
     </div>

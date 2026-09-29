@@ -27,26 +27,26 @@ export const CompanionOnboardingModal: React.FC<CompanionOnboardingModalProps> =
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white border-3 border-black rounded-2xl shadow-[8px_8px_0px_#000000] max-w-lg w-full p-6 sm:p-8 space-y-6 animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="bg-white border border-slate-200/90 rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 space-y-6 animate-in fade-in zoom-in-95 duration-200">
         
         {/* Header */}
         <div className="text-center space-y-1.5">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#fef08a] border-2 border-black rounded-full text-xs font-mono font-black uppercase mb-1 shadow-[2px_2px_0px_#000000]">
-            <Sparkles className="w-3.5 h-3.5 fill-black" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200/80 rounded-full text-xs font-semibold text-emerald-800 mb-1">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
             <span>One-Time Selection</span>
           </div>
-          <h2 className="text-2xl font-black text-black tracking-tight">
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
             Choose Your Quiet Companion
           </h2>
-          <p className="text-xs text-zinc-600 font-medium max-w-md mx-auto leading-relaxed">
+          <p className="text-xs text-slate-500 font-normal max-w-md mx-auto leading-relaxed">
             Pick your companion once. They will quietly accompany your daily reflections and celebrate your human moments. (You won't be asked again!)
           </p>
         </div>
 
         {/* Selected Companion Preview Stage */}
-        <div className="flex flex-col items-center justify-center py-4 px-6 border-2 border-black rounded-xl shadow-[4px_4px_0px_#000000]" style={{ backgroundColor: activeCompanion.accentBg }}>
-          <div className="p-3 bg-white border-2 border-black rounded-xl shadow-[3px_3px_0px_#000000] mb-3">
+        <div className="flex flex-col items-center justify-center py-5 px-6 border border-slate-200/80 rounded-2xl shadow-xs bg-gradient-to-b from-slate-50/70 to-emerald-50/30">
+          <div className="p-3 bg-white border border-slate-200/80 rounded-2xl shadow-xs mb-3">
             <PixelCompanion 
               type={selected} 
               emotion="smile" 
@@ -55,21 +55,21 @@ export const CompanionOnboardingModal: React.FC<CompanionOnboardingModalProps> =
             />
           </div>
           <div className="text-center">
-            <div className="text-base font-black text-black flex items-center justify-center gap-1.5">
+            <div className="text-base font-bold text-slate-900 flex items-center justify-center gap-1.5">
               <span>{activeCompanion.emoji}</span>
               <span>{activeCompanion.name}</span>
             </div>
-            <p className="text-xs font-bold text-zinc-700 font-mono mt-0.5">
+            <p className="text-xs font-semibold text-emerald-700 mt-0.5">
               {activeCompanion.tagline}
             </p>
-            <p className="text-[11px] text-zinc-600 italic mt-1 max-w-xs">
+            <p className="text-[11px] text-slate-600 italic mt-1 max-w-xs leading-relaxed">
               "{activeCompanion.description}"
             </p>
           </div>
         </div>
 
         {/* 6 Choices Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {ALL_COMPANIONS.map((c) => {
             const isSelected = selected === c.id;
             return (
@@ -80,21 +80,21 @@ export const CompanionOnboardingModal: React.FC<CompanionOnboardingModalProps> =
                   setSelected(c.id);
                   playCompanionBoop();
                 }}
-                className={`p-2.5 border-2 rounded-xl text-center transition-all flex flex-col items-center justify-between space-y-1.5 ${
+                className={`p-3 border rounded-2xl text-center transition-all flex flex-col items-center justify-between space-y-2 ${
                   isSelected
-                    ? 'border-black bg-black text-white shadow-[3px_3px_0px_#facc15] -translate-y-0.5'
-                    : 'border-black bg-zinc-50 hover:bg-zinc-100 text-black shadow-[2px_2px_0px_#000000]'
+                    ? 'border-emerald-400 ring-2 ring-emerald-500/20 bg-emerald-50/80 text-emerald-900 shadow-xs -translate-y-0.5 font-semibold'
+                    : 'border-slate-200/80 bg-white hover:bg-slate-50/80 text-slate-700 shadow-2xs font-medium'
                 }`}
               >
-                <div className="p-1 rounded-lg border border-black bg-white">
+                <div className="p-1.5 rounded-xl border border-slate-200/80 bg-white shadow-2xs">
                   <PixelCompanion type={c.id} emotion="idle" size={32} interactive={false} />
                 </div>
-                <div className="text-xs font-bold truncate w-full flex items-center justify-center gap-1">
+                <div className="text-xs truncate w-full flex items-center justify-center gap-1">
                   <span>{c.emoji}</span>
                   <span>{c.name}</span>
                 </div>
                 {isSelected && (
-                  <div className="text-[10px] font-mono font-bold bg-[#facc15] text-black px-1.5 py-0.2 rounded flex items-center gap-0.5">
+                  <div className="text-[10px] font-semibold bg-emerald-600 text-white px-2 py-0.5 rounded-full flex items-center gap-0.5 shadow-2xs">
                     <Check className="w-2.5 h-2.5" /> Selected
                   </div>
                 )}
@@ -107,9 +107,9 @@ export const CompanionOnboardingModal: React.FC<CompanionOnboardingModalProps> =
         <button
           type="button"
           onClick={handleConfirm}
-          className="w-full py-3.5 bg-black hover:bg-zinc-800 text-white font-black text-sm uppercase tracking-wider font-mono rounded-xl border-2 border-black shadow-[4px_4px_0px_#000000] hover:shadow-[2px_2px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all flex items-center justify-center space-x-2"
+          className="brutalist-btn-primary w-full py-3.5 text-sm font-semibold rounded-2xl shadow-sm flex items-center justify-center space-x-2"
         >
-          <Heart className="w-4 h-4 fill-rose-500 text-rose-500" />
+          <Heart className="w-4 h-4 fill-white text-white" />
           <span>Bond with {activeCompanion.name} & Continue</span>
         </button>
       </div>

@@ -54,19 +54,19 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <header className="sticky top-0 z-30 bg-white border-b-2 border-black shadow-[0px_4px_0px_#000000]">
+    <header className="sticky top-0 z-30 bg-white/85 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-colors">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="flex justify-between h-14 sm:h-16 items-center gap-1.5 sm:gap-3">
           {/* Brand */}
           <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer shrink-0" onClick={() => onSelectTab('dashboard')}>
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#facc15] border-2 border-black shadow-[2px_2px_0px_#000000] flex items-center justify-center text-black font-black text-base sm:text-xl shrink-0">
-              <Zap className="w-4 h-4 sm:w-6 sm:h-6 fill-black" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 shadow-sm shadow-emerald-500/20 flex items-center justify-center text-white shrink-0">
+              <Zap className="w-4 h-4 sm:w-5 sm:h-5 fill-white text-white" />
             </div>
             <div>
-              <span className="text-base sm:text-xl font-black text-black tracking-tight flex items-center gap-1.5 sm:gap-2">
-                WHO-HUM <span className="bg-black text-[#facc15] px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-xs uppercase font-mono tracking-wider hidden md:inline-block">For Humans</span>
+              <span className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-1.5 sm:gap-2">
+                Who-Hum <span className="bg-emerald-50 text-emerald-700 border border-emerald-200/60 px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium tracking-normal hidden md:inline-block">For Humans</span>
               </span>
-              <span className="hidden lg:inline-block text-xs font-mono font-bold text-zinc-600">
+              <span className="hidden lg:inline-block text-xs text-slate-500">
                 {isSimpleMode ? 'Quiet Companion • Natural Daily Logging' : 'Full Telemetry & Health Rhythm'}
               </span>
             </div>
@@ -75,41 +75,41 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Mode Switcher Pill & Action Buttons */}
           <div className="flex items-center space-x-1.5 sm:space-x-2.5 shrink-0">
             {/* Simple vs Advanced Toggle */}
-            <div className="flex items-center p-0.5 bg-zinc-100 border-2 border-black rounded shadow-[2px_2px_0px_#000000]">
+            <div className="flex items-center p-1 bg-slate-100/90 rounded-xl border border-slate-200/60">
               <button
                 type="button"
                 onClick={() => onToggleSimpleMode(true)}
-                className={`px-2 sm:px-3 py-1 sm:py-1.5 text-xs font-black uppercase tracking-wider rounded transition-all flex items-center space-x-1 ${
+                className={`px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center space-x-1.5 ${
                   isSimpleMode
-                    ? 'bg-[#facc15] text-black border-2 border-black shadow-[1px_1px_0px_#000000]'
-                    : 'text-zinc-600 hover:text-black'
+                    ? 'bg-white text-emerald-800 shadow-xs font-semibold'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
                 title="Simple Mode: clean, distraction-free chat buddy window"
               >
-                <MessageSquare className="w-3.5 h-3.5" />
+                <MessageSquare className={`w-3.5 h-3.5 ${isSimpleMode ? 'text-emerald-600' : 'text-slate-400'}`} />
                 <span className="hidden sm:inline">Simple Chat</span>
-                <span className="sm:hidden text-[10px] font-bold">Chat</span>
+                <span className="sm:hidden text-[11px]">Chat</span>
               </button>
               <button
                 type="button"
                 onClick={() => onToggleSimpleMode(false)}
-                className={`px-2 sm:px-3 py-1 sm:py-1.5 text-xs font-black uppercase tracking-wider rounded transition-all flex items-center space-x-1 ${
+                className={`px-2.5 sm:px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center space-x-1.5 ${
                   !isSimpleMode
-                    ? 'bg-black text-white border-2 border-black shadow-[1px_1px_0px_#000000]'
-                    : 'text-zinc-600 hover:text-black'
+                    ? 'bg-white text-slate-900 shadow-xs font-semibold'
+                    : 'text-slate-600 hover:text-slate-900'
                 }`}
                 title="Advanced Mode: full metrics, biometrics sliders, tasks & charts"
               >
-                <Sliders className="w-3.5 h-3.5" />
+                <Sliders className={`w-3.5 h-3.5 ${!isSimpleMode ? 'text-emerald-600' : 'text-slate-400'}`} />
                 <span className="hidden sm:inline">Advanced View</span>
-                <span className="sm:hidden text-[10px] font-bold">Full</span>
+                <span className="sm:hidden text-[11px]">Full</span>
               </button>
             </div>
 
             {/* User ID Badge (Desktop) */}
-            <div className="hidden xl:flex items-center space-x-2 text-xs font-mono font-bold text-black bg-[#fef08a] border-2 border-black shadow-[2px_2px_0px_#000000] rounded px-3 py-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-black animate-pulse"></span>
-              <span>ID: <strong className="text-black">{userId}</strong></span>
+            <div className="hidden xl:flex items-center space-x-2 text-xs font-medium text-slate-700 bg-slate-100 border border-slate-200/80 rounded-xl px-3 py-1.5 shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>ID: <strong className="text-slate-900 font-semibold">{userId}</strong></span>
             </div>
 
             {/* Sound FX Toggle */}
@@ -120,8 +120,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   playCompanionBoop();
                   onToggleSound();
                 }}
-                className={`p-1.5 sm:p-2 border-2 border-black rounded shadow-[2px_2px_0px_#000000] transition-all ${
-                  soundEnabled ? 'bg-[#bbf7d0] text-black hover:bg-emerald-300' : 'bg-zinc-200 text-zinc-500 hover:text-black'
+                className={`p-2 rounded-xl border border-slate-200/80 transition-all ${
+                  soundEnabled 
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200/60 hover:bg-emerald-100/80 shadow-2xs' 
+                    : 'bg-white text-slate-400 hover:text-slate-600 hover:bg-slate-50'
                 }`}
                 title={soundEnabled ? 'Mute 8-bit sounds' : 'Enable 8-bit sounds'}
               >
@@ -137,12 +139,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   playCompanionBoop();
                   onToggleTheme();
                 }}
-                className={`p-1.5 sm:p-2 border-2 border-black rounded shadow-[2px_2px_0px_#000000] transition-all ${
-                  theme === 'ember' ? 'bg-[#facc15] text-black hover:bg-amber-400' : 'bg-white text-black hover:bg-zinc-100'
-                }`}
+                className="p-2 rounded-xl border border-slate-200/80 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 shadow-2xs transition-all"
                 title={theme === 'ember' ? 'Switch to Light Theme' : 'Switch to Cozy Ember (Night Mode)'}
               >
-                {theme === 'ember' ? <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                {theme === 'ember' ? <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500" /> : <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-600" />}
               </button>
             )}
           </div>
@@ -150,7 +150,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Tab Navigation - Only shown in Advanced Mode on desktop (mobile uses bottom nav) */}
         {!isSimpleMode && (
-          <nav className="hidden md:flex space-x-2 overflow-x-auto no-scrollbar py-2">
+          <nav className="hidden md:flex items-center space-x-1 overflow-x-auto no-scrollbar py-2.5 border-t border-slate-100">
             {advancedNavItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentTab === item.id;
@@ -158,13 +158,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => onSelectTab(item.id)}
-                  className={`flex items-center space-x-2 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wide border-2 border-black rounded transition-all ${
+                  className={`flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                     isActive
-                      ? 'bg-black text-white shadow-[2px_2px_0px_#facc15] -translate-y-0.5'
-                      : 'bg-white text-black hover:bg-zinc-100 shadow-[2px_2px_0px_#000000]'
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60 shadow-2xs'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#facc15]' : 'text-black'}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-emerald-600' : 'text-slate-400'}`} />
                   <span>{item.label}</span>
                 </button>
               );

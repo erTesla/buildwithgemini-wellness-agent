@@ -143,26 +143,26 @@ export const DiscoverScreen: React.FC<DiscoverScreenProps> = ({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="material-card-flat p-6 bg-white">
-        <h1 className="text-2xl font-normal text-[#202124]">
-          Recommendations & <span className="font-semibold text-[#1a73e8]">Activity Discovery</span>
+      <div className="p-6 bg-gradient-to-r from-emerald-50/70 via-teal-50/40 to-sky-50/50 border border-emerald-100/80 rounded-2xl shadow-xs">
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
+          Recommendations & <span className="text-emerald-700">Restorative Discovery</span>
         </h1>
-        <p className="text-sm text-[#5f6368] mt-1">
+        <p className="text-sm text-slate-600 mt-1">
           Hand-picked cooking, reading, travel, outdoor, and creative experiences. Every recommendation includes realistic steps, cost estimates, and live links.
         </p>
       </div>
 
       {/* Filter Toolbar */}
-      <div className="material-card p-4 bg-white flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-3">
           {/* Category Tabs */}
-          <div className="flex flex-wrap rounded-md border border-[#dadce0] overflow-hidden text-xs">
+          <div className="flex flex-wrap rounded-xl bg-slate-100/90 p-1 border border-slate-200/80 text-xs shadow-2xs">
             {['all', 'cooking', 'reading', 'travel', 'outdoor', 'creative', 'relaxing'].map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-1.5 font-medium capitalize ${
-                  selectedCategory === cat ? 'bg-[#1a73e8] text-white' : 'bg-white text-[#5f6368] hover:bg-[#f8f9fa]'
+                className={`px-3 py-1.5 rounded-lg font-semibold capitalize transition-all ${
+                  selectedCategory === cat ? 'bg-white text-emerald-800 shadow-2xs font-bold' : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 {cat}
@@ -174,72 +174,72 @@ export const DiscoverScreen: React.FC<DiscoverScreenProps> = ({
           <select
             value={budgetFilter}
             onChange={(e) => setBudgetFilter(e.target.value)}
-            className="text-xs border border-[#dadce0] rounded-md px-2.5 py-1.5 text-[#202124]"
+            className="text-xs border border-slate-200/80 rounded-xl px-3 py-1.5 text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500"
           >
             <option value="all">Any Cost</option>
             <option value="free">Free Only</option>
           </select>
 
           {/* Duration Slider */}
-          <div className="flex items-center space-x-2 text-xs text-[#5f6368]">
+          <div className="flex items-center space-x-2 text-xs text-slate-600">
             <span>Max Time:</span>
             <input 
               type="range" min="15" max="180" step="15" value={maxDuration} 
               onChange={(e) => setMaxDuration(Number(e.target.value))}
-              className="accent-[#1a73e8] w-24"
+              className="w-24"
             />
-            <strong className="text-[#202124]">{maxDuration}m</strong>
+            <strong className="text-slate-800">{maxDuration}m</strong>
           </div>
         </div>
 
-        <div className="text-xs text-[#5f6368]">
-          Found <strong>{filtered.length}</strong> matching ideas
+        <div className="text-xs text-slate-500">
+          Found <strong className="text-slate-800">{filtered.length}</strong> matching ideas
         </div>
       </div>
 
       {/* Recommendations Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {filtered.map((rec) => {
           const isSaved = savedTaskIds.has(rec.id);
           return (
-            <div key={rec.id} className="material-card p-5 flex flex-col justify-between bg-white space-y-4">
+            <div key={rec.id} className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs flex flex-col justify-between hover:shadow-sm transition-all space-y-4">
               <div>
                 <div className="flex justify-between items-start mb-2">
-                  <span className="text-xs uppercase tracking-wider font-semibold px-2 py-0.5 rounded bg-[#e8f0fe] text-[#1a73e8]">
+                  <span className="text-[11px] uppercase tracking-wider font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60">
                     {rec.category}
                   </span>
-                  <span className="text-xs text-[#5f6368] font-medium bg-[#f1f3f4] px-2 py-0.5 rounded">
+                  <span className="text-xs text-slate-500 font-medium bg-slate-100 border border-slate-200/60 px-2.5 py-0.5 rounded-full">
                     ~{rec.estimatedDurationMinutes} mins
                   </span>
                 </div>
 
-                <h3 className="text-base font-semibold text-[#202124]">{rec.title}</h3>
+                <h3 className="text-base font-semibold text-slate-900">{rec.title}</h3>
                 
-                <p className="text-xs text-[#1a73e8] mt-1 font-medium">
-                  Why it fits: <span className="text-[#5f6368] font-normal">{rec.whyItFits}</span>
+                <p className="text-xs text-emerald-700 mt-1 font-semibold">
+                  Why it fits: <span className="text-slate-600 font-normal">{rec.whyItFits}</span>
                 </p>
 
-                <div className="mt-3 text-xs text-[#5f6368] space-y-1">
+                <div className="mt-3 text-xs text-slate-500 space-y-1">
                   <div>
-                    <strong>Est. Cost:</strong> {rec.approximateCost}
+                    <strong className="text-slate-700">Est. Cost:</strong> {rec.approximateCost}
                   </div>
                   <div>
-                    <strong>Materials / Location:</strong> {rec.locationOrMaterials}
+                    <strong className="text-slate-700">Materials / Location:</strong> {rec.locationOrMaterials}
                   </div>
                 </div>
 
                 {/* Practical Steps Checklist */}
-                <div className="mt-4 pt-3 border-t border-[#dadce0]">
-                  <h4 className="text-xs font-semibold text-[#202124] mb-2 uppercase tracking-wide">
+                <div className="mt-4 pt-3 border-t border-slate-100">
+                  <h4 className="text-[11px] font-semibold text-slate-700 mb-2 uppercase tracking-wider">
                     Suggested Next Steps
                   </h4>
-                  <ul className="space-y-1.5 text-xs text-[#3c4043]">
+                  <ul className="space-y-1.5 text-xs text-slate-600">
                     {rec.actionableSteps.map((step, idx) => (
                       <li key={idx} className="flex items-start space-x-2">
-                        <span className="w-4 h-4 rounded-full bg-[#f1f3f4] text-[#5f6368] flex items-center justify-center text-[10px] flex-shrink-0 mt-0.5">
+                        <span className="w-4 h-4 rounded-full bg-slate-100 text-slate-600 border border-slate-200/80 flex items-center justify-center text-[10px] flex-shrink-0 mt-0.5 font-medium">
                           {idx + 1}
                         </span>
-                        <span>{step}</span>
+                        <span className="leading-relaxed">{step}</span>
                       </li>
                     ))}
                   </ul>
@@ -247,34 +247,34 @@ export const DiscoverScreen: React.FC<DiscoverScreenProps> = ({
 
                 {/* External Verification link */}
                 {rec.placeSourceUrl && (
-                  <div className="mt-3 pt-2 text-xs flex items-center space-x-1.5 text-[#1a73e8]">
-                    <MapPin className="w-3.5 h-3.5 text-[#ea4335]" />
+                  <div className="mt-3 pt-2 text-xs flex items-center space-x-1.5 text-emerald-700">
+                    <MapPin className="w-3.5 h-3.5 text-rose-500" />
                     <a 
                       href={rec.placeSourceUrl} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="hover:underline flex items-center space-x-1"
+                      className="hover:underline flex items-center space-x-1 font-medium"
                     >
                       <span>Explore on Google Maps</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
-                    <span className="text-[#5f6368] text-[11px]">(Verify live hours before visiting)</span>
+                    <span className="text-slate-400 text-[11px]">(Verify live hours before visiting)</span>
                   </div>
                 )}
               </div>
 
               {/* Action Buttons */}
-              <div className="pt-3 border-t border-[#dadce0] flex justify-between items-center">
+              <div className="pt-3 border-t border-slate-100 flex justify-between items-center">
                 <div className="flex space-x-2">
                   <button
                     onClick={() => onSaveFeedback(rec.id, 'tried_loved')}
-                    className="text-xs text-[#1e8e3e] hover:bg-[#e6f4ea] px-2 py-1 rounded border border-[#ceead6]"
+                    className="text-xs text-emerald-800 bg-emerald-50 hover:bg-emerald-100/80 px-2.5 py-1.5 rounded-xl border border-emerald-200/80 font-medium transition-colors"
                   >
                     ❤️ Enjoyed this
                   </button>
                   <button
                     onClick={() => onSaveFeedback(rec.id, 'dismissed')}
-                    className="text-xs text-[#5f6368] hover:bg-[#f8f9fa] px-2 py-1 rounded border border-[#dadce0]"
+                    className="text-xs text-slate-600 hover:bg-slate-100 px-2.5 py-1.5 rounded-xl border border-slate-200/80 font-medium transition-colors"
                   >
                     Dismiss
                   </button>
@@ -283,10 +283,10 @@ export const DiscoverScreen: React.FC<DiscoverScreenProps> = ({
                 <button
                   onClick={() => handleSave(rec)}
                   disabled={isSaved}
-                  className={`text-xs px-3 py-1.5 rounded flex items-center space-x-1 font-medium transition-all ${
+                  className={`text-xs px-3.5 py-1.5 rounded-xl flex items-center space-x-1 font-semibold transition-all ${
                     isSaved 
-                      ? 'bg-[#e6f4ea] text-[#1e8e3e] border border-[#ceead6]' 
-                      : 'google-btn-primary'
+                      ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/80' 
+                      : 'brutalist-btn-primary'
                   }`}
                 >
                   {isSaved ? (
