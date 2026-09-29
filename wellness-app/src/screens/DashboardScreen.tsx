@@ -105,9 +105,9 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Top Welcome Banner */}
-      <div className="material-card-flat p-6 bg-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="material-card-flat p-6 sm:p-7 bg-white flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <h1 className="text-2xl font-bold text-black flex items-center gap-2">
             Welcome back to your <span className="bg-[#facc15] px-1.5 py-0.5 border-2 border-black rounded text-xl">Wellness Hub</span>

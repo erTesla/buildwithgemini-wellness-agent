@@ -175,7 +175,7 @@ export const App: React.FC = () => {
         onToggleSimpleMode={handleToggleSimpleMode}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
         {loading ? (
           <div className="flex justify-center items-center h-64 text-[#5f6368]">
             <span className="text-sm font-bold font-mono">Connecting to your personal wellness cloud...</span>

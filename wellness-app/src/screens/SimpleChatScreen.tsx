@@ -19,8 +19,7 @@ import {
   ExternalLink, 
   Utensils, 
   BookMarked,
-  Sliders,
-  Compass
+  Sliders
 } from 'lucide-react';
 
 interface SimpleChatScreenProps {
@@ -150,57 +149,57 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
   ];
 
   return (
-    <div className="max-w-3xl mx-auto flex flex-col h-[calc(100vh-140px)] min-h-[550px] space-y-3">
-      {/* Friendly Chat Header with Switcher */}
-      <div className="p-3.5 bg-white border-2 border-black rounded shadow-[3px_3px_0px_#000000] flex justify-between items-center">
-        <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded bg-[#facc15] border-2 border-black flex items-center justify-center text-black font-black">
-            <Bot className="w-5 h-5 text-black" />
+    <div className="max-w-4xl mx-auto flex flex-col h-[calc(100vh-170px)] min-h-[620px] space-y-5 px-2 sm:px-4">
+      {/* Friendly Airy Chat Header */}
+      <div className="p-4 sm:p-5 bg-white border-2 border-black rounded-lg shadow-[4px_4px_0px_#000000] flex justify-between items-center">
+        <div className="flex items-center space-x-3.5">
+          <div className="w-10 h-10 rounded-lg bg-[#facc15] border-2 border-black shadow-[2px_2px_0px_#000000] flex items-center justify-center text-black font-black">
+            <Bot className="w-6 h-6 text-black" />
           </div>
           <div>
-            <h2 className="text-base font-black text-black flex items-center gap-2">
+            <h2 className="text-lg font-black text-black flex items-center gap-2">
               <span>Your AI Buddy</span>
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse border border-black"></span>
             </h2>
-            <p className="text-xs font-mono font-medium text-zinc-600">
-              Simple Chat Mode • Type your day, we log the rest.
+            <p className="text-xs font-mono font-medium text-zinc-600 mt-0.5">
+              Simple Chat Mode • Tell me about your day, I'll log the details.
             </p>
           </div>
         </div>
 
         <button
           onClick={onSwitchToAdvanced}
-          className="text-xs font-bold font-mono px-3 py-1.5 border-2 border-black rounded bg-zinc-100 hover:bg-black hover:text-white transition-all shadow-[2px_2px_0px_#000000] flex items-center space-x-1"
+          className="text-xs font-bold font-mono px-3.5 py-2 border-2 border-black rounded-md bg-zinc-50 hover:bg-black hover:text-white transition-all shadow-[2px_2px_0px_#000000] flex items-center space-x-1.5"
           title="Switch to full dashboard with charts, tasks and hobbies"
         >
           <Sliders className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Advanced Mode</span>
+          <span className="hidden sm:inline">Advanced View</span>
         </button>
       </div>
 
-      {/* Main Chat Scroll Container */}
-      <div className="flex-1 bg-zinc-50 border-2 border-black rounded shadow-[4px_4px_0px_#000000] p-4 overflow-y-auto space-y-4">
+      {/* Spacious Main Chat Scroll Container */}
+      <div className="flex-1 bg-white border-2 border-black rounded-lg shadow-[5px_5px_0px_#000000] p-5 sm:p-6 overflow-y-auto space-y-6">
         {messages.map((msg) => {
           const isUser = msg.role === 'user';
           return (
             <div
               key={msg.id}
-              className={`flex items-start space-x-2.5 ${isUser ? 'flex-row-reverse space-x-reverse' : ''}`}
+              className={`flex items-start space-x-3.5 ${isUser ? 'flex-row-reverse space-x-reverse' : ''}`}
             >
-              {/* Avatar */}
-              <div className={`w-8 h-8 rounded border-2 border-black flex items-center justify-center font-bold text-xs shrink-0 ${
+              {/* Avatar with Breathing Room */}
+              <div className={`w-9 h-9 rounded-lg border-2 border-black flex items-center justify-center font-black text-xs shrink-0 shadow-[2px_2px_0px_#000000] ${
                 isUser ? 'bg-black text-white' : 'bg-[#facc15] text-black'
               }`}>
-                {isUser ? 'YOU' : <Bot className="w-4 h-4" />}
+                {isUser ? 'YOU' : <Bot className="w-5 h-5 text-black" />}
               </div>
 
-              {/* Message Bubble */}
-              <div className={`max-w-[85%] rounded border-2 border-black p-3.5 space-y-2.5 ${
+              {/* Generous Message Bubble */}
+              <div className={`max-w-[80%] rounded-lg border-2 border-black p-4 sm:p-5 space-y-3.5 leading-relaxed ${
                 isUser 
-                  ? 'bg-[#bae6fd] text-black shadow-[3px_3px_0px_#000000]' 
+                  ? 'bg-[#bae6fd] text-black shadow-[4px_4px_0px_#000000]' 
                   : msg.crisisAlert 
-                  ? 'bg-[#fecaca] text-black shadow-[3px_3px_0px_#000000]' 
-                  : 'bg-white text-black shadow-[3px_3px_0px_#000000]'
+                  ? 'bg-[#fecaca] text-black shadow-[4px_4px_0px_#000000]' 
+                  : 'bg-[#fafafa] text-black shadow-[4px_4px_0px_#000000]'
               }`}>
                 {msg.crisisAlert && (
                   <div className="flex items-center space-x-2 text-red-600 font-bold text-xs mb-1">
@@ -215,15 +214,15 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
 
                 {/* Auto Logged Daily Check-in Notification Badge */}
                 {msg.loggedCheckIn && (
-                  <div className="bg-[#fef08a] border-2 border-black p-2.5 rounded shadow-[2px_2px_0px_#000000] space-y-1">
-                    <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider text-black">
-                      <BookMarked className="w-3.5 h-3.5 text-black" />
+                  <div className="bg-[#fef08a] border-2 border-black p-3.5 rounded-md shadow-[3px_3px_0px_#000000] space-y-1.5 my-2">
+                    <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-black">
+                      <BookMarked className="w-4 h-4 text-black" />
                       <span>Daily Wellness Entry Automatically Logged!</span>
                     </div>
                     <p className="text-xs font-mono text-zinc-800">
-                      <strong>Mood:</strong> {msg.loggedCheckIn.mood.toUpperCase()} (Energy: {msg.loggedCheckIn.energyLevel}/5)
+                      <strong>Mood:</strong> {msg.loggedCheckIn.mood.toUpperCase()} • <strong>Energy:</strong> {msg.loggedCheckIn.energyLevel}/5
                     </p>
-                    <p className="text-xs text-zinc-700 italic">
+                    <p className="text-xs text-zinc-800 italic bg-white/70 p-2 rounded border border-black/30">
                       "{msg.loggedCheckIn.journalText}"
                     </p>
                   </div>
@@ -231,23 +230,23 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
 
                 {/* Travel Spots with Google Maps & Ratings */}
                 {msg.travelSpots && msg.travelSpots.length > 0 && (
-                  <div className="pt-2 border-t-2 border-black space-y-2">
-                    <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider text-black bg-[#fef08a] px-2 py-0.5 border border-black inline-block">
-                      <MapPin className="w-3 h-3 text-black" />
-                      <span>Google Maps Places & Ratings</span>
+                  <div className="pt-3 border-t-2 border-black space-y-3">
+                    <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-black bg-[#fef08a] px-2.5 py-1 border border-black rounded inline-block shadow-[1px_1px_0px_#000000]">
+                      <MapPin className="w-3.5 h-3.5 text-black" />
+                      <span>Google Maps Places & Community Ratings</span>
                     </div>
-                    <div className="grid grid-cols-1 gap-2">
+                    <div className="grid grid-cols-1 gap-3">
                       {msg.travelSpots.map((spot, idx) => (
-                        <div key={idx} className="p-2.5 bg-zinc-50 border-2 border-black rounded shadow-[2px_2px_0px_#000000] space-y-1">
+                        <div key={idx} className="p-3.5 bg-white border-2 border-black rounded shadow-[2px_2px_0px_#000000] space-y-2">
                           <div className="flex justify-between items-start">
-                            <h4 className="font-bold text-xs text-black">{spot.name}</h4>
-                            <span className="flex items-center space-x-1 bg-amber-100 text-amber-900 border border-black px-1.5 py-0.5 rounded text-[10px] font-bold">
-                              <Star className="w-2.5 h-2.5 fill-amber-500 text-amber-500" />
+                            <h4 className="font-bold text-sm text-black">{spot.name}</h4>
+                            <span className="flex items-center space-x-1 bg-amber-100 text-amber-900 border border-black px-2 py-0.5 rounded text-xs font-bold">
+                              <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
                               <span>{spot.rating}</span>
                             </span>
                           </div>
-                          <p className="text-[11px] text-zinc-600 leading-normal">{spot.description}</p>
-                          <div className="flex justify-between items-center pt-1 text-[10px] font-mono">
+                          <p className="text-xs text-zinc-600 leading-normal">{spot.description}</p>
+                          <div className="flex justify-between items-center pt-1 text-xs font-mono">
                             <span className="text-zinc-500">{spot.reviewCount.toLocaleString()} reviews</span>
                             <a 
                               href={spot.mapsUrl} 
@@ -256,7 +255,7 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
                               className="font-bold text-black flex items-center space-x-1 underline hover:text-blue-700"
                             >
                               <span>View on Google Maps</span>
-                              <ExternalLink className="w-2.5 h-2.5" />
+                              <ExternalLink className="w-3.5 h-3.5" />
                             </a>
                           </div>
                         </div>
@@ -267,26 +266,26 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
 
                 {/* Cheer-Up Recipe Card with Image */}
                 {msg.recipeData && (
-                  <div className="pt-2 border-t-2 border-black space-y-2">
-                    <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider text-black bg-[#bbf7d0] px-2 py-0.5 border border-black inline-block">
-                      <Utensils className="w-3 h-3 text-black" />
+                  <div className="pt-3 border-t-2 border-black space-y-3">
+                    <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-black bg-[#bbf7d0] px-2.5 py-1 border border-black rounded inline-block shadow-[1px_1px_0px_#000000]">
+                      <Utensils className="w-3.5 h-3.5 text-black" />
                       <span>Cheer-Up Recipe Visualization</span>
                     </div>
 
-                    <div className="border-2 border-black rounded overflow-hidden bg-white shadow-[2px_2px_0px_#000000]">
+                    <div className="border-2 border-black rounded-lg overflow-hidden bg-white shadow-[3px_3px_0px_#000000]">
                       <img 
                         src={msg.recipeData.imageUrl} 
                         alt={msg.recipeData.dishName}
-                        className="w-full h-36 object-cover border-b-2 border-black" 
+                        className="w-full h-44 object-cover border-b-2 border-black" 
                       />
-                      <div className="p-2.5 space-y-1.5">
+                      <div className="p-3.5 space-y-2">
                         <div className="flex justify-between items-center">
-                          <h4 className="font-black text-xs text-black">{msg.recipeData.dishName}</h4>
-                          <span className="text-[10px] font-mono font-bold bg-[#fef08a] px-1.5 py-0.5 border border-black rounded">
+                          <h4 className="font-black text-sm text-black">{msg.recipeData.dishName}</h4>
+                          <span className="text-xs font-mono font-bold bg-[#fef08a] px-2 py-0.5 border border-black rounded">
                             {msg.recipeData.prepTimeMinutes} mins
                           </span>
                         </div>
-                        <p className="text-[11px] font-medium text-emerald-800 bg-emerald-50 p-1.5 border border-emerald-300 rounded">
+                        <p className="text-xs font-medium text-emerald-900 bg-emerald-50 p-2 border border-emerald-300 rounded leading-relaxed">
                           💡 {msg.recipeData.moodBenefit}
                         </p>
                       </div>
@@ -296,30 +295,30 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
 
                 {/* Suggested Tasks */}
                 {msg.suggestedTasks && msg.suggestedTasks.length > 0 && (
-                  <div className="pt-2 border-t-2 border-black space-y-1.5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-600">
+                  <div className="pt-3 border-t-2 border-black space-y-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-zinc-700 block">
                       Suggested Actions:
                     </span>
-                    <div className="space-y-1.5">
+                    <div className="space-y-2">
                       {msg.suggestedTasks.map((task, idx) => {
                         const isAccepted = acceptedTaskIds.has(`${msg.id}_${task.title}`);
                         return (
                           <div 
                             key={idx} 
-                            className="flex items-center justify-between p-2 bg-zinc-50 border-2 border-black rounded shadow-[2px_2px_0px_#000000] text-xs font-bold"
+                            className="flex items-center justify-between p-2.5 bg-white border-2 border-black rounded shadow-[2px_2px_0px_#000000] text-xs font-bold"
                           >
-                            <span className="text-black truncate mr-2">{task.title}</span>
+                            <span className="text-black truncate mr-3">{task.title}</span>
                             {isAccepted ? (
-                              <span className="flex items-center space-x-1 text-emerald-700 text-xs shrink-0">
-                                <Check className="w-3.5 h-3.5" />
+                              <span className="flex items-center space-x-1 text-emerald-700 text-xs shrink-0 font-mono">
+                                <Check className="w-4 h-4" />
                                 <span>Added</span>
                               </span>
                             ) : (
                               <button
                                 onClick={() => handleAcceptTask(task, msg.id)}
-                                className="px-2 py-1 bg-[#facc15] text-black border border-black rounded text-[11px] hover:bg-black hover:text-white transition-all shrink-0 flex items-center space-x-1 shadow-[1px_1px_0px_#000000]"
+                                className="px-2.5 py-1 bg-[#facc15] text-black border border-black rounded text-xs hover:bg-black hover:text-white transition-all shrink-0 flex items-center space-x-1 shadow-[1px_1px_0px_#000000]"
                               >
-                                <PlusCircle className="w-3 h-3" />
+                                <PlusCircle className="w-3.5 h-3.5" />
                                 <span>Add</span>
                               </button>
                             )}
@@ -332,30 +331,30 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
 
                 {/* Suggested Hobbies */}
                 {msg.suggestedHobbies && msg.suggestedHobbies.length > 0 && (
-                  <div className="pt-2 border-t-2 border-black space-y-1.5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-600">
+                  <div className="pt-3 border-t-2 border-black space-y-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-zinc-700 block">
                       Explore New Hobby:
                     </span>
-                    <div className="space-y-1.5">
+                    <div className="space-y-2">
                       {msg.suggestedHobbies.map((hobby, idx) => {
                         const isAccepted = acceptedHobbyIds.has(`${msg.id}_${hobby.name}`);
                         return (
                           <div 
                             key={idx} 
-                            className="flex items-center justify-between p-2 bg-zinc-50 border-2 border-black rounded shadow-[2px_2px_0px_#000000] text-xs font-bold"
+                            className="flex items-center justify-between p-2.5 bg-white border-2 border-black rounded shadow-[2px_2px_0px_#000000] text-xs font-bold"
                           >
-                            <span className="text-black truncate mr-2">{hobby.name}</span>
+                            <span className="text-black truncate mr-3">{hobby.name}</span>
                             {isAccepted ? (
-                              <span className="flex items-center space-x-1 text-emerald-700 text-xs shrink-0">
-                                <Check className="w-3.5 h-3.5" />
+                              <span className="flex items-center space-x-1 text-emerald-700 text-xs shrink-0 font-mono">
+                                <Check className="w-4 h-4" />
                                 <span>Tracking</span>
                               </span>
                             ) : (
                               <button
                                 onClick={() => handleAcceptHobby(hobby, msg.id)}
-                                className="px-2 py-1 bg-[#bae6fd] text-black border border-black rounded text-[11px] hover:bg-black hover:text-white transition-all shrink-0 flex items-center space-x-1 shadow-[1px_1px_0px_#000000]"
+                                className="px-2.5 py-1 bg-[#bae6fd] text-black border border-black rounded text-xs hover:bg-black hover:text-white transition-all shrink-0 flex items-center space-x-1 shadow-[1px_1px_0px_#000000]"
                               >
-                                <Sparkles className="w-3 h-3" />
+                                <Sparkles className="w-3.5 h-3.5" />
                                 <span>Track</span>
                               </button>
                             )}
@@ -371,41 +370,41 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
         })}
 
         {loading && (
-          <div className="flex items-center space-x-2 p-3 bg-white border-2 border-black rounded shadow-[2px_2px_0px_#000000] w-fit">
-            <span className="w-2 h-2 rounded-full bg-black animate-ping"></span>
+          <div className="flex items-center space-x-3 p-3.5 bg-white border-2 border-black rounded-lg shadow-[3px_3px_0px_#000000] w-fit">
+            <span className="w-2.5 h-2.5 rounded-full bg-black animate-ping"></span>
             <span className="text-xs font-bold font-mono">Your buddy is listening and writing back...</span>
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Quick Prompts Strip */}
-      <div className="flex space-x-2 overflow-x-auto no-scrollbar py-1">
+      {/* Quick Prompts Strip with Breathing Margins */}
+      <div className="flex space-x-2.5 overflow-x-auto no-scrollbar py-1">
         {quickStarters.map((qs, i) => (
           <button
             key={i}
             onClick={() => setInputPrompt(qs)}
-            className="text-[11px] font-bold font-mono bg-white border border-black px-2.5 py-1 rounded whitespace-nowrap hover:bg-[#fef08a] transition-all shadow-[1px_1px_0px_#000000]"
+            className="text-xs font-bold font-mono bg-white border-2 border-black px-3.5 py-1.5 rounded-md whitespace-nowrap hover:bg-[#fef08a] transition-all shadow-[2px_2px_0px_#000000]"
           >
             "{qs}"
           </button>
         ))}
       </div>
 
-      {/* Input Message Form */}
-      <form onSubmit={handleSendMessage} className="flex space-x-2">
+      {/* Spacious Input Message Form */}
+      <form onSubmit={handleSendMessage} className="flex space-x-3">
         <input
           type="text"
           value={inputPrompt}
           onChange={(e) => setInputPrompt(e.target.value)}
           placeholder="Tell your buddy about your day (e.g. 'I am so happy today i bought a cycle')..."
           disabled={loading}
-          className="flex-1 text-sm font-medium py-3 px-4"
+          className="flex-1 text-sm font-medium py-3.5 px-4 rounded-lg border-2 border-black shadow-[3px_3px_0px_#000000]"
         />
         <button
           type="submit"
           disabled={loading || !inputPrompt.trim()}
-          className="brutalist-btn-primary px-5 py-3 text-sm font-black flex items-center space-x-1.5"
+          className="brutalist-btn-primary px-6 py-3.5 text-sm font-black flex items-center space-x-2 rounded-lg shadow-[3px_3px_0px_#000000]"
         >
           <span>Send</span>
           <Send className="w-4 h-4" />
