@@ -12,6 +12,11 @@ Experience the live web application:
 - **Primary Live URL**: [https://qwiklabs-gcp-03-478f309b432f.web.app](https://qwiklabs-gcp-03-478f309b432f.web.app)
 - **Alternative Mirror**: [https://qwiklabs-gcp-03-478f309b432f.firebaseapp.com](https://qwiklabs-gcp-03-478f309b432f.firebaseapp.com)
 
+**Live Features to Try**:
+- 🏷️ **Non-Unique Username Onboarding**: Enter any display name (e.g. `Alex`, `Sam`, `Maya`) on first launch to instantly link and persist your reflections, habits, and tasks across sessions and devices without passwords.
+- 🎨 **Tri-Theme Switcher**: Switch seamlessly between **Clean Light**, **Cozy Ember** (restorative night mode), and **Neo-Brutalism** (bold 2px solid borders and hard offset drop shadows).
+- 🐱 **Interactive Ambient Buddy**: A floating desktop companion with animated pixel art, thought bubbles, petting counter, and 8-bit synthesized audio feedback.
+
 *(To deploy this application to your own personal Firebase / GCP account, see the [Personal Project Deployment Guide](PERSONAL_PROJECT_DEPLOYMENT_GUIDE.md)).*
 
 ---
@@ -51,6 +56,20 @@ Based on the codebase in `demo-agent/app/agent.py` and `agents-cli-manifest.yaml
 
 7. **Client-Side Data Persistence (Cloud Firestore)**
    - The companion web application (`wellness-app`) integrates directly with **Cloud Firestore** for user-scoped check-in histories, energy-aware task management, and hobby trackers under `/users/{userId}/*`.
+
+8. **Non-Unique Username Onboarding & Multi-Device Sync**
+   - Users choose any display name or nickname (e.g. `Alex`, `Sam`, `Maya`) on first launch without passwords or complex auth barriers.
+   - Derives a deterministic user profile key while preserving user-facing identity across visits and devices, enabling effortless return visits and data continuity.
+
+9. **Tri-Theme Visual Design Engine (Clean Light, Cozy Ember, Neo-Brutalism)**
+   - Seamlessly switch themes at any time from the navbar quick toggle or the Settings screen:
+     - **Clean Light**: Calming emerald accents, airy whitespace, and soft diffuse shadows (`0 4px 14px -2px rgba(0,0,0,0.04)`).
+     - **Cozy Ember**: Restorative warm amber and deep charcoal dark mode (`#090d16` / `#111827`) optimized for late-night reflection without harsh blue light.
+     - **Neo-Brutalism**: Retro high-contrast visual style with bold 2px solid black borders, hard unblurred drop-shadows (`4px 4px 0px #0f172a`), chunky input fields, and tactile pressed-button physics.
+
+10. **Interactive Ambient Companion & 8-Bit Web Audio Synthesizer**
+    - **Floating Companion Widget ("Tamagotchi Mode")**: Interactive desktop companion widget featuring 6 animated pixel pets (Cat, Racoon Dog, Dog, T-Rex, Cloud Potato, Cloud Blueberry), dynamic thought bubbles, and a persistent petting counter.
+    - **Web Audio Synthesizer**: Custom synthesized audio feedback (companion boops, message chimes, celebration fanfares) built directly on the browser's native Web Audio API with zero external media files and one-click mute controls.
 
 ---
 
@@ -134,11 +153,22 @@ agents-cli deploy
 
 ## 🧪 Testing
 
-Run the test suite using `pytest`:
+### 1. Agent Backend (pytest)
+
+Run the backend agent and tool integration tests:
 
 ```bash
 cd demo-agent
 uv run pytest tests/unit tests/integration
+```
+
+### 2. Companion Web App (Vitest)
+
+Run the client-side test suite (33 automated unit and integration tests verifying username onboarding, companion domain logic, 8-bit audio synthesis, ambient buddy, and multi-theme styling):
+
+```bash
+cd wellness-app
+npm test
 ```
 
 ---
