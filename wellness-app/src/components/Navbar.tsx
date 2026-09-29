@@ -9,7 +9,8 @@ import {
   User, 
   Bot,
   Zap,
-  Sliders
+  Sliders,
+  MessageSquare
 } from 'lucide-react';
 
 export type TabType = 'dashboard' | 'checkin' | 'tasks' | 'hobbies' | 'discover' | 'history' | 'profile' | 'assistant';
@@ -29,21 +30,16 @@ export const Navbar: React.FC<NavbarProps> = ({
   isSimpleMode, 
   onToggleSimpleMode 
 }) => {
-  // Navigation tabs: in Simple Mode we show the 4 most essential actions; in Advanced Mode we show all 8 tabs
-  const allNavItems = [
-    { id: 'dashboard' as TabType, label: 'Dashboard', icon: LayoutDashboard, simple: true },
-    { id: 'assistant' as TabType, label: 'AI Partner', icon: Bot, simple: true },
-    { id: 'tasks' as TabType, label: 'Tasks', icon: CheckSquare, simple: true },
-    { id: 'checkin' as TabType, label: 'Check-in', icon: HeartHandshake, simple: false },
-    { id: 'hobbies' as TabType, label: 'Hobbies', icon: Sparkles, simple: true },
-    { id: 'discover' as TabType, label: 'Discover', icon: Compass, simple: false },
-    { id: 'history' as TabType, label: 'Insights', icon: BarChart3, simple: false },
-    { id: 'profile' as TabType, label: 'Settings', icon: User, simple: false },
+  const advancedNavItems = [
+    { id: 'dashboard' as TabType, label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'assistant' as TabType, label: 'AI Partner', icon: Bot },
+    { id: 'checkin' as TabType, label: 'Check-in', icon: HeartHandshake },
+    { id: 'tasks' as TabType, label: 'Tasks', icon: CheckSquare },
+    { id: 'hobbies' as TabType, label: 'Hobbies', icon: Sparkles },
+    { id: 'discover' as TabType, label: 'Discover', icon: Compass },
+    { id: 'history' as TabType, label: 'Insights', icon: BarChart3 },
+    { id: 'profile' as TabType, label: 'Settings', icon: User },
   ];
-
-  const visibleNavItems = isSimpleMode 
-    ? allNavItems.filter(item => item.simple) 
-    : allNavItems;
 
   return (
     <header className="sticky top-0 z-30 bg-white border-b-2 border-black shadow-[0px_4px_0px_#000000]">
@@ -59,7 +55,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 WELLNESS <span className="bg-black text-[#facc15] px-1.5 py-0.5 rounded text-sm uppercase">Agent</span>
               </span>
               <span className="hidden md:inline-block text-xs font-mono font-bold text-zinc-600">
-                Helium4 Edition
+                {isSimpleMode ? 'Simple Chat Experience' : 'Advanced Telemetry'}
               </span>
             </div>
           </div>
@@ -71,28 +67,28 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 type="button"
                 onClick={() => onToggleSimpleMode(true)}
-                className={`px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded transition-all flex items-center space-x-1 ${
+                className={`px-3 py-1.5 text-xs font-black uppercase tracking-wider rounded transition-all flex items-center space-x-1.5 ${
                   isSimpleMode
                     ? 'bg-[#facc15] text-black border-2 border-black shadow-[1px_1px_0px_#000000]'
                     : 'text-zinc-600 hover:text-black'
                 }`}
-                title="Simple Mode: streamlined, distraction-free view"
+                title="Simple Mode: clean, distraction-free chat buddy window"
               >
-                <Zap className="w-3 h-3" />
-                <span>Simple</span>
+                <MessageSquare className="w-3.5 h-3.5" />
+                <span>Simple Chat</span>
               </button>
               <button
                 type="button"
                 onClick={() => onToggleSimpleMode(false)}
-                className={`px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded transition-all flex items-center space-x-1 ${
+                className={`px-3 py-1.5 text-xs font-black uppercase tracking-wider rounded transition-all flex items-center space-x-1.5 ${
                   !isSimpleMode
                     ? 'bg-black text-white border-2 border-black shadow-[1px_1px_0px_#000000]'
                     : 'text-zinc-600 hover:text-black'
                 }`}
-                title="Advanced Mode: full telemetry, metrics & custom controls"
+                title="Advanced Mode: full metrics, biometrics sliders, tasks & charts"
               >
-                <Sliders className="w-3 h-3" />
-                <span>Advanced</span>
+                <Sliders className="w-3.5 h-3.5" />
+                <span>Advanced View</span>
               </button>
             </div>
 
@@ -104,27 +100,29 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Tab Navigation */}
-        <nav className="flex space-x-2 overflow-x-auto no-scrollbar py-2">
-          {visibleNavItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = currentTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => onSelectTab(item.id)}
-                className={`flex items-center space-x-2 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wide border-2 border-black rounded transition-all ${
-                  isActive
-                    ? 'bg-black text-white shadow-[2px_2px_0px_#facc15] -translate-y-0.5'
-                    : 'bg-white text-black hover:bg-zinc-100 shadow-[2px_2px_0px_#000000]'
-                }`}
-              >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#facc15]' : 'text-black'}`} />
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </nav>
+        {/* Tab Navigation - Only shown in Advanced Mode */}
+        {!isSimpleMode && (
+          <nav className="flex space-x-2 overflow-x-auto no-scrollbar py-2">
+            {advancedNavItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = currentTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => onSelectTab(item.id)}
+                  className={`flex items-center space-x-2 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wide border-2 border-black rounded transition-all ${
+                    isActive
+                      ? 'bg-black text-white shadow-[2px_2px_0px_#facc15] -translate-y-0.5'
+                      : 'bg-white text-black hover:bg-zinc-100 shadow-[2px_2px_0px_#000000]'
+                  }`}
+                >
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#facc15]' : 'text-black'}`} />
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+        )}
       </div>
     </header>
   );

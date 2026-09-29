@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, TabType } from './components/Navbar';
 import { DashboardScreen } from './screens/DashboardScreen';
-import { SimpleDashboardScreen } from './screens/SimpleDashboardScreen';
+import { SimpleChatScreen } from './screens/SimpleChatScreen';
 import { CheckinScreen } from './screens/CheckinScreen';
 import { TasksScreen } from './screens/TasksScreen';
 import { HobbiesScreen } from './screens/HobbiesScreen';
@@ -180,34 +180,32 @@ export const App: React.FC = () => {
           <div className="flex justify-center items-center h-64 text-[#5f6368]">
             <span className="text-sm font-bold font-mono">Connecting to your personal wellness cloud...</span>
           </div>
+        ) : isSimpleMode ? (
+          <SimpleChatScreen
+            userId={userId}
+            checkins={checkins}
+            tasks={tasks}
+            hobbies={hobbies}
+            preferences={preferences}
+            onSaveTask={handleSaveTask}
+            onSaveHobby={handleSaveHobby}
+            onSaveCheckIn={handleSaveCheckIn}
+            onSwitchToAdvanced={() => handleToggleSimpleMode(false)}
+          />
         ) : (
           <>
             {currentTab === 'dashboard' && (
-              isSimpleMode ? (
-                <SimpleDashboardScreen
-                  userId={userId}
-                  checkins={checkins}
-                  tasks={tasks}
-                  hobbies={hobbies}
-                  onNavigate={setCurrentTab}
-                  onToggleTask={handleToggleTask}
-                  onSaveCheckIn={handleSaveCheckIn}
-                  onSaveTask={handleSaveTask}
-                  onSwitchToAdvanced={() => handleToggleSimpleMode(false)}
-                />
-              ) : (
-                <DashboardScreen
-                  userId={userId}
-                  checkins={checkins}
-                  tasks={tasks}
-                  hobbies={hobbies}
-                  recommendations={recommendations}
-                  onNavigate={setCurrentTab}
-                  onToggleTask={handleToggleTask}
-                  onSaveRecommendationAsTask={handleSaveRecommendationAsTask}
-                  onSaveCheckIn={handleSaveCheckIn}
-                />
-              )
+              <DashboardScreen
+                userId={userId}
+                checkins={checkins}
+                tasks={tasks}
+                hobbies={hobbies}
+                recommendations={recommendations}
+                onNavigate={setCurrentTab}
+                onToggleTask={handleToggleTask}
+                onSaveRecommendationAsTask={handleSaveRecommendationAsTask}
+                onSaveCheckIn={handleSaveCheckIn}
+              />
             )}
 
             {currentTab === 'checkin' && (
