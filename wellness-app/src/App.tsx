@@ -11,6 +11,9 @@ import { AssistantScreen } from './screens/AssistantScreen';
 import { ProfileScreen } from './screens/ProfileScreen';
 import { PixelLoadingScreen } from './components/PixelLoadingScreen';
 import { CompanionType } from './components/PixelCompanion';
+import { AmbientCompanionWidget } from './components/AmbientCompanionWidget';
+import { MobileBottomNav } from './components/MobileBottomNav';
+import { isSoundEnabled, setSoundEnabled } from './services/soundEffects';
 
 import { 
   getCurrentUserId, 
@@ -58,6 +61,35 @@ export const App: React.FC = () => {
     setIsSimpleMode(simple);
     localStorage.setItem('wellness_ui_mode', simple ? 'simple' : 'advanced');
   };
+
+  // Theme: light vs Cozy Ember (persisted)
+  const [theme, setTheme] = useState<'light' | 'ember'>(() => {
+    const saved = localStorage.getItem('whohum_theme');
+    return saved === 'ember' ? 'ember' : 'light';
+  });
+
+  const handleToggleTheme = () => {
+    const nextTheme = theme === 'light' ? 'ember' : 'light';
+    setTheme(nextTheme);
+    localStorage.setItem('whohum_theme', nextTheme);
+  };
+
+  // Sound FX: enabled vs muted (persisted)
+  const [soundEnabled, setSoundEnabledState] = useState<boolean>(() => isSoundEnabled());
+
+  const handleToggleSound = () => {
+    const next = !soundEnabled;
+    setSoundEnabledState(next);
+    setSoundEnabled(next);
+  };
+
+  useEffect(() => {
+    if (theme === 'ember') {
+      document.body.classList.add('theme-ember');
+    } else {
+      document.body.classList.remove('theme-ember');
+    }
+  }, [theme]);
   
   const [checkins, setCheckins] = useState<WellnessCheckIn[]>([]);
   const [tasks, setTasks] = useState<TaskItem[]>([]);
@@ -186,9 +218,13 @@ export const App: React.FC = () => {
         userId={userId} 
         isSimpleMode={isSimpleMode}
         onToggleSimpleMode={handleToggleSimpleMode}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
+        soundEnabled={soundEnabled}
+        onToggleSound={handleToggleSound}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10 pb-24 md:pb-10">
         {loading ? (
           <PixelLoadingScreen 
             message="Who-Hum is waking up..." 
@@ -221,6 +257,7 @@ export const App: React.FC = () => {
                 onToggleTask={handleToggleTask}
                 onSaveRecommendationAsTask={handleSaveRecommendationAsTask}
                 onSaveCheckIn={handleSaveCheckIn}
+                companionType={companionType}
               />
             )}
 
@@ -298,6 +335,20 @@ export const App: React.FC = () => {
           </>
         )}
       </main>
+
+      {/* Floating Ambient Companion Widget ("Tamagotchi Mode") */}
+      <AmbientCompanionWidget 
+        companionType={companionType}
+        onChangeCompanionType={handleCompanionTypeChange}
+      />
+
+      {/* Thumb-friendly Mobile Bottom Navigation */}
+      <MobileBottomNav 
+        currentTab={currentTab}
+        onSelectTab={setCurrentTab}
+        isSimpleMode={isSimpleMode}
+        onToggleSimpleMode={handleToggleSimpleMode}
+      />
 
       {/* Calm Google Footer */}
       <footer className="border-t border-[#dadce0] py-6 text-center text-xs text-[#5f6368] bg-[#f8f9fa]">

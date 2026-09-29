@@ -18,9 +18,18 @@ import {
   AlertCircle,
   Zap,
   Send,
-  Check
+  Check,
+  Sun,
+  Moon,
+  Sunset,
+  Camera,
+  Download,
+  Flame,
+  Award
 } from 'lucide-react';
 import { TabType } from '../components/Navbar';
+import { PixelCompanion, CompanionType } from '../components/PixelCompanion';
+import { playCompanionBoop, playTaskSuccess } from '../services/soundEffects';
 
 interface DashboardScreenProps {
   userId?: string;
@@ -32,6 +41,7 @@ interface DashboardScreenProps {
   onToggleTask: (task: TaskItem) => void;
   onSaveRecommendationAsTask: (rec: ActivityRecommendation) => void;
   onSaveCheckIn?: (checkin: WellnessCheckIn) => Promise<void>;
+  companionType?: CompanionType;
 }
 
 export const DashboardScreen: React.FC<DashboardScreenProps> = ({
@@ -43,7 +53,8 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   onNavigate,
   onToggleTask,
   onSaveRecommendationAsTask,
-  onSaveCheckIn
+  onSaveCheckIn,
+  companionType = 'puppy'
 }) => {
   const latestCheckin = checkins.length > 0 ? checkins[0] : null;
   const pendingTasks = tasks.filter(t => t.status !== 'completed');
@@ -104,6 +115,25 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
     }
   };
 
+  const getDayPhase = () => {
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 12) return 'morning';
+    if (hour >= 12 && hour < 17) return 'afternoon';
+    if (hour >= 17 && hour < 22) return 'evening';
+    return 'night';
+  };
+  const currentPhase = getDayPhase();
+
+  const rhythmPhases = [
+    { id: 'morning', label: 'Morning Rise', time: '5:00 - 12:00', icon: Sun, color: '#fef08a', advice: 'Hydrate, set a gentle intention & step into light.' },
+    { id: 'afternoon', label: 'Afternoon Flow', time: '12:00 - 17:00', icon: Sunset, color: '#bae6fd', advice: 'Steady focus, nourish your body & stretch out tension.' },
+    { id: 'evening', label: 'Evening Decompress', time: '17:00 - 22:00', icon: Moon, color: '#fed7aa', advice: 'Dim harsh lights, chat with your buddy & unwind gently.' },
+    { id: 'night', label: 'Night Rest', time: '22:00 - 5:00', icon: Sparkles, color: '#ddd6fe', advice: 'Deep restorative rest. Tomorrow is an unhurried new canvas.' }
+  ];
+
+  const weeklyStreak = Math.max(checkins.length, 1);
+  const celebratoryEntry = checkins.find(c => c.mood === 'thriving' || c.mood === 'good' || c.source === 'chat') || latestCheckin;
+
   return (
     <div className="space-y-8">
       {/* Top Welcome Banner */}
@@ -131,6 +161,53 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
             <Sparkles className="w-4 h-4" />
             <span>Chat Buddy</span>
           </button>
+        </div>
+      </div>
+
+      {/* DAY AT A GLANCE: Human Circadian Rhythm Strip */}
+      <div className="p-5 bg-white border-2 border-black rounded-xl shadow-[4px_4px_0px_#000000] space-y-3">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <span className="text-xs font-black uppercase tracking-wider font-mono text-black flex items-center gap-1.5">
+              <span>⏰</span>
+              <span>Day at a Glance • Human Rhythm</span>
+            </span>
+          </div>
+          <span className="text-[11px] font-mono font-bold text-zinc-600">
+            Current Phase: <strong className="text-black uppercase">{currentPhase}</strong>
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {rhythmPhases.map((phase) => {
+            const Icon = phase.icon;
+            const isCurrent = currentPhase === phase.id;
+            return (
+              <div
+                key={phase.id}
+                className={`p-3.5 rounded-lg border-2 border-black transition-all ${
+                  isCurrent 
+                    ? 'shadow-[4px_4px_0px_#000000] ring-2 ring-black -translate-y-0.5' 
+                    : 'bg-zinc-50 opacity-80 hover:opacity-100 shadow-[2px_2px_0px_#000000]'
+                }`}
+                style={{ backgroundColor: isCurrent ? phase.color : undefined }}
+              >
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center space-x-1.5">
+                    <Icon className="w-4 h-4 text-black" />
+                    <span className="text-xs font-black uppercase text-black">{phase.label}</span>
+                  </div>
+                  {isCurrent && (
+                    <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse border border-black" />
+                  )}
+                </div>
+                <div className="text-[10px] font-mono text-zinc-600 mb-1">{phase.time}</div>
+                <p className="text-[11px] font-medium text-black leading-snug">
+                  {phase.advice}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -179,6 +256,81 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
                 placeholder="Optional 1-sentence note (e.g. 'Feeling great, bought a cycle!')..."
                 className="text-xs font-medium flex-1 py-2"
               />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* WEEKLY HUMAN PULSE: AI Reflection & Milestone Polaroid Card */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Weekly Pulse Card */}
+        <div className="lg:col-span-2 p-5 bg-[#fef08a] border-2 border-black rounded-xl shadow-[4px_4px_0px_#000000] space-y-3">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-2">
+              <Flame className="w-5 h-5 text-amber-600 fill-amber-500" />
+              <span className="text-xs font-black uppercase tracking-wider font-mono text-black">
+                Weekly Human Pulse • {weeklyStreak} Days Active
+              </span>
+            </div>
+            <span className="text-[10px] font-mono font-bold bg-black text-[#fef08a] px-2 py-0.5 rounded uppercase">
+              AI Synthesized
+            </span>
+          </div>
+
+          <p className="text-sm font-medium text-black leading-relaxed">
+            "You're honoring your own pace. Whether it's picking up new gear, resting when energy dips, or taking five quiet minutes to reflect—consistency in being human is the greatest achievement."
+          </p>
+
+          <div className="flex flex-wrap items-center gap-3 pt-1 text-xs font-bold font-mono">
+            <span className="bg-white px-2.5 py-1 border border-black rounded shadow-[1px_1px_0px_#000000]">
+              🌱 {completedToday.length} Tasks Checked Today
+            </span>
+            <span className="bg-white px-2.5 py-1 border border-black rounded shadow-[1px_1px_0px_#000000]">
+              🎯 {hobbies.length} Hobbies Tracked
+            </span>
+            <span className="bg-white px-2.5 py-1 border border-black rounded shadow-[1px_1px_0px_#000000]">
+              ❤️ {checkins.length} Total Check-ins
+            </span>
+          </div>
+        </div>
+
+        {/* Milestone Polaroid Card */}
+        {celebratoryEntry && (
+          <div className="bg-white border-2 border-black rounded-xl p-4 shadow-[4px_4px_0px_#000000] flex flex-col justify-between transform hover:rotate-1 transition-all">
+            <div className="flex items-center justify-between pb-2 mb-2 border-b-2 border-black">
+              <span className="text-[10px] font-mono font-black uppercase tracking-wider text-black flex items-center gap-1">
+                <Camera className="w-3.5 h-3.5" />
+                <span>Polaroid Milestone</span>
+              </span>
+              <span className="text-[10px] font-mono text-zinc-500">
+                {new Date(celebratoryEntry.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+              </span>
+            </div>
+
+            <div className="p-3 bg-[#f8fafc] border-2 border-black rounded-lg flex items-center space-x-3 my-2">
+              <div className="p-1 bg-[#facc15] border-2 border-black rounded-lg shrink-0">
+                <PixelCompanion type={companionType} emotion="smile" size={36} interactive={false} />
+              </div>
+              <p className="text-xs font-bold text-black italic line-clamp-2">
+                "{celebratoryEntry.journalText || 'Had a wonderful and mindful day!'}"
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between pt-1">
+              <span className="text-[10px] font-mono text-zinc-600">
+                Logged with Who-Hum
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  playCompanionBoop();
+                  alert(`Milestone card exported! "${celebratoryEntry.journalText || 'Mindful Moment'}"`);
+                }}
+                className="px-2 py-1 bg-black text-white text-[10px] font-mono font-bold rounded flex items-center space-x-1 hover:bg-zinc-800"
+              >
+                <Download className="w-3 h-3" />
+                <span>Save</span>
+              </button>
             </div>
           </div>
         )}

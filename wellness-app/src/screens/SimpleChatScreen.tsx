@@ -16,12 +16,17 @@ import {
   Check, 
   MapPin, 
   Star, 
-  ExternalLink, 
+  ExternalLink,
   Utensils, 
   BookMarked,
-  Sliders
+  Sliders,
+  Mic,
+  MicOff,
+  Volume2
 } from 'lucide-react';
 import { PixelCompanion, CompanionType, CompanionEmotion } from '../components/PixelCompanion';
+import { useVoiceInput } from '../hooks/useVoiceInput';
+import { playMessageChime, playTaskSuccess, playCompanionBoop } from '../services/soundEffects';
 
 interface SimpleChatScreenProps {
   userId: string;
@@ -64,6 +69,21 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
   const [acceptedHobbyIds, setAcceptedHobbyIds] = useState<Set<string>>(new Set());
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Browser-native speech recognition
+  const { isListening, isSupported: voiceSupported, startListening, stopListening, error: voiceError } = useVoiceInput((spokenText) => {
+    setInputPrompt(prev => prev ? `${prev} ${spokenText}` : spokenText);
+  });
+
+  const toggleVoiceRecording = () => {
+    playCompanionBoop();
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -73,9 +93,21 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Adjust textarea height dynamically
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`;
+    }
+  }, [inputPrompt]);
+
+  const handleSendMessage = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!inputPrompt.trim() || loading) return;
+
+    if (isListening) {
+      stopListening();
+    }
 
     const userMsg: AIChatMessage = {
       id: 'user_' + Date.now(),
@@ -87,6 +119,7 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
     setMessages(prev => [...prev, userMsg]);
     setInputPrompt('');
     setLoading(true);
+    playMessageChime(); // Gentle chime when sending
 
     try {
       const response = await askAgentAssistant(userMsg.content, {
@@ -103,6 +136,7 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
       }
 
       setMessages(prev => [...prev, response]);
+      playMessageChime(); // Gentle chime when reply arrives
     } catch (err) {
       console.error(err);
     } finally {
@@ -127,6 +161,7 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
     };
 
     await onSaveTask(newTask);
+    playTaskSuccess(); // Upbeat arpeggio
     setAcceptedTaskIds(prev => new Set(prev).add(`${msgId}_${taskPartial.title}`));
   };
 
@@ -143,15 +178,57 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
     };
 
     await onSaveHobby(newHobby);
+    playTaskSuccess(); // Upbeat arpeggio
     setAcceptedHobbyIds(prev => new Set(prev).add(`${msgId}_${hobbyPartial.name}`));
   };
 
   const quickStarters = [
-    "I am so happy today i boud a cyle.",
+    "I am so happy today i bought a cycle!",
     "Feeling a little tired and stressed today.",
     "Dreaming of traveling to Kyoto or the Swiss Alps!",
     "Can you give me a comforting cheer-up recipe?"
   ];
+
+  // Dynamic Contextual Smart Reply Chips
+  const getContextualChips = (): string[] => {
+    const lastBot = [...messages].reverse().find(m => m.role === 'assistant');
+    if (!lastBot) return quickStarters;
+
+    const text = lastBot.content.toLowerCase();
+    if (text.includes('cycle') || text.includes('bike') || text.includes('ride') || text.includes('cycling')) {
+      return [
+        "What are great scenic cycling routes nearby? 🚴",
+        "Help me pick a safe, stylish helmet!",
+        "Felt so wonderful feeling the cool breeze!"
+      ];
+    }
+    if (text.includes('soup') || text.includes('recipe') || text.includes('cook') || text.includes('dinner') || text.includes('meal')) {
+      return [
+        "Can you give me the full ingredient list? 🍲",
+        "How long does this take to prepare?",
+        "Sounds so cozy, saving this for tonight!"
+      ];
+    }
+    if (text.includes('kyoto') || text.includes('travel') || text.includes('trip') || text.includes('alps') || text.includes('hotel') || text.includes('spots')) {
+      return [
+        "What's the best time of year to visit? 🌸",
+        "Any hidden quiet cafes or temples?",
+        "Add this to my bucket list!"
+      ];
+    }
+    if (text.includes('stress') || text.includes('breath') || text.includes('overwhelm') || text.includes('vent') || text.includes('gentle') || text.includes('tired')) {
+      return [
+        "Taking a quiet 10-minute break now 🌿",
+        "Making a warm mug of chamomile tea ☕",
+        "Thanks for listening, feeling lighter already 🤍"
+      ];
+    }
+    return [
+      "Tell me more about this!",
+      "How can I build this into a gentle habit?",
+      "Let's celebrate this as a small win 🎉"
+    ];
+  };
 
   const getMessageEmotion = (msg: AIChatMessage): CompanionEmotion => {
     if (msg.crisisAlert) return 'sad';
@@ -437,37 +514,91 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Quick Prompts Strip with Breathing Margins */}
-      <div className="flex space-x-2.5 overflow-x-auto no-scrollbar py-1">
-        {quickStarters.map((qs, i) => (
-          <button
-            key={i}
-            onClick={() => setInputPrompt(qs)}
-            className="text-xs font-bold font-mono bg-white border-2 border-black px-3.5 py-1.5 rounded-md whitespace-nowrap hover:bg-[#fef08a] transition-all shadow-[2px_2px_0px_#000000]"
-          >
-            "{qs}"
-          </button>
-        ))}
+      {/* Contextual Smart Reply Chips */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between px-1">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-500">
+            {messages.length <= 1 ? 'Quick Starters:' : 'Smart Reply Suggestions:'}
+          </span>
+          {voiceSupported && (
+            <span className="text-[10px] font-mono text-zinc-500 hidden sm:inline">
+              🎙️ Voice typing available
+            </span>
+          )}
+        </div>
+        <div className="flex space-x-2.5 overflow-x-auto no-scrollbar py-1">
+          {getContextualChips().map((chip, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => {
+                playCompanionBoop();
+                setInputPrompt(chip);
+              }}
+              className="text-xs font-bold font-mono bg-white border-2 border-black px-3.5 py-1.5 rounded-lg whitespace-nowrap hover:bg-[#fef08a] transition-all shadow-[2px_2px_0px_#000000] active:translate-y-0.5"
+            >
+              {chip}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Spacious Input Message Form */}
-      <form onSubmit={handleSendMessage} className="flex space-x-3">
-        <input
-          type="text"
-          value={inputPrompt}
-          onChange={(e) => setInputPrompt(e.target.value)}
-          placeholder="Tell your buddy about your day (e.g. 'I am so happy today i bought a cycle')..."
-          disabled={loading}
-          className="flex-1 text-sm font-medium py-3.5 px-4 rounded-lg border-2 border-black shadow-[3px_3px_0px_#000000]"
-        />
-        <button
-          type="submit"
-          disabled={loading || !inputPrompt.trim()}
-          className="brutalist-btn-primary px-6 py-3.5 text-sm font-black flex items-center space-x-2 rounded-lg shadow-[3px_3px_0px_#000000]"
-        >
-          <span>Send</span>
-          <Send className="w-4 h-4" />
-        </button>
+      {/* Spacious Input Message Form with Voice & Auto-Expanding Textarea */}
+      <form onSubmit={handleSendMessage} className="space-y-1.5">
+        <div className="flex items-end space-x-2.5 bg-white border-2 border-black rounded-xl p-2 shadow-[4px_4px_0px_#000000] transition-all focus-within:shadow-[5px_5px_0px_#000000]">
+          {/* Voice Dictation Button */}
+          {voiceSupported && (
+            <button
+              type="button"
+              onClick={toggleVoiceRecording}
+              className={`p-2.5 rounded-lg border-2 border-black transition-all flex items-center justify-center shrink-0 shadow-[1px_1px_0px_#000000] ${
+                isListening 
+                  ? 'bg-red-500 text-white animate-pulse' 
+                  : 'bg-zinc-100 text-zinc-700 hover:bg-[#fef08a] hover:text-black'
+              }`}
+              title={isListening ? 'Stop listening' : 'Dictate with your voice (Web Speech API)'}
+            >
+              {isListening ? <MicOff className="w-4 h-4 animate-bounce" /> : <Mic className="w-4 h-4" />}
+            </button>
+          )}
+
+          {/* Auto-Expanding Multiline Textarea */}
+          <textarea
+            ref={textareaRef}
+            rows={1}
+            value={inputPrompt}
+            onChange={(e) => setInputPrompt(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+              }
+            }}
+            placeholder={
+              isListening 
+                ? 'Listening to you speak...' 
+                : "Tell your buddy about your day (e.g. 'I am so happy today I bought a cycle!')..."
+            }
+            disabled={loading}
+            className="flex-1 text-sm font-medium p-1.5 border-none outline-none resize-none max-h-32 bg-transparent text-black"
+          />
+
+          {/* Send Button */}
+          <button
+            type="submit"
+            disabled={loading || !inputPrompt.trim()}
+            className="brutalist-btn-primary px-5 py-2.5 text-sm font-black flex items-center space-x-1.5 rounded-lg shadow-[2px_2px_0px_#000000] shrink-0 disabled:opacity-50"
+          >
+            <span className="hidden sm:inline">Send</span>
+            <Send className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Input Helper Text */}
+        <div className="flex justify-between items-center px-2 text-[10px] font-mono text-zinc-500">
+          <span>{isListening ? '🔴 Recording voice...' : 'Press Enter to send • Shift+Enter for new line'}</span>
+          <span>Logged quietly in background</span>
+        </div>
       </form>
     </div>
   );

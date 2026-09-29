@@ -272,3 +272,72 @@ input[type="range"]::-webkit-slider-thumb:active {
 ::-webkit-scrollbar-thumb:hover {
   background: #a1a1aa;
 }
+
+/* ==============================================================================
+   Cozy Ember (Night Mode) Design System:
+   Midnight obsidian canvas (#0a0f1d), dark surface slate (#131c2e), warm amber glow,
+   crisp high-contrast borders, and eye-friendly typography.
+   ============================================================================== */
+
+body.theme-ember,
+.theme-ember {
+  background-color: #070a13 !important;
+  color: #f8fafc !important;
+}
+
+.theme-ember header {
+  background-color: #0f172a !important;
+  border-color: #facc15 !important;
+  box-shadow: 0px 4px 0px #000000 !important;
+}
+
+.theme-ember .material-card,
+.theme-ember .brutalist-card,
+.theme-ember .material-card-flat {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+  box-shadow: 4px 4px 0px #000000 !important;
+}
+
+.theme-ember .material-card h1,
+.theme-ember .material-card h2,
+.theme-ember .material-card h3,
+.theme-ember .material-card-flat h1,
+.theme-ember .material-card-flat h2,
+.theme-ember .material-card-flat h3,
+.theme-ember h1,
+.theme-ember h2,
+.theme-ember h3 {
+  color: #f8fafc !important;
+}
+
+.theme-ember footer {
+  background-color: #0b0f19 !important;
+  border-color: #1e293b !important;
+  color: #94a3b8 !important;
+}
+
+.theme-ember input[type="text"],
+.theme-ember textarea,
+.theme-ember select {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #475569 !important;
+}
+
+.theme-ember input[type="text"]::placeholder,
+.theme-ember textarea::placeholder {
+  color: #64748b !important;
+}
+
+.theme-ember ::-webkit-scrollbar-track {
+  background: #0b0f19;
+  border-left: 2px solid #1e293b;
+}
+
+.theme-ember ::-webkit-scrollbar-thumb {
+  background: #334155;
+  border: 2px solid #000000;
+}
+

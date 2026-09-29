@@ -1,4 +1,3 @@
-import React from 'react';
 import { 
   LayoutDashboard, 
   HeartHandshake, 
@@ -10,8 +9,13 @@ import {
   Bot,
   Zap,
   Sliders,
-  MessageSquare
+  MessageSquare,
+  Sun,
+  Moon,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
+import { playCompanionBoop } from '../services/soundEffects';
 
 export type TabType = 'dashboard' | 'checkin' | 'tasks' | 'hobbies' | 'discover' | 'history' | 'profile' | 'assistant';
 
@@ -21,6 +25,10 @@ interface NavbarProps {
   userId: string;
   isSimpleMode: boolean;
   onToggleSimpleMode: (simple: boolean) => void;
+  theme?: 'light' | 'ember';
+  onToggleTheme?: () => void;
+  soundEnabled?: boolean;
+  onToggleSound?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ 
@@ -28,7 +36,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSelectTab, 
   userId, 
   isSimpleMode, 
-  onToggleSimpleMode 
+  onToggleSimpleMode,
+  theme = 'light',
+  onToggleTheme,
+  soundEnabled = true,
+  onToggleSound
 }) => {
   const advancedNavItems = [
     { id: 'dashboard' as TabType, label: 'Dashboard', icon: LayoutDashboard },
@@ -93,10 +105,44 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* User ID Badge */}
-            <div className="hidden sm:flex items-center space-x-2 text-xs font-mono font-bold text-black bg-[#fef08a] border-2 border-black shadow-[2px_2px_0px_#000000] rounded px-3 py-1.5">
+            <div className="hidden lg:flex items-center space-x-2 text-xs font-mono font-bold text-black bg-[#fef08a] border-2 border-black shadow-[2px_2px_0px_#000000] rounded px-3 py-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-black animate-pulse"></span>
               <span>ID: <strong className="text-black">{userId}</strong></span>
             </div>
+
+            {/* Sound FX Toggle */}
+            {onToggleSound && (
+              <button
+                type="button"
+                onClick={() => {
+                  playCompanionBoop();
+                  onToggleSound();
+                }}
+                className={`p-2 border-2 border-black rounded shadow-[2px_2px_0px_#000000] transition-all ${
+                  soundEnabled ? 'bg-[#bbf7d0] text-black hover:bg-emerald-300' : 'bg-zinc-200 text-zinc-500 hover:text-black'
+                }`}
+                title={soundEnabled ? 'Mute 8-bit sounds' : 'Enable 8-bit sounds'}
+              >
+                {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+              </button>
+            )}
+
+            {/* Theme Toggle (Light / Cozy Ember) */}
+            {onToggleTheme && (
+              <button
+                type="button"
+                onClick={() => {
+                  playCompanionBoop();
+                  onToggleTheme();
+                }}
+                className={`p-2 border-2 border-black rounded shadow-[2px_2px_0px_#000000] transition-all ${
+                  theme === 'ember' ? 'bg-[#facc15] text-black hover:bg-amber-400' : 'bg-white text-black hover:bg-zinc-100'
+                }`}
+                title={theme === 'ember' ? 'Switch to Light Theme' : 'Switch to Cozy Ember (Night Mode)'}
+              >
+                {theme === 'ember' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </button>
+            )}
           </div>
         </div>
 
