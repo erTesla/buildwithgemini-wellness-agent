@@ -131,4 +131,36 @@ describe('CompanionOnboardingModal Component', () => {
     );
     expect(container.firstChild).toBeNull();
   });
+
+  it('asks for username on first-time onboarding and persists it', async () => {
+    localStorage.clear();
+    const { CompanionOnboardingModal } = await import('../components/CompanionOnboardingModal');
+    let selectedCompanion = '';
+    let selectedUsername = '';
+    render(
+      <CompanionOnboardingModal 
+        isOpen={true} 
+        onSelectCompanion={(c, u) => { 
+          selectedCompanion = c; 
+          selectedUsername = u || '';
+        }} 
+      />
+    );
+
+    // Verify username prompt and non-unique disclaimer
+    expect(screen.getByText(/Choose Your Username \(Non-Unique\)/i)).toBeTruthy();
+    const usernameInput = screen.getByPlaceholderText(/e\.g\. Alex, Maya, Sam/i);
+    expect(usernameInput).toBeTruthy();
+
+    // Type a custom username
+    fireEvent.change(usernameInput, { target: { value: 'Alex Walker' } });
+
+    // Confirm selection with Cat (default)
+    const confirmBtn = screen.getByRole('button', { name: /Bond with /i });
+    fireEvent.click(confirmBtn);
+
+    expect(selectedCompanion).toBe('cat');
+    expect(selectedUsername).toBe('Alex Walker');
+    expect(localStorage.getItem('whohum_username')).toBe('Alex Walker');
+  });
 });

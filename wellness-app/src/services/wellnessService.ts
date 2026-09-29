@@ -21,11 +21,34 @@ import {
 } from '../types';
 
 export const USER_STORAGE_KEY = 'wellness_agent_current_user_id';
+export const USER_NAME_STORAGE_KEY = 'whohum_username';
+
+export function sanitizeUsernameToId(name: string): string {
+  const clean = name.trim().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_-]/g, '');
+  return 'user_' + (clean || 'friend');
+}
+
+export function getCurrentUserName(): string {
+  return localStorage.getItem(USER_NAME_STORAGE_KEY) || 'Friend';
+}
+
+export function setUserNameAndId(name: string): { userName: string; userId: string } {
+  const trimmed = name.trim() || 'Friend';
+  const uid = sanitizeUsernameToId(trimmed);
+  localStorage.setItem(USER_NAME_STORAGE_KEY, trimmed);
+  localStorage.setItem(USER_STORAGE_KEY, uid);
+  return { userName: trimmed, userId: uid };
+}
 
 export function getCurrentUserId(): string {
   let uid = localStorage.getItem(USER_STORAGE_KEY);
   if (!uid) {
-    uid = 'user_' + Math.random().toString(36).substring(2, 10);
+    const uname = localStorage.getItem(USER_NAME_STORAGE_KEY);
+    if (uname) {
+      uid = sanitizeUsernameToId(uname);
+    } else {
+      uid = 'user_' + Math.random().toString(36).substring(2, 10);
+    }
     localStorage.setItem(USER_STORAGE_KEY, uid);
   }
   return uid;

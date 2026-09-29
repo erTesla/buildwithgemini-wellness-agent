@@ -23,6 +23,7 @@ interface NavbarProps {
   currentTab: TabType;
   onSelectTab: (tab: TabType) => void;
   userId: string;
+  userName?: string;
   isSimpleMode: boolean;
   onToggleSimpleMode: (simple: boolean) => void;
   theme?: 'light' | 'ember';
@@ -35,6 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   currentTab, 
   onSelectTab, 
   userId, 
+  userName,
   isSimpleMode, 
   onToggleSimpleMode,
   theme = 'light',
@@ -143,6 +145,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {theme === 'ember' ? <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500" /> : <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-600" />}
               </button>
             )}
+
+            {/* User Profile Chip */}
+            <button
+              type="button"
+              onClick={() => onSelectTab('profile')}
+              className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-emerald-200/70 bg-emerald-50/70 hover:bg-emerald-100/70 text-emerald-800 text-xs font-semibold shadow-2xs transition-all"
+              title="Click to view profile & edit username"
+            >
+              <User className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="truncate max-w-[110px]">{userName || 'Friend'}</span>
+            </button>
           </div>
         </div>
 

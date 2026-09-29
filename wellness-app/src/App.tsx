@@ -18,6 +18,8 @@ import { isSoundEnabled, setSoundEnabled } from './services/soundEffects';
 
 import { 
   getCurrentUserId, 
+  getCurrentUserName,
+  setUserNameAndId,
   getCheckIns, 
   saveCheckIn, 
   getTasks, 
@@ -39,6 +41,7 @@ import {
 
 export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<TabType>('dashboard');
+  const [userName, setUserName] = useState<string>(() => getCurrentUserName());
   const [userId, setUserId] = useState<string>(getCurrentUserId());
   
   // Companion choice: cat, racoon, puppy (dog), trex, cloud_potato, cloud_blueberry (persisted)
@@ -50,10 +53,30 @@ export const App: React.FC = () => {
     return 'cat';
   });
 
-  // One-time companion onboarding: only show modal if never selected before
+  // One-time onboarding modal: show if companion not chosen OR username not entered
   const [showCompanionModal, setShowCompanionModal] = useState<boolean>(() => {
-    return localStorage.getItem('whohum_companion_chosen') !== 'true';
+    const chosen = localStorage.getItem('whohum_companion_chosen') === 'true';
+    const hasName = Boolean(localStorage.getItem('whohum_username'));
+    return !chosen || !hasName;
   });
+
+  const handleOnboardingComplete = (selected: CompanionType, newUserName?: string) => {
+    setCompanionType(selected);
+    if (newUserName && newUserName.trim()) {
+      const { userName: updatedName, userId: updatedId } = setUserNameAndId(newUserName);
+      setUserName(updatedName);
+      setUserId(updatedId);
+    }
+    setShowCompanionModal(false);
+  };
+
+  const handleUpdateUserName = async (newUserName: string) => {
+    if (newUserName.trim()) {
+      const { userName: updatedName, userId: updatedId } = setUserNameAndId(newUserName);
+      setUserName(updatedName);
+      setUserId(updatedId);
+    }
+  };
 
   const handleCompanionTypeChange = (newType: CompanionType) => {
     setCompanionType(newType);
@@ -225,6 +248,7 @@ export const App: React.FC = () => {
         currentTab={currentTab} 
         onSelectTab={setCurrentTab} 
         userId={userId} 
+        userName={userName}
         isSimpleMode={isSimpleMode}
         onToggleSimpleMode={handleToggleSimpleMode}
         theme={theme}
@@ -242,6 +266,7 @@ export const App: React.FC = () => {
         ) : isSimpleMode ? (
           <AssistantScreen
             userId={userId}
+            userName={userName}
             checkins={checkins}
             tasks={tasks}
             hobbies={hobbies}
@@ -257,6 +282,7 @@ export const App: React.FC = () => {
             {currentTab === 'dashboard' && (
               <DashboardScreen
                 userId={userId}
+                userName={userName}
                 checkins={checkins}
                 tasks={tasks}
                 hobbies={hobbies}
@@ -326,6 +352,7 @@ export const App: React.FC = () => {
             {currentTab === 'assistant' && (
               <AssistantScreen
                 userId={userId}
+                userName={userName}
                 checkins={checkins}
                 tasks={tasks}
                 hobbies={hobbies}
@@ -341,6 +368,8 @@ export const App: React.FC = () => {
             {currentTab === 'profile' && (
               <ProfileScreen
                 userId={userId}
+                userName={userName}
+                onUpdateUserName={handleUpdateUserName}
                 preferences={preferences}
                 onSavePreferences={handleSavePreferences}
                 onReloadAllData={loadUserData}
@@ -369,10 +398,8 @@ export const App: React.FC = () => {
       {/* One-Time Companion Selection Onboarding Modal */}
       <CompanionOnboardingModal 
         isOpen={showCompanionModal}
-        onSelectCompanion={(selected) => {
-          setCompanionType(selected);
-          setShowCompanionModal(false);
-        }}
+        initialUserName={userName}
+        onSelectCompanion={handleOnboardingComplete}
       />
 
       {/* Calm Modern Footer - Desktop Only */}

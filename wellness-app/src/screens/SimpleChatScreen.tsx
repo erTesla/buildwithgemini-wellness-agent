@@ -31,6 +31,7 @@ import { playMessageChime, playTaskSuccess, playCompanionBoop } from '../service
 
 interface SimpleChatScreenProps {
   userId: string;
+  userName?: string;
   checkins: WellnessCheckIn[];
   tasks: TaskItem[];
   hobbies: HobbyItem[];
@@ -45,6 +46,7 @@ interface SimpleChatScreenProps {
 
 export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
   userId,
+  userName,
   checkins,
   tasks,
   hobbies,
@@ -60,7 +62,7 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
     {
       id: 'msg_welcome',
       role: 'assistant',
-      content: `Hey buddy! 👋 How's your day going? Feel free to tell me what you're up to, how you're feeling, or anything fun that happened today. I'm here to listen and keep you company.`,
+      content: `Hey ${userName || 'buddy'}! 👋 How's your day going? Feel free to tell me what you're up to, how you're feeling, or anything fun that happened today. I'm here to listen and keep you company.`,
       timestamp: new Date().toISOString()
     }
   ]);

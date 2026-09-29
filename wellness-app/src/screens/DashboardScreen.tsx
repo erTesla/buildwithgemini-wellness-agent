@@ -33,6 +33,7 @@ import { playCompanionBoop, playTaskSuccess } from '../services/soundEffects';
 
 interface DashboardScreenProps {
   userId?: string;
+  userName?: string;
   checkins: WellnessCheckIn[];
   tasks: TaskItem[];
   hobbies: HobbyItem[];
@@ -46,6 +47,7 @@ interface DashboardScreenProps {
 
 export const DashboardScreen: React.FC<DashboardScreenProps> = ({
   userId,
+  userName,
   checkins,
   tasks,
   hobbies,
@@ -140,7 +142,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
       <div className="p-6 sm:p-7 bg-gradient-to-r from-emerald-50/70 via-teal-50/40 to-sky-50/50 border border-emerald-100/80 rounded-2xl shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
-            Welcome to <span className="text-emerald-700">Who-Hum Hub</span>
+            Welcome back, <span className="text-emerald-700">{userName || 'Friend'}</span>
           </h1>
           <p className="text-sm text-slate-600 mt-1 max-w-xl">
             A quiet companion for humans. Daily rhythm, honest reflections, and restorative habits.

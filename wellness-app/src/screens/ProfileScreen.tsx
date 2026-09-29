@@ -3,7 +3,9 @@ import { UserPreferences } from '../types';
 import { 
   switchUserId, 
   exportAllUserData, 
-  clearAllUserData 
+  clearAllUserData,
+  setUserNameAndId,
+  getCurrentUserName 
 } from '../services/wellnessService';
 import { PixelCompanion } from '../components/PixelCompanion';
 import { CompanionType, ALL_COMPANIONS, formatCompanionLabel } from '../domain/companions';
@@ -37,6 +39,8 @@ interface ProfileScreenProps {
   onReloadAllData: () => Promise<void>;
   companionType?: CompanionType;
   onChangeCompanionType?: (type: CompanionType) => void;
+  userName?: string;
+  onUpdateUserName?: (name: string) => Promise<void>;
 }
 
 export const ProfileScreen: React.FC<ProfileScreenProps> = ({
@@ -45,7 +49,9 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   onSavePreferences,
   onReloadAllData,
   companionType = 'cat',
-  onChangeCompanionType
+  onChangeCompanionType,
+  userName,
+  onUpdateUserName
 }) => {
   const [preferredLocation, setPreferredLocation] = useState(preferences.preferredLocation || 'San Francisco, CA');
   const [budgetLevel, setBudgetLevel] = useState(preferences.budgetLevel);
@@ -56,6 +62,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   const [consentAI, setConsentAI] = useState(preferences.consentExternalAI);
   const [enableCrisis, setEnableCrisis] = useState(preferences.enableCrisisAssistance);
 
+  const [customUserName, setCustomUserName] = useState(userName || getCurrentUserName());
   const [customUserId, setCustomUserId] = useState(userId);
   const [savedStatus, setSavedStatus] = useState<string>('');
   const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(() => {
@@ -96,6 +103,20 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
     await onSavePreferences(updated);
     setSavedStatus('Preferences saved successfully!');
     setTimeout(() => setSavedStatus(''), 3000);
+  };
+
+  const handleUpdateUserName = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (customUserName.trim()) {
+      if (onUpdateUserName) {
+        await onUpdateUserName(customUserName.trim());
+      } else {
+        setUserNameAndId(customUserName.trim());
+        await onReloadAllData();
+      }
+      setSavedStatus(`Username updated to "${customUserName.trim()}". Your data is synced!`);
+      setTimeout(() => setSavedStatus(''), 4000);
+    }
   };
 
   const handleSwitchAccount = async () => {
@@ -146,6 +167,38 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <span>{savedStatus}</span>
         </div>
       )}
+
+      {/* Username & Shared Data Access */}
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-semibold text-slate-900 flex items-center space-x-2">
+            <User className="w-5 h-5 text-emerald-600" />
+            <span>Your Username & Shared Data Access</span>
+          </h2>
+          <span className="text-[11px] font-semibold bg-emerald-50 text-emerald-700 px-2.5 py-0.5 rounded-full border border-emerald-200/60">
+            Non-Unique
+          </span>
+        </div>
+        <p className="text-xs text-slate-500 leading-relaxed">
+          Your username does not need to be unique! By entering this username on any device or session, you can keep updating your daily reflections, tasks, and wellness routines seamlessly.
+        </p>
+
+        <form onSubmit={handleUpdateUserName} className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+          <input
+            type="text"
+            value={customUserName}
+            onChange={(e) => setCustomUserName(e.target.value)}
+            placeholder="e.g. Alex, Maya, Sam..."
+            className="p-2.5 bg-slate-50/70 border border-slate-200/80 rounded-xl text-sm font-semibold text-slate-900 flex-1 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/15 focus:border-emerald-500"
+          />
+          <button
+            type="submit"
+            className="brutalist-btn-primary text-xs py-2.5 px-4 rounded-xl whitespace-nowrap"
+          >
+            Update Username
+          </button>
+        </form>
+      </div>
 
       {/* Account Identity Switcher */}
       <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-xs space-y-4">

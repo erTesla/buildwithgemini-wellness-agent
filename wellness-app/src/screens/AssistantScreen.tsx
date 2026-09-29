@@ -27,6 +27,7 @@ import { formatCompanionLabel } from '../domain/companions';
 
 interface AssistantScreenProps {
   userId: string;
+  userName?: string;
   checkins: WellnessCheckIn[];
   tasks: TaskItem[];
   hobbies: HobbyItem[];
@@ -40,6 +41,7 @@ interface AssistantScreenProps {
 
 export const AssistantScreen: React.FC<AssistantScreenProps> = ({
   userId,
+  userName,
   checkins,
   tasks,
   hobbies,
@@ -54,7 +56,7 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
     {
       id: 'msg_welcome',
       role: 'assistant',
-      content: `Hey there, buddy! 👋 I'm your Who-Hum lifestyle companion. Talk to me like a close friend—tell me about your day, any exciting things that happened, your mood, or what you're dreaming of doing. I'm here for you!`,
+      content: `Hey there, ${userName || 'buddy'}! 👋 I'm your Who-Hum lifestyle companion. Talk to me like a close friend—tell me about your day, any exciting things that happened, your mood, or what you're dreaming of doing. I'm here for you!`,
       timestamp: new Date().toISOString()
     }
   ]);

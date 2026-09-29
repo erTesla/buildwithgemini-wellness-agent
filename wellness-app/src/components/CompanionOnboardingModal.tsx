@@ -2,18 +2,22 @@ import React, { useState } from 'react';
 import { PixelCompanion } from './PixelCompanion';
 import { CompanionType, ALL_COMPANIONS, getCompanionMetadata } from '../domain/companions';
 import { playCompanionBoop, playTaskSuccess } from '../services/soundEffects';
-import { Sparkles, Check, Heart } from 'lucide-react';
+import { Sparkles, Check, Heart, User } from 'lucide-react';
+import { getCurrentUserName } from '../services/wellnessService';
 
 interface CompanionOnboardingModalProps {
   isOpen: boolean;
-  onSelectCompanion: (type: CompanionType) => void;
+  onSelectCompanion: (type: CompanionType, userName?: string) => void;
+  initialUserName?: string;
 }
 
 export const CompanionOnboardingModal: React.FC<CompanionOnboardingModalProps> = ({
   isOpen,
-  onSelectCompanion
+  onSelectCompanion,
+  initialUserName
 }) => {
   const [selected, setSelected] = useState<CompanionType>('cat');
+  const [userName, setUserName] = useState<string>(() => initialUserName || getCurrentUserName() || '');
 
   if (!isOpen) return null;
 
@@ -21,27 +25,51 @@ export const CompanionOnboardingModal: React.FC<CompanionOnboardingModalProps> =
 
   const handleConfirm = () => {
     playTaskSuccess();
+    const finalName = userName.trim() || 'Friend';
+    localStorage.setItem('whohum_username', finalName);
     localStorage.setItem('whohum_companion', selected);
     localStorage.setItem('whohum_companion_chosen', 'true');
-    onSelectCompanion(selected);
+    localStorage.setItem('whohum_onboarding_completed', 'true');
+    onSelectCompanion(selected, finalName);
   };
 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white border border-slate-200/90 rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 space-y-6 animate-in fade-in zoom-in-95 duration-200">
+      <div className="bg-white border border-slate-200/90 rounded-3xl shadow-2xl max-w-lg w-full p-6 sm:p-8 space-y-5 animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto no-scrollbar">
         
         {/* Header */}
         <div className="text-center space-y-1.5">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200/80 rounded-full text-xs font-semibold text-emerald-800 mb-1">
             <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-            <span>One-Time Selection</span>
+            <span>Welcome to Who-Hum</span>
           </div>
           <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
             Choose Your Quiet Companion
           </h2>
           <p className="text-xs text-slate-500 font-normal max-w-md mx-auto leading-relaxed">
-            Pick your companion once. They will quietly accompany your daily reflections and celebrate your human moments. (You won't be asked again!)
+            Enter your name and pick your companion. They will quietly accompany your daily reflections and celebrate your human moments!
           </p>
+        </div>
+
+        {/* Username Selection Section */}
+        <div className="bg-slate-50/80 border border-slate-200/90 rounded-2xl p-4 space-y-2">
+          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+            <User className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Choose Your Username (Non-Unique)</span>
+          </label>
+          <p className="text-[11px] text-slate-500 leading-relaxed">
+            Pick any name or nickname. It does not need to be unique! By using this name, you can keep updating your reflections, habits, and tasks across visits.
+          </p>
+          <div className="relative">
+            <input
+              type="text"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              placeholder="e.g. Alex, Maya, Sam, StarGazer..."
+              className="w-full px-3.5 py-2.5 bg-white border border-slate-200/90 rounded-xl text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+              maxLength={30}
+            />
+          </div>
         </div>
 
         {/* Selected Companion Preview Stage */}
