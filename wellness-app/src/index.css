@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    background-color: #fafafa;
+    background-color: #f8f9fa;
     color: #000000;
     font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -13,63 +13,70 @@
 }
 
 /* ==============================================================================
-   Helium4 Brutalism Tokens:
-   Heavy 2px black borders, crisp 0-4px corners, un-blurred offset hard shadows (4px-6px),
-   and ultra-smooth micro-interactions.
+   Helium4 Brutalism Design Tokens:
+   2px solid pure black borders, 4px corner radii, 4px-6px un-blurred offset hard shadows,
+   rich typography, customized form controls, and tactile micro-interactions.
    ============================================================================== */
 
-/* Base Brutalist Surface (Hard un-blurred shadow) */
-.brutalist-card {
+/* Surface Cards with Hard Un-blurred Shadows */
+.brutalist-card, .material-card {
   background-color: #ffffff;
   border: 2px solid #000000;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: 4px 4px 0px #000000;
   transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.brutalist-card:hover {
+.brutalist-card:hover, .material-card:hover {
   transform: translate(-1px, -1px);
   box-shadow: 5px 5px 0px #000000;
 }
 
-/* Multi-colored cards based on mood states */
+.material-card-flat {
+  background-color: #ffffff;
+  border: 2px solid #000000;
+  border-radius: 6px;
+  box-shadow: 3px 3px 0px #000000;
+}
+
+/* Mood-Themed Surfaces */
 .brutalist-card-energetic {
   background-color: #fef08a; /* Electric yellow */
   border: 2px solid #000000;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: 4px 4px 0px #000000;
 }
 
 .brutalist-card-calm {
-  background-color: #bae6fd; /* Soft Sky Cyan */
+  background-color: #bae6fd; /* Soft sky cyan */
   border: 2px solid #000000;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: 4px 4px 0px #000000;
 }
 
 .brutalist-card-stressed {
-  background-color: #ddd6fe; /* Soothing Lavender */
+  background-color: #ddd6fe; /* Soothing lavender */
   border: 2px solid #000000;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: 4px 4px 0px #000000;
 }
 
 .brutalist-card-tired {
-  background-color: #fed7aa; /* Warm Amber */
+  background-color: #fed7aa; /* Warm amber */
   border: 2px solid #000000;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: 4px 4px 0px #000000;
 }
 
 .brutalist-card-motivated {
-  background-color: #bbf7d0; /* Crisp Mint Green */
+  background-color: #bbf7d0; /* Crisp mint */
   border: 2px solid #000000;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: 4px 4px 0px #000000;
 }
 
-/* Brutalist Buttons */
-.brutalist-btn-primary {
+/* Rich Buttons */
+.brutalist-btn-primary, .google-btn-primary {
   background-color: #000000;
   color: #ffffff;
   font-weight: 700;
@@ -77,16 +84,21 @@
   border-radius: 4px;
   padding: 8px 20px;
   box-shadow: 3px 3px 0px #000000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
 }
 
-.brutalist-btn-primary:hover {
-  background-color: #1a1a1a;
+.brutalist-btn-primary:hover, .google-btn-primary:hover {
+  background-color: #18181b;
   transform: translate(-1px, -1px);
   box-shadow: 4px 4px 0px #000000;
 }
 
-.brutalist-btn-primary:active {
+.brutalist-btn-primary:active, .google-btn-primary:active {
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0px #000000;
 }
@@ -99,7 +111,12 @@
   border-radius: 4px;
   padding: 8px 20px;
   box-shadow: 3px 3px 0px #000000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
 }
 
 .brutalist-btn-accent:hover {
@@ -113,7 +130,7 @@
   box-shadow: 1px 1px 0px #000000;
 }
 
-.brutalist-btn-outlined {
+.brutalist-btn-outlined, .google-btn-outlined {
   background-color: #ffffff;
   color: #000000;
   font-weight: 700;
@@ -121,80 +138,137 @@
   border-radius: 4px;
   padding: 8px 20px;
   box-shadow: 3px 3px 0px #000000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
 }
 
-.brutalist-btn-outlined:hover {
+.brutalist-btn-outlined:hover, .google-btn-outlined:hover {
   background-color: #f4f4f5;
   transform: translate(-1px, -1px);
   box-shadow: 4px 4px 0px #000000;
 }
 
-.brutalist-btn-outlined:active {
+.brutalist-btn-outlined:active, .google-btn-outlined:active {
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0px #000000;
 }
 
-/* Material card backward compatibility class with smooth brutalism enhancements */
-.material-card {
+/* ==============================================================================
+   Rich Styled Form Controls (Replacing Bare HTML inputs, selects, textareas, sliders)
+   ============================================================================== */
+
+/* Rich Text Input & Select */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
   background-color: #ffffff;
   border: 2px solid #000000;
   border-radius: 4px;
-  box-shadow: 4px 4px 0px #000000;
-  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.material-card:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 5px 5px 0px #000000;
-}
-
-.material-card-flat {
-  background-color: #ffffff;
-  border: 2px solid #000000;
-  border-radius: 4px;
-}
-
-.google-btn-primary {
-  background-color: #000000;
-  color: #ffffff;
-  font-weight: 700;
-  border: 2px solid #000000;
-  border-radius: 4px;
-  padding: 8px 20px;
-  box-shadow: 3px 3px 0px #000000;
-  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.google-btn-primary:hover {
-  background-color: #18181b;
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0px #000000;
-}
-
-.google-btn-primary:active {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px #000000;
-}
-
-.google-btn-outlined {
-  background-color: #ffffff;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  font-family: inherit;
   color: #000000;
-  font-weight: 700;
-  border: 2px solid #000000;
-  border-radius: 4px;
-  padding: 8px 20px;
+  box-shadow: 2px 2px 0px #000000;
+  outline: none;
+  transition: all 0.15s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+  border-color: #000000;
+  background-color: #fffbeb;
   box-shadow: 3px 3px 0px #000000;
-  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.google-btn-outlined:hover {
-  background-color: #f4f4f5;
-  transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0px #000000;
+/* Rich Checkbox */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #000000;
+  border-radius: 3px;
+  background-color: #ffffff;
+  box-shadow: 2px 2px 0px #000000;
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  transition: all 0.15s ease-in-out;
 }
 
-.google-btn-outlined:active {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0px #000000;
+input[type="checkbox"]:checked {
+  background-color: #facc15;
+}
+
+input[type="checkbox"]:checked::before {
+  content: "✔";
+  font-size: 13px;
+  font-weight: 900;
+  color: #000000;
+}
+
+/* Rich Range Sliders */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 12px;
+  border: 2px solid #000000;
+  border-radius: 6px;
+  background: #ffffff;
+  box-shadow: 2px 2px 0px #000000;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  border: 2px solid #000000;
+  border-radius: 50%;
+  background: #facc15;
+  box-shadow: 2px 2px 0px #000000;
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out, background-color 0.15s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  background: #eab308;
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(0.95);
+  background: #000000;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f4f4f5;
+  border-left: 2px solid #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+  border: 2px solid #000000;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1aa;
 }
