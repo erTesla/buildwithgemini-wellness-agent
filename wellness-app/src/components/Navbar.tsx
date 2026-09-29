@@ -8,7 +8,8 @@ import {
   BarChart3, 
   User, 
   Bot,
-  Zap
+  Zap,
+  Sliders
 } from 'lucide-react';
 
 export type TabType = 'dashboard' | 'checkin' | 'tasks' | 'hobbies' | 'discover' | 'history' | 'profile' | 'assistant';
@@ -17,19 +18,32 @@ interface NavbarProps {
   currentTab: TabType;
   onSelectTab: (tab: TabType) => void;
   userId: string;
+  isSimpleMode: boolean;
+  onToggleSimpleMode: (simple: boolean) => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, userId }) => {
-  const navItems = [
-    { id: 'dashboard' as TabType, label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'checkin' as TabType, label: 'Check-in', icon: HeartHandshake },
-    { id: 'tasks' as TabType, label: 'Tasks & Goals', icon: CheckSquare },
-    { id: 'hobbies' as TabType, label: 'Hobbies', icon: Sparkles },
-    { id: 'discover' as TabType, label: 'Discover', icon: Compass },
-    { id: 'history' as TabType, label: 'Insights', icon: BarChart3 },
-    { id: 'assistant' as TabType, label: 'AI Partner', icon: Bot },
-    { id: 'profile' as TabType, label: 'Settings', icon: User },
+export const Navbar: React.FC<NavbarProps> = ({ 
+  currentTab, 
+  onSelectTab, 
+  userId, 
+  isSimpleMode, 
+  onToggleSimpleMode 
+}) => {
+  // Navigation tabs: in Simple Mode we show the 4 most essential actions; in Advanced Mode we show all 8 tabs
+  const allNavItems = [
+    { id: 'dashboard' as TabType, label: 'Dashboard', icon: LayoutDashboard, simple: true },
+    { id: 'assistant' as TabType, label: 'AI Partner', icon: Bot, simple: true },
+    { id: 'tasks' as TabType, label: 'Tasks', icon: CheckSquare, simple: true },
+    { id: 'checkin' as TabType, label: 'Check-in', icon: HeartHandshake, simple: false },
+    { id: 'hobbies' as TabType, label: 'Hobbies', icon: Sparkles, simple: true },
+    { id: 'discover' as TabType, label: 'Discover', icon: Compass, simple: false },
+    { id: 'history' as TabType, label: 'Insights', icon: BarChart3, simple: false },
+    { id: 'profile' as TabType, label: 'Settings', icon: User, simple: false },
   ];
+
+  const visibleNavItems = isSimpleMode 
+    ? allNavItems.filter(item => item.simple) 
+    : allNavItems;
 
   return (
     <header className="sticky top-0 z-30 bg-white border-b-2 border-black shadow-[0px_4px_0px_#000000]">
@@ -45,21 +59,54 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onSelectTab, userId 
                 WELLNESS <span className="bg-black text-[#facc15] px-1.5 py-0.5 rounded text-sm uppercase">Agent</span>
               </span>
               <span className="hidden md:inline-block text-xs font-mono font-bold text-zinc-600">
-                Helium4 Brutalism Edition
+                Helium4 Edition
               </span>
             </div>
           </div>
 
-          {/* User Badge */}
-          <div className="hidden sm:flex items-center space-x-2 text-xs font-mono font-bold text-black bg-[#fef08a] border-2 border-black shadow-[2px_2px_0px_#000000] rounded px-3 py-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-black animate-pulse"></span>
-            <span>ID: <strong className="text-black">{userId}</strong></span>
+          {/* Mode Switcher Pill & User Badge */}
+          <div className="flex items-center space-x-3">
+            {/* Simple vs Advanced Toggle */}
+            <div className="flex items-center p-0.5 bg-zinc-100 border-2 border-black rounded shadow-[2px_2px_0px_#000000]">
+              <button
+                type="button"
+                onClick={() => onToggleSimpleMode(true)}
+                className={`px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded transition-all flex items-center space-x-1 ${
+                  isSimpleMode
+                    ? 'bg-[#facc15] text-black border-2 border-black shadow-[1px_1px_0px_#000000]'
+                    : 'text-zinc-600 hover:text-black'
+                }`}
+                title="Simple Mode: streamlined, distraction-free view"
+              >
+                <Zap className="w-3 h-3" />
+                <span>Simple</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => onToggleSimpleMode(false)}
+                className={`px-2.5 py-1 text-xs font-bold uppercase tracking-wider rounded transition-all flex items-center space-x-1 ${
+                  !isSimpleMode
+                    ? 'bg-black text-white border-2 border-black shadow-[1px_1px_0px_#000000]'
+                    : 'text-zinc-600 hover:text-black'
+                }`}
+                title="Advanced Mode: full telemetry, metrics & custom controls"
+              >
+                <Sliders className="w-3 h-3" />
+                <span>Advanced</span>
+              </button>
+            </div>
+
+            {/* User ID Badge */}
+            <div className="hidden sm:flex items-center space-x-2 text-xs font-mono font-bold text-black bg-[#fef08a] border-2 border-black shadow-[2px_2px_0px_#000000] rounded px-3 py-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-black animate-pulse"></span>
+              <span>ID: <strong className="text-black">{userId}</strong></span>
+            </div>
           </div>
         </div>
 
         {/* Tab Navigation */}
         <nav className="flex space-x-2 overflow-x-auto no-scrollbar py-2">
-          {navItems.map((item) => {
+          {visibleNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentTab === item.id;
             return (

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, TabType } from './components/Navbar';
 import { DashboardScreen } from './screens/DashboardScreen';
+import { SimpleDashboardScreen } from './screens/SimpleDashboardScreen';
 import { CheckinScreen } from './screens/CheckinScreen';
 import { TasksScreen } from './screens/TasksScreen';
 import { HobbiesScreen } from './screens/HobbiesScreen';
@@ -33,6 +34,17 @@ import {
 export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<TabType>('dashboard');
   const [userId, setUserId] = useState<string>(getCurrentUserId());
+  
+  // UI Mode: Simple vs Advanced (persisted in localStorage)
+  const [isSimpleMode, setIsSimpleMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem('wellness_ui_mode');
+    return saved !== null ? saved === 'simple' : true; // Default to Simple mode for effortless ease of access
+  });
+
+  const handleToggleSimpleMode = (simple: boolean) => {
+    setIsSimpleMode(simple);
+    localStorage.setItem('wellness_ui_mode', simple ? 'simple' : 'advanced');
+  };
   
   const [checkins, setCheckins] = useState<WellnessCheckIn[]>([]);
   const [tasks, setTasks] = useState<TaskItem[]>([]);
@@ -155,27 +167,47 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white text-[#202124] flex flex-col font-sans">
-      <Navbar currentTab={currentTab} onSelectTab={setCurrentTab} userId={userId} />
+      <Navbar 
+        currentTab={currentTab} 
+        onSelectTab={setCurrentTab} 
+        userId={userId} 
+        isSimpleMode={isSimpleMode}
+        onToggleSimpleMode={handleToggleSimpleMode}
+      />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {loading ? (
           <div className="flex justify-center items-center h-64 text-[#5f6368]">
-            <span className="text-sm">Connecting to your personal wellness cloud...</span>
+            <span className="text-sm font-bold font-mono">Connecting to your personal wellness cloud...</span>
           </div>
         ) : (
           <>
             {currentTab === 'dashboard' && (
-              <DashboardScreen
-                userId={userId}
-                checkins={checkins}
-                tasks={tasks}
-                hobbies={hobbies}
-                recommendations={recommendations}
-                onNavigate={setCurrentTab}
-                onToggleTask={handleToggleTask}
-                onSaveRecommendationAsTask={handleSaveRecommendationAsTask}
-                onSaveCheckIn={handleSaveCheckIn}
-              />
+              isSimpleMode ? (
+                <SimpleDashboardScreen
+                  userId={userId}
+                  checkins={checkins}
+                  tasks={tasks}
+                  hobbies={hobbies}
+                  onNavigate={setCurrentTab}
+                  onToggleTask={handleToggleTask}
+                  onSaveCheckIn={handleSaveCheckIn}
+                  onSaveTask={handleSaveTask}
+                  onSwitchToAdvanced={() => handleToggleSimpleMode(false)}
+                />
+              ) : (
+                <DashboardScreen
+                  userId={userId}
+                  checkins={checkins}
+                  tasks={tasks}
+                  hobbies={hobbies}
+                  recommendations={recommendations}
+                  onNavigate={setCurrentTab}
+                  onToggleTask={handleToggleTask}
+                  onSaveRecommendationAsTask={handleSaveRecommendationAsTask}
+                  onSaveCheckIn={handleSaveCheckIn}
+                />
+              )
             )}
 
             {currentTab === 'checkin' && (
