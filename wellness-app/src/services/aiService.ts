@@ -194,7 +194,7 @@ export async function askAgentAssistant(
   // Case A: User bought a cycle / bike or shares a major joyous life event
   // ---------------------------------------------------------------------------
   if (analysis.topics.cycleOrBike) {
-    content = `Oh that is awesome!! Huge congrats on the new cycle! 🎉🚲 Honestly, getting a bike is such an incredible lifestyle upgrade. There's nothing quite like feeling the breeze, getting outdoors, and turning everyday travel into joyful movement.\n\nI just updated your daily wellness record with your new bike and this happy moment. Go take it for a spin around the neighborhood whenever you're ready!`;
+    content = `Oh that is awesome!! Huge congrats on the new cycle! 🎉🚲 Honestly, getting a bike is such an incredible lifestyle upgrade. There's nothing quite like feeling the breeze, getting outdoors, and turning everyday travel into joyful movement. Go take it for a spin around the neighborhood whenever you're ready!`;
 
     loggedCheckIn = {
       id: 'checkin_' + Date.now(),
@@ -206,7 +206,8 @@ export async function askAgentAssistant(
       sleepQuality: 4,
       motivationLevel: 5,
       journalText: `Bought a new bicycle! Feeling super happy and energized today.`,
-      aiSummary: `User bought a new bicycle. Mood: THRIVING (Energy: 5/5). Milestone logged to daily wellness diary.`
+      aiSummary: `User bought a new bicycle. Mood: THRIVING (Energy: 5/5).`,
+      source: 'chat'
     };
 
     suggestedTasks.push({
@@ -231,9 +232,9 @@ export async function askAgentAssistant(
   // ---------------------------------------------------------------------------
   else if (analysis.isLifeEvent || analysis.sentiment === 'very_positive' || (analysis.sentiment === 'positive' && prompt.length > 10)) {
     if (analysis.sentiment === 'very_positive') {
-      content = `That makes me so happy to hear! 😄 What a great day. Celebrating wins—big or small—is so essential for our mental well-being and builds lasting momentum.\n\nI've automatically logged this into your daily wellness diary so it's captured in your records! What's on your mind next?`;
+      content = `That makes me so happy to hear! 😄 What a great day. Celebrating wins—big or small—is so essential for our mental well-being and builds lasting momentum. What are you looking forward to doing next?`;
     } else {
-      content = `That's great! Thanks for sharing that with me. I've logged this update into your daily wellness journal so we keep track of how your days are shaping up.`;
+      content = `That's great! Thanks for sharing that with me. I'm really glad to hear about how your day is going.`;
     }
 
     loggedCheckIn = {
@@ -246,14 +247,15 @@ export async function askAgentAssistant(
       sleepQuality: 4,
       motivationLevel: analysis.energyLevel,
       journalText: prompt.trim(),
-      aiSummary: `Daily update: "${prompt.trim()}". Mood: ${analysis.detectedMood.toUpperCase()}.`
+      aiSummary: `Daily update: "${prompt.trim()}". Mood: ${analysis.detectedMood.toUpperCase()}.`,
+      source: 'chat'
     };
   }
   // ---------------------------------------------------------------------------
   // Case C: Stressed or Down Day Sharing
   // ---------------------------------------------------------------------------
   else if (analysis.sentiment === 'stressed' || analysis.sentiment === 'down') {
-    content = `I hear you, my friend. Thank you for being honest with me about how you're feeling. Take a slow, deep breath right now—you don't have to carry everything all at once.\n\nI've noted this in your daily log with care. Do you want to just vent, take a break from your task list, or would you like me to find a soothing cheer-up recipe or quick relaxation idea?`;
+    content = `I hear you, my friend. Thank you for being honest with me about how you're feeling. Take a slow, deep breath right now—you don't have to carry everything all at once.\n\nDo you want to just vent, take a break from your task list, or would you like me to find a soothing cheer-up recipe or quick relaxation idea?`;
 
     loggedCheckIn = {
       id: 'checkin_' + Date.now(),
@@ -265,7 +267,8 @@ export async function askAgentAssistant(
       sleepQuality: 3,
       motivationLevel: 2,
       journalText: prompt.trim(),
-      aiSummary: `User shared: "${prompt.trim()}". Mood: ${analysis.detectedMood.toUpperCase()}. Gentle pacing recommended.`
+      aiSummary: `User shared: "${prompt.trim()}". Mood: ${analysis.detectedMood.toUpperCase()}. Gentle pacing recommended.`,
+      source: 'chat'
     };
   }
   // ---------------------------------------------------------------------------

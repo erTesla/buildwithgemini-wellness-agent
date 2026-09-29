@@ -132,10 +132,18 @@ export const HistoryScreen: React.FC<HistoryScreenProps> = ({
                 <span className="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-white border-2 border-[#1a73e8]" />
                 
                 <div className="p-4 rounded-lg border border-[#dadce0] bg-[#ffffff] space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs font-semibold text-[#1a73e8]">
-                      {new Date(item.timestamp).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })} at {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
+                  <div className="flex flex-wrap justify-between items-center gap-2">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xs font-semibold text-[#1a73e8]">
+                        {new Date(item.timestamp).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })} at {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                      {item.source === 'chat' && (
+                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#fef08a] text-black border border-black flex items-center space-x-1 shadow-[1px_1px_0px_#000000]">
+                          <span>💬</span>
+                          <span>Generated from Chat</span>
+                        </span>
+                      )}
+                    </div>
                     <span className="text-xs uppercase px-2 py-0.5 rounded font-medium bg-[#f1f3f4] text-[#3c4043]">
                       Mood: {item.mood}
                     </span>

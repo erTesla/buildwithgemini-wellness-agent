@@ -13,6 +13,7 @@ export interface WellnessCheckIn {
   concernsOrNotes?: string;
   aiSummary?: string;
   extractedKeywords?: string[];
+  source?: 'chat' | 'checkin_form' | 'dashboard_quick';
 }
 
 export type TaskPriority = 'low' | 'medium' | 'high';

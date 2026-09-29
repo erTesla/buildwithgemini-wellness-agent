@@ -49,7 +49,7 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
     {
       id: 'msg_welcome',
       role: 'assistant',
-      content: `Hey buddy! 👋 Tell me about your day—how are you feeling? Did anything fun or exciting happen? (Like buying something cool, finishing a project, or feeling tired?)\n\nJust type whatever is on your mind. I'll listen, chat with you, and automatically log your mood and daily updates for you!`,
+      content: `Hey buddy! 👋 How's your day going? Feel free to tell me what you're up to, how you're feeling, or anything fun that happened today. I'm here to listen and keep you company.`,
       timestamp: new Date().toISOString()
     }
   ]);
@@ -158,11 +158,11 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
           </div>
           <div>
             <h2 className="text-lg font-black text-black flex items-center gap-2">
-              <span>Your AI Buddy</span>
+              <span>Who-Hum Buddy</span>
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse border border-black"></span>
             </h2>
             <p className="text-xs font-mono font-medium text-zinc-600 mt-0.5">
-              Simple Chat Mode • Tell me about your day, I'll log the details.
+              Talk freely. Everything is captured quietly in the background.
             </p>
           </div>
         </div>
@@ -211,22 +211,6 @@ export const SimpleChatScreen: React.FC<SimpleChatScreenProps> = ({
                 <div className="text-sm font-medium whitespace-pre-line leading-relaxed">
                   {msg.content}
                 </div>
-
-                {/* Auto Logged Daily Check-in Notification Badge */}
-                {msg.loggedCheckIn && (
-                  <div className="bg-[#fef08a] border-2 border-black p-3.5 rounded-md shadow-[3px_3px_0px_#000000] space-y-1.5 my-2">
-                    <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-black">
-                      <BookMarked className="w-4 h-4 text-black" />
-                      <span>Daily Wellness Entry Automatically Logged!</span>
-                    </div>
-                    <p className="text-xs font-mono text-zinc-800">
-                      <strong>Mood:</strong> {msg.loggedCheckIn.mood.toUpperCase()} • <strong>Energy:</strong> {msg.loggedCheckIn.energyLevel}/5
-                    </p>
-                    <p className="text-xs text-zinc-800 italic bg-white/70 p-2 rounded border border-black/30">
-                      "{msg.loggedCheckIn.journalText}"
-                    </p>
-                  </div>
-                )}
 
                 {/* Travel Spots with Google Maps & Ratings */}
                 {msg.travelSpots && msg.travelSpots.length > 0 && (

@@ -109,11 +109,11 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
       {/* Top Welcome Banner */}
       <div className="material-card-flat p-6 sm:p-7 bg-white flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-2xl font-bold text-black flex items-center gap-2">
-            Welcome back to your <span className="bg-[#facc15] px-1.5 py-0.5 border-2 border-black rounded text-xl">Wellness Hub</span>
+          <h1 className="text-2xl font-black text-black flex items-center gap-2">
+            Welcome to <span className="bg-[#facc15] px-2 py-0.5 border-2 border-black rounded text-xl">Who-Hum Hub</span>
           </h1>
           <p className="text-sm font-medium text-zinc-600 mt-1">
-            Track daily mental wellness, harmonize personal tasks, and explore restorative adventures.
+            A quiet companion for humans. Daily rhythm, honest reflections, and restorative habits.
           </p>
         </div>
         <div className="flex gap-3">
@@ -204,9 +204,15 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({
 
           {latestCheckin ? (
             <div className="space-y-3">
-              <div className="flex items-center space-x-3">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-bold uppercase tracking-wider text-zinc-600">Mood:</span>
                 {getMoodBadge(latestCheckin.mood)}
+                {latestCheckin.source === 'chat' && (
+                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#fef08a] text-black border border-black flex items-center space-x-1 shadow-[1px_1px_0px_#000000]">
+                    <span>💬</span>
+                    <span>Generated from Chat</span>
+                  </span>
+                )}
                 <span className="text-xs font-mono text-zinc-500 ml-auto">
                   {new Date(latestCheckin.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>

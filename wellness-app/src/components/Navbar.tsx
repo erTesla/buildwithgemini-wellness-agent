@@ -47,15 +47,15 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex justify-between h-16 items-center">
           {/* Brand */}
           <div className="flex items-center space-x-3 cursor-pointer" onClick={() => onSelectTab('dashboard')}>
-            <div className="w-10 h-10 rounded bg-[#facc15] border-2 border-black shadow-[2px_2px_0px_#000000] flex items-center justify-center text-black font-black text-xl">
+            <div className="w-10 h-10 rounded-lg bg-[#facc15] border-2 border-black shadow-[2px_2px_0px_#000000] flex items-center justify-center text-black font-black text-xl">
               <Zap className="w-6 h-6 fill-black" />
             </div>
             <div>
-              <span className="text-xl font-bold text-black tracking-tight flex items-center gap-2">
-                WELLNESS <span className="bg-black text-[#facc15] px-1.5 py-0.5 rounded text-sm uppercase">Agent</span>
+              <span className="text-xl font-black text-black tracking-tight flex items-center gap-2">
+                WHO-HUM <span className="bg-black text-[#facc15] px-2 py-0.5 rounded text-xs uppercase font-mono tracking-wider">For Humans</span>
               </span>
               <span className="hidden md:inline-block text-xs font-mono font-bold text-zinc-600">
-                {isSimpleMode ? 'Simple Chat Experience' : 'Advanced Telemetry'}
+                {isSimpleMode ? 'Quiet Companion • Natural Daily Logging' : 'Full Telemetry & Health Rhythm'}
               </span>
             </div>
           </div>

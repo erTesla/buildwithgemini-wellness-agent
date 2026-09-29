@@ -48,7 +48,7 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
     {
       id: 'msg_welcome',
       role: 'assistant',
-      content: `Hey there, buddy! 👋 I'm your wellness & lifestyle buddy. Talk to me like a close friend—tell me about your day, any exciting things that happened, your mood, or what you're dreaming of doing. I'll automatically log your highlights into your daily wellness diary, map out travel spots, or find cheer-up recipes!`,
+      content: `Hey there, buddy! 👋 I'm your Who-Hum lifestyle companion. Talk to me like a close friend—tell me about your day, any exciting things that happened, your mood, or what you're dreaming of doing. I'm here for you!`,
       timestamp: new Date().toISOString()
     }
   ]);
@@ -188,22 +188,6 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
                   <div className="text-sm font-medium whitespace-pre-line leading-relaxed">
                     {msg.content}
                   </div>
-
-                  {/* Logged Daily Check-in Notification Badge */}
-                  {msg.loggedCheckIn && (
-                    <div className="bg-[#fef08a] border-2 border-black p-3 rounded shadow-[2px_2px_0px_#000000] space-y-1">
-                      <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-black">
-                        <BookMarked className="w-4 h-4 text-black" />
-                        <span>Daily Wellness Entry Automatically Logged!</span>
-                      </div>
-                      <p className="text-xs font-mono text-zinc-800">
-                        <strong>Logged Mood:</strong> {msg.loggedCheckIn.mood.toUpperCase()} (Energy: {msg.loggedCheckIn.energyLevel}/5)
-                      </p>
-                      <p className="text-xs text-zinc-700 italic">
-                        "{msg.loggedCheckIn.journalText}"
-                      </p>
-                    </div>
-                  )}
 
                   {/* Travel Spots & Google Maps Rendering */}
                   {msg.travelSpots && msg.travelSpots.length > 0 && (

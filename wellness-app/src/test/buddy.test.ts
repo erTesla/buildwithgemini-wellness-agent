@@ -31,11 +31,12 @@ describe('AI Chat Buddy Natural Tone & Daily Logging', () => {
     expect(response.loggedCheckIn).toBeDefined();
     expect(response.loggedCheckIn?.mood).toBe('thriving');
     expect(response.loggedCheckIn?.energyLevel).toBe(5);
+    expect(response.loggedCheckIn?.source).toBe('chat');
     expect(response.suggestedHobbies).toBeDefined();
     expect(response.suggestedHobbies?.[0].name).toContain('Cycling');
   });
 
-  it('responds naturally to general feeling updates and logs a daily entry', async () => {
+  it('responds naturally to general feeling updates and logs a daily entry with source chat', async () => {
     const response = await askAgentAssistant("Today was really productive, I finished all my project milestones!", {
       userId: 'test_user',
       checkins: [],
@@ -45,6 +46,7 @@ describe('AI Chat Buddy Natural Tone & Daily Logging', () => {
     });
 
     expect(response.loggedCheckIn).toBeDefined();
-    expect(response.content.toLowerCase()).toContain('logged');
+    expect(response.loggedCheckIn?.source).toBe('chat');
+    expect(response.content).toBeDefined();
   });
 });
